@@ -15,7 +15,6 @@ public class UserController {
     @GetMapping(value = "/test")
     public AppletResult queryTest(){
         System.out.print("*********************进来测试*******************");
-        String a="00";
         return ResultUtil.success();
     }
 }
