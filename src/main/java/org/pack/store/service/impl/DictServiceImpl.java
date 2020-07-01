@@ -23,7 +23,7 @@ public class DictServiceImpl implements DictService {
 
     public AppletResult queryDictAll(DictReq dictReq){
         DictRes dictRes =new DictRes();
-        PageHelper.startPage(dictReq.getCurrentPage(),10,true);
+        PageHelper.startPage(dictReq.getCurrentPage(),8,true);
         List<DictEntity> dictList = DictMapper.queryDictAll(dictReq.getParentCode());
         PageInfo<DictEntity> page =new PageInfo<DictEntity>(dictList);
         if (dictList.size()>0){
@@ -33,5 +33,8 @@ public class DictServiceImpl implements DictService {
         }
         dictRes.setDictList(dictList);
         return ResultUtil.success(dictRes);
+    }
+    public void inserDictInfo(DictEntity dictInfo){
+        DictMapper.inserDictInfo(dictInfo);
     }
 }

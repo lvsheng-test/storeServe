@@ -16,4 +16,10 @@ public interface DictMapper {
      * @return
      */
     public List<DictEntity> queryDictAll(@Param("parentCode") String parentCode);
+
+    /**
+     * 添加字典表信息
+     * @param dictInfo
+     */
+    public void inserDictInfo(DictEntity dictInfo);
 }

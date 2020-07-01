@@ -11,6 +11,20 @@ public class UuidUtil {
         return uuidStr;  
     }
 
+    /**
+     * java生成随机数字和字母组合10位数
+     * @param
+     * @return
+     */
+    public static String getDictCode(){
+        String val = "";
+        Random random = new Random();
+        for (int i = 0; i < 5; i++) {
+            // 输出字母还是数字
+            val += String.valueOf(random.nextInt(10));
+        }
+        return "ZD10000"+val;
+    }
 
     public static String getThreeDigits(int rangeNum) {
 
@@ -23,7 +37,8 @@ public class UuidUtil {
         return str;
     }
     public static void main(String[] args) {  
-        System.out.println(UuidUtil.getUuid());   
+        //System.out.println(UuidUtil.getUuid());
+        System.out.println("java生成随机数字和字母组合10位数：" + getDictCode());
     }  
   
 }

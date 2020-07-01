@@ -16,4 +16,9 @@
             and parent_code =#{parentCode}
         </if>
     </select>
+
+    <insert id="inserDictInfo" parameterType="org.pack.store.entity.DictEntity">
+        insert into t_dict(id,code,name,parent_name,parent_code,ts) values (#{id},#{code},#{name},#{parentName},#{parentCode},#{ts})
+    </insert>
+
 </mapper>
