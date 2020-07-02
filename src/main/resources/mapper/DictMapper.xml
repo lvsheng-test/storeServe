@@ -21,4 +21,12 @@
         insert into t_dict(id,code,name,parent_name,parent_code,ts) values (#{id},#{code},#{name},#{parentName},#{parentCode},#{ts})
     </insert>
 
+    <delete id="deleteDictInfo" parameterType="java.lang.String">
+        delete from t_dict where id=#{id}
+    </delete>
+
+    <select id="getCode" parameterType="java.lang.String" resultType="org.pack.store.entity.DictEntity">
+        SELECT * FROM t_dict WHERE code=#{code}
+    </select>
+
 </mapper>

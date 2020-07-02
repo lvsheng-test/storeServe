@@ -22,4 +22,17 @@ public interface DictMapper {
      * @param dictInfo
      */
     public void inserDictInfo(DictEntity dictInfo);
+
+    /**
+     * 根据主键ID删除字典信息
+     * @param id
+     */
+    public void deleteDictInfo(@Param("id") String id);
+
+    /**
+     * 根据CODE查询单挑字典信息
+     * @param code
+     * @return
+     */
+    public DictEntity getCode(@Param("code") String code);
 }

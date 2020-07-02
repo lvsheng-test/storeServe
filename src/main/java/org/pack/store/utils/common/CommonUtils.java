@@ -639,8 +639,27 @@ public class CommonUtils {
 		return random.nextInt(x);
 	}
 
+	public static String getMemberCard(String memberName){
+		String val = "";
+		Random random = new Random();
+		for (int i = 0; i < 16; i++) {
+			// 输出字母还是数字
+			val += String.valueOf(random.nextInt(10));
+		}
+		if (memberName.equals("消费卡")){
+			return "XF"+val;
+		}
+		if (memberName.equals("会员卡")){
+			return "HY"+val;
+		}
+		if (memberName.equals("押金卡")){
+			return "YJ"+val;
+		}
+		return null;
+	}
+
 	public static void main(String[] args) {
-		String time = getCurrentTimeFormat("yyyyMMddHHmmss");
+		String time = getMemberCard("消费卡");
 		System.out.println("time:" + time);
 	}
 

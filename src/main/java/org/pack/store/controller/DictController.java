@@ -3,6 +3,8 @@ package org.pack.store.controller;
 import io.swagger.annotations.ApiOperation;
 import org.pack.store.entity.DictEntity;
 import org.pack.store.enums.DictEnums;
+import org.pack.store.requestVo.DictByIdReq;
+import org.pack.store.requestVo.DictByParentCodeReq;
 import org.pack.store.requestVo.DictReq;
 import org.pack.store.service.DictService;
 import org.pack.store.utils.AppletResult;
@@ -31,6 +33,15 @@ public class DictController {
     }
 
     @CrossOrigin
+    @ApiOperation(value = "根据父级编码查询字典信息")
+    @PostMapping(value = "searchParentCode")
+    public AppletResult searchParentCode(@RequestBody DictByParentCodeReq dictByParentCodeReq){
+        return dictService.searchParentCode(dictByParentCodeReq);
+    }
+
+
+
+    @CrossOrigin
     @ApiOperation(value = "字典父级编码查询")
     @GetMapping(value = "getDictParentCode")
     public AppletResult getDictParentCode(){
@@ -54,6 +65,22 @@ public class DictController {
         dictService.inserDictInfo(dictInfo);
         return ResultUtil.success();
     }
+
+    @CrossOrigin
+    @ApiOperation(value = "删除字典信息")
+    @PostMapping(value = "deleteDictInfo")
+    public AppletResult deleteDictInfo(@RequestBody DictByIdReq dictByIdReq){
+        System.out.print("传参数:"+dictByIdReq.getId());
+        String [] ids = dictByIdReq.getId().split(",");
+        System.out.print("" +
+                ":"+ids[0]);
+        for(String id :ids){
+            dictService.deleteDictInfo(id);
+        }
+        return ResultUtil.success();
+    }
+
+
 
     /**
      * 根据枚举的字符串获取枚举的值

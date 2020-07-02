@@ -3,8 +3,8 @@ package org.pack.store.service.impl;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.pack.store.entity.DictEntity;
-import org.pack.store.enums.ResultEnums;
 import org.pack.store.mapper.DictMapper;
+import org.pack.store.requestVo.DictByParentCodeReq;
 import org.pack.store.requestVo.DictReq;
 import org.pack.store.resposeVo.DictRes;
 import org.pack.store.service.DictService;
@@ -34,7 +34,20 @@ public class DictServiceImpl implements DictService {
         dictRes.setDictList(dictList);
         return ResultUtil.success(dictRes);
     }
+
+    public AppletResult searchParentCode(DictByParentCodeReq dictByParentCodeReq){
+        DictRes dictRes =new DictRes();
+        List<DictEntity> dictList = DictMapper.queryDictAll(dictByParentCodeReq.getParentCode());
+        dictRes.setPageTotal(dictList.size());
+        dictRes.setDictList(dictList);
+        return ResultUtil.success(dictRes);
+    }
+
     public void inserDictInfo(DictEntity dictInfo){
         DictMapper.inserDictInfo(dictInfo);
+    }
+
+    public void deleteDictInfo(String id){
+        DictMapper.deleteDictInfo(id);
     }
 }
