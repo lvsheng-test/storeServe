@@ -54,6 +54,14 @@ public class ResultUtil {
         return result;
     }
 
+    public static AppletResult error(int code,String msg){
+        AppletResult result = new AppletResult();
+        result.setCode(code);
+        result.setMsg(msg);
+        result.setData(null);
+        return result;
+    }
+
     public static AppletResult successv1(ResultEnums resultEnums,Object object){
 
         AppletResult result = new AppletResult();

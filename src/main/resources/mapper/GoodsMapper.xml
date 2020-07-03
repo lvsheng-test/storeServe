@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.clouds.goods.mapper.GoodsManagerEXMapper">
+  <select id="queryGoodsList" resultType="com.alibaba.fastjson.JSONObject">
+  	SELECT
+		gb.id goodsId,
+		gb.shop_id shopId
+	FROM
+		goods_basics_wx gb
+	LEFT JOIN goods_relate_classify_wx gr ON gb.id = gr.goods_id
+	LEFT JOIN goods_classify_wx gc ON gc.id = gr.classify_id
+	LEFT JOIN goods_shop_relation gs on gs.goods_id = gb.id
+	where gb.delete_flag = 0
+	and gr.delete_flag = 0 and gc.delete_flag = 0
+	and sell_status = 0 and gs.gd_status = 1
+	and gr.classify_id = #{classifyId}
+	AND gs.shop_id = #{shopId}
+  </select>
+</mapper>
