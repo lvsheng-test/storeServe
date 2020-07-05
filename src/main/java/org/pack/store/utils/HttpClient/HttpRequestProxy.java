@@ -1,6 +1,5 @@
 package org.pack.store.utils.HttpClient;
 
-import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.*;
@@ -182,9 +181,9 @@ public class HttpRequestProxy {
 	 *            Json类型的数据
 	 * @return HTTP��Ӧ���ַ�
 	 */
-	public static String doPost(String reqUrl, JsonObject json, String recvEncoding) {
-		return doPost(reqUrl,json.toString(),recvEncoding);
-	}
+//Ӧ	public static String doPost(String reqUrl, JsonObject json, String recvEncoding) {
+//		return doPost(reqUrl,json.toString(),recvEncoding);
+//	}
 
 	public static String doPost(String reqUrl, String json,String recvEncoding) {
 		HttpURLConnection url_con = null;

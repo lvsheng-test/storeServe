@@ -6,6 +6,7 @@ import org.pack.store.utils.JSONUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.geo.Circle;
 import org.springframework.data.geo.Distance;
@@ -18,6 +19,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+
 import javax.annotation.Resource;
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +40,13 @@ public class RedisUtil {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RedisUtil.class);
 
+    @Autowired
+    @Qualifier("spring.redis.pool")
+    private JedisPool jedisPool;
 
+    public Jedis getResource() {
+        return jedisPool.getResource();
+    }
 
 
     @Autowired
@@ -497,5 +507,23 @@ public class RedisUtil {
             LOGGER.error("缓存获取失败 key {} x {} y {} distance {} limit {}", key, point.getX(), point.getY(), distance, limit);
         }
         return geoResults;
+    }
+
+    public Long incr(String key) {
+        long value = 1;
+        try (Jedis jedis = getResource();){
+            value = jedis.incr(key);
+        }
+        catch (Exception e) {
+        }
+        return value;
+    }
+
+    public void expire(String key, Integer seconds) {
+        try (Jedis jedis = getResource();){
+            jedis.expire(key, seconds);
+        }
+        catch (Exception e) {
+        }
     }
 }

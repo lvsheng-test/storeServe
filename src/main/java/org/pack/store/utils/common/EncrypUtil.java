@@ -2,7 +2,6 @@ package org.pack.store.utils.common;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -136,7 +135,7 @@ public class EncrypUtil {
 
     private static void initialize() {
         if (initialized) return;
-        Security.addProvider(new BouncyCastleProvider());
+//        Security.addProvider(new BouncyCastleProvider());
         initialized = true;
     }
     private static AlgorithmParameters generateIV(byte[] iv) throws Exception{
