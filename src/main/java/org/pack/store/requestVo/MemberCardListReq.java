@@ -6,7 +6,9 @@ public class MemberCardListReq {
 
     private char dr; //会员卡标识(0:已启用,1:未启用)
 
-    private Integer currentPage; //当前页数
+    private Integer page; //代表当前页码
+
+    private Integer limit;//代表每页数据量
 
     public String getMemberType() {
         return memberType;
@@ -24,11 +26,19 @@ public class MemberCardListReq {
         this.dr = dr;
     }
 
-    public Integer getCurrentPage() {
-        return currentPage;
+    public Integer getPage() {
+        return page;
     }
 
-    public void setCurrentPage(Integer currentPage) {
-        this.currentPage = currentPage;
+    public void setPage(Integer page) {
+        this.page = page;
+    }
+
+    public Integer getLimit() {
+        return limit;
+    }
+
+    public void setLimit(Integer limit) {
+        this.limit = limit;
     }
 }

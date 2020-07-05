@@ -24,4 +24,14 @@
         insert into t_member_card(id,member_type,member_name,card_no,create_time,dr) values (#{id},#{memberType},#{memberName},#{cardNo},#{createTime},#{dr})
     </insert>
 
+    <select id="queryMemberCardAllByCount" parameterType="org.pack.store.requestVo.MemberCardListReq" resultType="java.lang.Integer">
+        select count(*) from t_member_card where 1=1
+        <if test="memberType !=null and memberType !=''">
+            and member_type=#{memberType}
+        </if>
+        <if test="dr !=null and dr !=''">
+            and dr=#{dr}
+        </if>
+    </select>
+
 </mapper>

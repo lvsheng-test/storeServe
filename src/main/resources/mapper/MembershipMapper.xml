@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.MembershipMapper">
+    <resultMap id="BaseResultMap" type="org.pack.store.entity.MembershipEntity">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="member_type" jdbcType="VARCHAR" property="memberType" />
+        <result column="member_name" jdbcType="VARCHAR" property="memberName" />
+        <result column="card_no" jdbcType="VARCHAR" property="cardNo" />
+        <result column="amount" jdbcType="DECIMAL" property="amount" />
+        <result column="start_time" jdbcType="DATE" property="startTime" />
+        <result column="end_time" jdbcType="DATE" property="endTime" />
+        <result column="dr" jdbcType="VARCHAR" property="dr" />
+    </resultMap>
+
+    <select id="queryMembershipByPageList" parameterType="org.pack.store.requestVo.MembershipListReq" resultMap="BaseResultMap">
+        select * from t_membership where dr='0'
+        <if test="mobile !=null and mobile !=''">
+            and mobile=#{mobile}
+        </if>
+    </select>
+
+    <!--<insert id="insertMemberCard" parameterType="org.pack.store.entity.MemberCardEntity">
+        insert into t_member_card(id,member_type,member_name,card_no,create_time,dr) values (#{id},#{memberType},#{memberName},#{cardNo},#{createTime},#{dr})
+    </insert>-->
+
+    <select id="getMembershipByPageCount" parameterType="org.pack.store.requestVo.MembershipListReq" resultType="java.lang.Integer">
+        select count(*) from t_membership where dr='0'
+        <if test="mobile !=null and mobile !=''">
+            and mobile=#{mobile}
+        </if>
+    </select>
+
+</mapper>

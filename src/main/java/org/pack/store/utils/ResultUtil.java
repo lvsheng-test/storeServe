@@ -4,6 +4,8 @@ package org.pack.store.utils;
 import org.pack.store.enums.ResultEnums;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Component
 public class ResultUtil {
     public static AppletResult success(Object object){
@@ -12,6 +14,15 @@ public class ResultUtil {
         result.setCode(ResultEnums.RETURN_SUCCESS.getCode());
         result.setMsg(ResultEnums.RETURN_SUCCESS.getMsg());
         result.setData(object);
+        return result;
+    }
+
+    public static JSONResult success(List<?> data, int count){
+        JSONResult result = new JSONResult();
+        result.setCode(ResultEnums.RETURN_SUCCESS.getCode());
+        result.setMsg(ResultEnums.RETURN_SUCCESS.getMsg());
+        result.setCount(count);
+        result.setData(data);
         return result;
     }
 
