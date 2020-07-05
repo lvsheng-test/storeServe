@@ -10,6 +10,16 @@ public class MemberCardRes {
     //总页数
     private Integer pageTotal;
 
+    private Integer total; //总条数
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
+    }
+
     public List<MemberCardEntity> getMemberCardList() {
         return memberCardList;
     }

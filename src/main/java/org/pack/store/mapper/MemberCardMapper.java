@@ -22,4 +22,11 @@ public interface MemberCardMapper {
      * @return
      */
     public List<MemberCardEntity> queryMemberCardAll(MemberCardListReq memberCardListReq);
+
+    /**
+     * 条件查询会员卡管理信息总条数
+     * @param memberCardListReq
+     * @return
+     */
+    public int queryMemberCardAllByCount(MemberCardListReq memberCardListReq);
 }
