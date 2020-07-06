@@ -14,6 +14,7 @@ public class IDGenerateUtil {
     @Autowired
     private RedisUtil redisUtil;
 
+
     public String getId(String key){
         String date = DateUtil.dateYYYYMMDD(0) + "00000000";
         long oid = Long.parseLong(date);
