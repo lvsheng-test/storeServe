@@ -45,7 +45,7 @@ public class ResultUtil {
 
     public static AppletResult success(ResultEnums resultEnums){
         AppletResult result = new AppletResult();
-        result.setCode(ResultEnums.RETURN_SUCCESS.getCode());
+        result.setCode(resultEnums.getCode());
         result.setMsg(resultEnums.getMsg());
         result.setData(new ResultBuild());
         return result;

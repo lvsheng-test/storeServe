@@ -1,9 +1,12 @@
 package org.pack.store.service;
 
 import org.pack.store.entity.DictEntity;
+import org.pack.store.requestVo.ConfigAddReq;
+import org.pack.store.requestVo.ConfigReq;
 import org.pack.store.requestVo.DictByParentCodeReq;
 import org.pack.store.requestVo.DictReq;
 import org.pack.store.utils.AppletResult;
+import org.pack.store.utils.JSONResult;
 
 public interface DictService {
 
@@ -32,5 +35,18 @@ public interface DictService {
      * @param id
      */
     public void deleteDictInfo(String id);
+
+    /**
+     * 查询配置比例信息列表
+     * @param configReq
+     * @return
+     */
+    public JSONResult queryConfigAll(ConfigReq configReq);
+
+    /**
+     * 添加返佣比例
+     * @param configAddReq
+     */
+    void insertConfigProportion(ConfigAddReq configAddReq);
 
 }

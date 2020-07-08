@@ -1,6 +1,7 @@
 package org.pack.store.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.pack.store.entity.MemberCardEntity;
 import org.pack.store.requestVo.MemberCardListReq;
 import org.springframework.stereotype.Component;
@@ -29,4 +30,17 @@ public interface MemberCardMapper {
      * @return
      */
     public int queryMemberCardAllByCount(MemberCardListReq memberCardListReq);
+
+    /**
+     * 根据会员卡卡号查询未启用信息
+     * @param cardNo
+     * @return
+     */
+    public MemberCardEntity getCardNo(@Param("cardNo") String cardNo);
+
+    /**
+     * 修改会员卡信息
+     * @param memberCardEntity
+     */
+    public void updataMemberCardInfo(MemberCardEntity memberCardEntity);
 }

@@ -6,6 +6,10 @@ public enum ResultEnums {
 
     RETURN_SUCCESS(200,"SUCCESS"),
 
+    CARD_NO_ERROR(202,"该会员卡已被使用或不存在"),
+
+    MOILE_NO_YES(203,"该手机号已开通此类型会员卡"),
+
     NOT_FOUND_DATA(10001,"数据不存在"),
 
     CUSTOM_STORE_NULL_PARAM(10001,""),

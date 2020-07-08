@@ -3,12 +3,12 @@ package org.pack.store.controller;
 import io.swagger.annotations.ApiOperation;
 import org.pack.store.entity.DictEntity;
 import org.pack.store.enums.DictEnums;
-import org.pack.store.requestVo.DictByIdReq;
-import org.pack.store.requestVo.DictByParentCodeReq;
-import org.pack.store.requestVo.DictReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.service.DictService;
 import org.pack.store.utils.AppletResult;
+import org.pack.store.utils.JSONResult;
 import org.pack.store.utils.ResultUtil;
+import org.pack.store.utils.common.EnumUtils;
 import org.pack.store.utils.common.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -47,7 +47,7 @@ public class DictController {
     public AppletResult getDictParentCode(){
         List<Map<String, Object>> lsit= new ArrayList<Map<String, Object>>();
         try{
-            lsit =getAllEnum("org.pack.store.enums.DictEnums");
+            lsit = EnumUtils.getAllEnum("org.pack.store.enums.DictEnums");
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -80,33 +80,33 @@ public class DictController {
         return ResultUtil.success();
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "添加配置信息")
+    @PostMapping(value = "insertConfigProportion")
+    public AppletResult insertConfigProportion(@RequestBody ConfigAddReq configAddReq){
+        dictService.insertConfigProportion(configAddReq);
+        return ResultUtil.success();
+    }
 
 
-    /**
-     * 根据枚举的字符串获取枚举的值
-     *
-     * @param className 包名+类名
-     * @return
-     * @throws Exception
-     */
-    public static List<Map<String, Object>> getAllEnum(String className) throws Exception {
-        // 得到枚举类对象
-        Class<Enum> clazz = (Class<Enum>) Class.forName(className);
-        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
-        //获取所有枚举实例
-        Enum[] enumConstants = clazz.getEnumConstants();
-        //根据方法名获取方法
-        Method getCode = clazz.getMethod("getCode");
-        Method getMessage = clazz.getMethod("getMessage");
-        Map<String, Object> map = null;
-        for (Enum enum1 : enumConstants) {
-            map = new HashMap<String, Object>();
-            //执行枚举方法获得枚举实例对应的值
-            map.put("code", getCode.invoke(enum1));
-            map.put("message", getMessage.invoke(enum1));
-            list.add(map);
+    @CrossOrigin
+    @ApiOperation(value = "查询配置比例信息列表")
+    @PostMapping(value = "queryConfigAll")
+    public JSONResult queryConfigAll(@RequestBody ConfigReq configReq){
+        return dictService.queryConfigAll(configReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "查询配置类型")
+    @GetMapping(value = "getConfigTYpe")
+    public AppletResult getConfigTYpe(){
+        List<Map<String, Object>> lsit= new ArrayList<Map<String, Object>>();
+        try{
+            lsit = EnumUtils.getAllEnum("org.pack.store.enums.ConfigEnums");
+        }catch (Exception e){
+            e.printStackTrace();
         }
-        return list;
+        return ResultUtil.success(lsit);
     }
 
 }

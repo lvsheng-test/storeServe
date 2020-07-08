@@ -20,15 +20,20 @@
         </if>
     </select>
 
-    <!--<insert id="insertMemberCard" parameterType="org.pack.store.entity.MemberCardEntity">
-        insert into t_member_card(id,member_type,member_name,card_no,create_time,dr) values (#{id},#{memberType},#{memberName},#{cardNo},#{createTime},#{dr})
-    </insert>-->
+    <insert id="insertMembershipInfo" parameterType="org.pack.store.entity.MembershipEntity">
+        insert into t_membership(id,mobile,member_type,member_name,card_no,amount,start_time,end_time,dr)
+         values (#{id},#{mobile},#{memberType},#{memberName},#{cardNo},#{amount},#{startTime},#{endTime},#{dr})
+    </insert>
 
     <select id="getMembershipByPageCount" parameterType="org.pack.store.requestVo.MembershipListReq" resultType="java.lang.Integer">
         select count(*) from t_membership where dr='0'
         <if test="mobile !=null and mobile !=''">
             and mobile=#{mobile}
         </if>
+    </select>
+
+    <select id="getMoblieAndMemberType" parameterType="java.lang.String" resultType="org.pack.store.entity.MembershipEntity">
+        select * from t_membership where mobile=#{mobile} and member_type=#{memberType} and dr='0'
     </select>
 
 </mapper>

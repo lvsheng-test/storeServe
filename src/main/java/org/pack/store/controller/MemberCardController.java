@@ -2,12 +2,12 @@ package org.pack.store.controller;
 
 import io.swagger.annotations.ApiOperation;
 import org.pack.store.requestVo.AddCardReq;
+import org.pack.store.requestVo.CardNoAndMoblieReq;
 import org.pack.store.requestVo.MemberCardListReq;
 import org.pack.store.requestVo.MembershipListReq;
 import org.pack.store.service.MemberCardService;
 import org.pack.store.utils.AppletResult;
 import org.pack.store.utils.JSONResult;
-import org.pack.store.utils.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +37,13 @@ public class MemberCardController {
     @PostMapping(value = "queryMembershipByPageList")
     public JSONResult queryMembershipByPageList(@RequestBody MembershipListReq membershipListReq){
         return memberCardService.queryMembershipByPageList(membershipListReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "开通会员卡操作")
+    @PostMapping(value = "queryCardNoAndMoblie")
+    public AppletResult queryCardNoAndMoblie(@RequestBody CardNoAndMoblieReq cardNoAndMoblieReq){
+        return memberCardService.queryCardNoAndMoblie(cardNoAndMoblieReq);
     }
 
 }

@@ -1,6 +1,7 @@
 package org.pack.store.service;
 
 import org.pack.store.requestVo.AddCardReq;
+import org.pack.store.requestVo.CardNoAndMoblieReq;
 import org.pack.store.requestVo.MemberCardListReq;
 import org.pack.store.requestVo.MembershipListReq;
 import org.pack.store.utils.AppletResult;
@@ -27,5 +28,12 @@ public interface MemberCardService {
      * @return
      */
     public JSONResult queryMembershipByPageList(MembershipListReq membershipListReq);
+
+    /**
+     * 会员卡号与手机号查询
+     * @param cardNoAndMoblieReq
+     * @return
+     */
+    public AppletResult queryCardNoAndMoblie(CardNoAndMoblieReq cardNoAndMoblieReq);
 
 }

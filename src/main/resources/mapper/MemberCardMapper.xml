@@ -34,4 +34,12 @@
         </if>
     </select>
 
+    <select id="getCardNo" parameterType="java.lang.String" resultType="org.pack.store.entity.MemberCardEntity">
+        select * from t_member_card where card_no=#{cardNo} and dr='1'
+    </select>
+
+    <update id="updataMemberCardInfo" parameterType="org.pack.store.entity.MemberCardEntity">
+        update t_member_card set dr=#{dr} where id =#{id}
+    </update>
+
 </mapper>
