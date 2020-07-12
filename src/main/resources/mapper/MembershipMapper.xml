@@ -36,4 +36,8 @@
         select * from t_membership where mobile=#{mobile} and member_type=#{memberType} and dr='0'
     </select>
 
+    <update id="doRechages" parameterType="org.pack.store.entity.MembershipEntity">
+        update t_membership set amount =#{amount} where id=#{id}
+    </update>
+
 </mapper>

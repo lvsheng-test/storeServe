@@ -5,10 +5,7 @@ import com.github.pagehelper.PageHelper;
 import org.pack.store.entity.*;
 import org.pack.store.enums.ResultEnums;
 import org.pack.store.mapper.*;
-import org.pack.store.requestVo.AddCardReq;
-import org.pack.store.requestVo.CardNoAndMoblieReq;
-import org.pack.store.requestVo.MemberCardListReq;
-import org.pack.store.requestVo.MembershipListReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.resposeVo.MemberCardRes;
 import org.pack.store.service.MemberCardService;
 import org.pack.store.utils.AppletResult;
@@ -154,5 +151,41 @@ public class MemberCardServiceImpl implements MemberCardService {
         }else {
             return ResultUtil.success(ResultEnums.CARD_NO_ERROR);
         }
+    }
+
+    public AppletResult doRecharge(RechargeMemberReq rechargeMemberReq){
+        //Integer amount =Integer.parseInt(rechargeMemberReq.getAmount());//账户余额
+        Integer rechargeAmount=Integer.parseInt(rechargeMemberReq.getRechargeAmount());//充值金额
+        //BigDecimal balance=new BigDecimal(amount);//账户余额
+        BigDecimal rechargeBalance=new BigDecimal(rechargeAmount);//充值金额
+        BigDecimal money=null; //充值返现金额
+        ConfigProportionEntity configProportion = configProportionMapper.getConfigType("101");//会员卡充值返现佣金比例
+        money = BigDecimalUtil.multiply(rechargeBalance,configProportion.getProportion());//充值金额乘以佣金比例
+
+        MembershipEntity membershipInfo =new MembershipEntity();
+        membershipInfo.setId(rechargeMemberReq.getId());
+        membershipInfo.setAmount(rechargeMemberReq.getAmount().add(rechargeBalance).add(money));//余额+充值金额+返现金额
+        membershipMapper.doRechages(membershipInfo);//充值成功
+
+        TransactionDetailEntity transactionDetail =new TransactionDetailEntity();
+        transactionDetail.setId(UuidUtil.getUuid());
+        transactionDetail.setMobile(rechargeMemberReq.getMobile());
+        transactionDetail.setAmount(rechargeBalance);
+        transactionDetail.setStatus("101");
+        transactionDetail.setInOut('0');
+        transactionDetail.setRemark("会员卡充值");
+        transactionDetail.setTs(new Date());
+        transactionDetailMapper.insertTransactionDetailInfo(transactionDetail);
+
+        TransactionDetailEntity detail =new TransactionDetailEntity();
+        detail.setId(UuidUtil.getUuid());
+        detail.setMobile(rechargeMemberReq.getMobile());
+        detail.setAmount(money);
+        detail.setStatus("103");
+        detail.setInOut('1');
+        detail.setRemark("充值返现");
+        detail.setTs(new Date());
+        transactionDetailMapper.insertTransactionDetailInfo(detail);
+        return ResultUtil.success();
     }
 }

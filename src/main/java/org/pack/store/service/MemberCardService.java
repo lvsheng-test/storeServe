@@ -1,9 +1,6 @@
 package org.pack.store.service;
 
-import org.pack.store.requestVo.AddCardReq;
-import org.pack.store.requestVo.CardNoAndMoblieReq;
-import org.pack.store.requestVo.MemberCardListReq;
-import org.pack.store.requestVo.MembershipListReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.utils.AppletResult;
 import org.pack.store.utils.JSONResult;
 
@@ -35,5 +32,12 @@ public interface MemberCardService {
      * @return
      */
     public AppletResult queryCardNoAndMoblie(CardNoAndMoblieReq cardNoAndMoblieReq);
+
+    /**
+     * 会员卡充值
+     * @param rechargeMemberReq
+     * @return
+     */
+    AppletResult doRecharge(RechargeMemberReq rechargeMemberReq);
 
 }

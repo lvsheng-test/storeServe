@@ -40,4 +40,11 @@ public interface MembershipMapper {
      * @return
      */
     public int insertMembershipInfo(MembershipEntity membershipEntity);
+
+    /**
+     * 会员卡充值
+     * @param membershipEntity
+     * @return
+     */
+    int doRechages(MembershipEntity membershipEntity);
 }

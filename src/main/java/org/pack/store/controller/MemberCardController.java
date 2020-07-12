@@ -1,10 +1,7 @@
 package org.pack.store.controller;
 
 import io.swagger.annotations.ApiOperation;
-import org.pack.store.requestVo.AddCardReq;
-import org.pack.store.requestVo.CardNoAndMoblieReq;
-import org.pack.store.requestVo.MemberCardListReq;
-import org.pack.store.requestVo.MembershipListReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.service.MemberCardService;
 import org.pack.store.utils.AppletResult;
 import org.pack.store.utils.JSONResult;
@@ -46,4 +43,10 @@ public class MemberCardController {
         return memberCardService.queryCardNoAndMoblie(cardNoAndMoblieReq);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "会员卡充值操作")
+    @PostMapping(value = "doRecharge")
+    public AppletResult doRecharge(@RequestBody RechargeMemberReq rechargeMemberReq){
+        return memberCardService.doRecharge(rechargeMemberReq);
+    }
 }
