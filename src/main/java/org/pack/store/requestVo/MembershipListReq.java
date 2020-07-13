@@ -7,6 +7,16 @@ public class MembershipListReq {
 
     private String mobile; //手机号
 
+    private String memberType;//会员卡类型
+
+    public String getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(String memberType) {
+        this.memberType = memberType;
+    }
+
     public Integer getPage() {
         return page;
     }

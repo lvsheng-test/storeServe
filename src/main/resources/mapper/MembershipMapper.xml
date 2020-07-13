@@ -18,6 +18,9 @@
         <if test="mobile !=null and mobile !=''">
             and mobile=#{mobile}
         </if>
+        <if test="memberType !=null and memberType !=''">
+            and member_type =#{memberType}
+        </if>
     </select>
 
     <insert id="insertMembershipInfo" parameterType="org.pack.store.entity.MembershipEntity">
