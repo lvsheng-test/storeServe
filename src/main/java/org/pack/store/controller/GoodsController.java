@@ -66,6 +66,17 @@ public class GoodsController {
         return result;
     }
 
+    @ApiOperation(value = "商品图片查询")
+    @PostMapping(value = "queryGoodsPic",produces = "application/json;charset=UTF-8")
+    @ApiImplicitParam(name = "参数",example = "{\"goodsId\":\"123\"}")
+    public AppletResult queryGoodsPic(@RequestBody JSONObject jsonObject) {
+        if(!VerifyUtils.isNotBlanks(jsonObject,"id")){
+            return ResultUtil.error(ResultEnums.PARAM_IS_NULL.getCode(),ResultEnums.PARAM_IS_NULL.getMsg());
+        }
+        AppletResult result = goodsService.queryGoodsPic(jsonObject.getString("id"));
+        return result;
+    }
+
     @ApiOperation(value = "商品删除")
     @PostMapping(value = "delGoods",produces = "application/json;charset=UTF-8")
     @ApiImplicitParam(name = "参数",example = "{\"id\":\"\"}")

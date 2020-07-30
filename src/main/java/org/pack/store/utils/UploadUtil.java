@@ -80,7 +80,7 @@ public class UploadUtil {
 	public String UploadFile(MultipartFile meFile){
 		StringBuffer path = new StringBuffer();
 		//String photoPath = "/root/image";
-		String photoPath = "D:/u02";
+		String photoPath = "D:/AAA/photo";
 		String time = new SimpleDateFormat("yyyyMMdd").format(new Date());
 		String result = "";
 		if (meFile != null) {

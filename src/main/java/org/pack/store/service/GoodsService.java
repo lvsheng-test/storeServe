@@ -5,6 +5,8 @@ import org.pack.store.utils.AppletResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 public interface GoodsService {
 
     /**
@@ -26,4 +28,9 @@ public interface GoodsService {
      * 删除菜品
      */
     AppletResult delGoods(@RequestBody JSONObject jsonObject);
+
+    /**
+     * @查询商品图片
+     */
+    AppletResult queryGoodsPic(String goodsId);
 }
