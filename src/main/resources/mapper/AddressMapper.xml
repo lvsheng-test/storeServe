@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.AddressMapper">
+    <resultMap id="BaseResultMap" type="org.pack.store.entity.AddressEntity">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="user_id" jdbcType="VARCHAR" property="userId" />
+        <result column="contact" jdbcType="VARCHAR" property="contact" />
+        <result column="sex" jdbcType="CHAR" property="sex" />
+        <result column="phone" jdbcType="VARCHAR" property="phone" />
+        <result column="provin" jdbcType="VARCHAR" property="provin" />
+        <result column="city" jdbcType="VARCHAR" property="city" />
+        <result column="area" jdbcType="VARCHAR" property="area" />
+        <result column="address" jdbcType="VARCHAR" property="address" />
+        <result column="default_address" jdbcType="CHAR" property="defaultAddress" />
+        <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+    </resultMap>
+
+    <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from t_address wher id =#{id}
+    </select>
+
+    <select id="queryMyAddress" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from t_address where user_id =#{userId}
+    </select>
+
+    <update id="updateMyAddress" parameterType="org.pack.store.requestVo.AddressReq">
+        update t_address
+        <set>
+            <if test="contact !=null and contact !=''">
+                contact =#{contact},
+            </if>
+            <if test="sex !=null and sex !=''">
+                sex =#{sex},
+            </if>
+            <if test="phone !=null and phone !=''">
+                phone = #{phone},
+            </if>
+            <if test="provin !=null and provin !=''">
+                provin = #{provin},
+            </if>
+            <if test="city !=null and city !=''">
+                city = #{city},
+            </if>
+            <if test="area !=null and area !=''">
+                area = #{area},
+            </if>
+            <if test="address !=null and address !=''">
+                address = #{address},
+            </if>
+            <if test="defaultAddress !=null and defaultAddress !=''">
+                default_address = #{defaultAddress},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
+
+    <insert id="insertMyAddress" parameterType="org.pack.store.entity.AddressEntity">
+        insert into t_address(id,user_id,contact,sex,phone,provin,city,area,address,default_address,ts) values
+        (#{id},#{userId},#{contact},#{sex},#{phone},#{provin},#{city},#{area},#{address},#{defaultAddress},#{ts})
+    </insert>
+
+</mapper>

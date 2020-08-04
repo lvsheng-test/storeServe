@@ -10,6 +10,8 @@ public enum ResultEnums {
 
     MOILE_NO_YES(203,"该手机号已开通此类型会员卡"),
 
+    USERID_IS_NULL(204,"此用户ID不能为空"),
+
     NOT_FOUND_DATA(10001,"数据不存在"),
 
     CUSTOM_STORE_NULL_PARAM(10001,""),

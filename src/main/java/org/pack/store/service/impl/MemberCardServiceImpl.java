@@ -61,7 +61,6 @@ public class MemberCardServiceImpl implements MemberCardService {
     }
 
     public JSONResult queryMemberCardAll(MemberCardListReq memberCardListReq){
-        MemberCardRes memberCardRes =new MemberCardRes();
         PageHelper.startPage(memberCardListReq.getPage(),memberCardListReq.getLimit(),true);
         List<MemberCardEntity> memberCardList = memberCardMapper.queryMemberCardAll(memberCardListReq);
         int count = memberCardMapper.queryMemberCardAllByCount(memberCardListReq);
