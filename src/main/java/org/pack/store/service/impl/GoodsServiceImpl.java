@@ -8,6 +8,7 @@ import org.pack.store.autoconf.DataConfig;
 import org.pack.store.mapper.GoodsMapper;
 import org.pack.store.service.GoodsService;
 import org.pack.store.utils.*;
+import org.pack.store.utils.common.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -60,15 +61,21 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     @Transactional
     public AppletResult addGoods(JSONObject jsonObject) {
-        String goodsId = idGenerateUtil.getId();
-        jsonObject.put("id", goodsId);
+        //String goodsId = idGenerateUtil.getId();
+        //jsonObject.put("id", goodsId);
+        jsonObject.put("id", UuidUtil.getUuid());
         jsonObject.put("storeId", "1");
-        jsonObject.put("goodsStatus",0);
-        jsonObject.put("discountType",0);
+        jsonObject.put("goodsStatus",1);//商品状态(0下架;1上架;3售罄)
+        jsonObject.put("discountType",0);//优惠类型(0:会员价，1:拼单价)
         JSONArray pictureList = jsonObject.getJSONArray("pictureList");
+        String  goodsUrl ="";
+        for (Object url:pictureList) {
+            goodsUrl+=url+",";
+        }
+        jsonObject.put("goodsUrl",goodsUrl);
         int i = goodsMapper.addGoods(jsonObject);
         if(i > 0){
-            List<JSONObject> list = new ArrayList<>();
+            /*List<JSONObject> list = new ArrayList<>();
             JSONObject json = null;
             for (Object url:pictureList) {
                 json = new JSONObject();
@@ -78,7 +85,7 @@ public class GoodsServiceImpl implements GoodsService {
                 json.put("goodsUrl",url);
                 list.add(json);
             }
-            goodsMapper.addPicture(list);
+            goodsMapper.addPicture(list);*/
             return ResultUtil.success("添加成功");
         }
         return ResultUtil.error(0,"添加失败");

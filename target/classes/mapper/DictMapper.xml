@@ -10,6 +10,19 @@
         <result column="ts" jdbcType="TIMESTAMP" property="ts" />
     </resultMap>
 
+    <resultMap id="CityResultMap" type="org.pack.store.resposeVo.CityInfoRes">
+        <result column="code" jdbcType="VARCHAR" property="code" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+    </resultMap>
+
+    <select id="queryCommonParentCode" parameterType="java.lang.String" resultMap="CityResultMap">
+        select * from t_dict where 1=1
+        <if test="parentCode !=null and parentCode !=''">
+            and parent_code =#{parentCode}
+        </if>
+    </select>
+
+
     <select id="queryDictAll" parameterType="java.lang.String" resultMap="BaseResultMap">
         select * from t_dict where 1=1
         <if test="parentCode !=null and parentCode !=''">

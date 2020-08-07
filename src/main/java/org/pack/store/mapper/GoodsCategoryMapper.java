@@ -10,6 +10,8 @@ public interface GoodsCategoryMapper {
      * 查询店内的菜品分类
      */
     List<JSONObject> queryCategoryList(JSONObject jsonObject);
+
+    List<JSONObject> queryGoodsTypeList();
     
     int addCategory(JSONObject jsonObject);
     

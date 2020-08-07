@@ -3,6 +3,7 @@ package org.pack.store.mapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.pack.store.entity.DictEntity;
+import org.pack.store.resposeVo.CityInfoRes;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -16,6 +17,8 @@ public interface DictMapper {
      * @return
      */
     public List<DictEntity> queryDictAll(@Param("parentCode") String parentCode);
+
+    List<CityInfoRes> queryCommonParentCode(@Param("parentCode") String parentCode);
 
     /**
      * 添加字典表信息

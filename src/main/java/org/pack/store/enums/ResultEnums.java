@@ -12,6 +12,9 @@ public enum ResultEnums {
 
     USERID_IS_NULL(204,"此用户ID不能为空"),
 
+    ID_IS_NULL(205,"主键ID参数不能为空"),
+    UPLOAD_IS_ERROR(206,"上传文件格式错误"),
+
     NOT_FOUND_DATA(10001,"数据不存在"),
 
     CUSTOM_STORE_NULL_PARAM(10001,""),

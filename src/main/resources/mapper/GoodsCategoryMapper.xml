@@ -15,11 +15,20 @@
 		<if test="categoryName != null and categoryName != ''">
 			and category_name = #{categoryName}
 		</if>
+		order by create_time desc
 	</where>
   </select>
+	<select id="queryGoodsTypeList" resultType="com.alibaba.fastjson.JSONObject">
+		SELECT
+			id,
+			category_name categoryName,
+			category_url categoryUrl
+		FROM t_goods_category order by create_time desc
+	</select>
+
   <insert id="addCategory">
-  	insert into t_goods_category(id,store_id,category_name,category_url,create_by,update_by,create_time,update_time)
-  	values(#{id},#{storeId},#{categoryName},#{categoryUrl},#{createBy},#{createBy},now(),now())
+  	insert into t_goods_category(id,store_id,category_name,category_url,show_top,create_by,update_by,create_time,update_time)
+  	values(#{id},#{storeId},#{categoryName},#{categoryUrl},#{showTop},#{createBy},#{createBy},now(),now())
   </insert>
   <update id="editCategory">
   	update t_goods_category

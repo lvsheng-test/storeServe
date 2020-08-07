@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.pack.store.requestVo.AddressReq;
+import org.pack.store.requestVo.ParentCodeReq;
 import org.pack.store.service.UserService;
 import org.pack.store.utils.AppletResult;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,4 +42,10 @@ public class UserApiController {
         return userService.insertMyAddress(addressReq);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "查询字典信息API")
+    @PostMapping(value = "queryCommonDict")
+    public AppletResult queryCommonDict(@RequestBody @ApiParam(name="字典编码对象",value="传入json格式",required = true) ParentCodeReq parentCodeReq){
+        return userService.queryCommonDict(parentCodeReq);
+    }
 }

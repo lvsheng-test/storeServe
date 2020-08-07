@@ -12,6 +12,12 @@ public interface GoodsCategoryService {
      * 查询店内的菜品分类
      */
     AppletResult queryCategoryList(JSONObject jsonObject);
+
+    /**
+     * 查询所有商品类型列表
+     * @return
+     */
+    AppletResult queryGoodsTypeList();
     
     /**
      * 添加菜品分类

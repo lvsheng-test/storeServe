@@ -93,7 +93,15 @@ public class StringUtil {
 	public static boolean isNullStr(String str){
 		return str == null || str.trim().length() == 0 || "null".equals(str);
 	}
-	
+
+	public static boolean isNullStr(char str){
+		if (str+"" ==null || str+"".trim().length()==0 || "null".equals(str+"")){
+			return true;
+		}else {
+			return false;
+		}
+	}
+
 	public static boolean isNotNullStr(String str){
 		return str != null && str.trim().length() > 0;
 	}

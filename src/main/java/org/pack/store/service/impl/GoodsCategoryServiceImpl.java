@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 import org.pack.store.mapper.GoodsCategoryMapper;
 import org.pack.store.service.GoodsCategoryService;
 import org.pack.store.utils.*;
+import org.pack.store.utils.common.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -43,14 +44,17 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
         }
         return ResultUtil.success(pageInfo);
     }
+
+	@Override
+    public AppletResult queryGoodsTypeList(){
+		List<JSONObject> cateList = goodsCategoryMapper.queryGoodsTypeList();
+		return ResultUtil.success(cateList);
+	}
+
 	@Override
 	public AppletResult addCategory(JSONObject jsonObject) {
-		String categoryUrl = jsonObject.getString("categoryUrl");
-		if(StringUtil.isNotNullStr(categoryUrl)){
-			String savePic = uploadUtil.savePic(categoryUrl);
-			jsonObject.put("categoryUrl", savePic);
-		}
-		jsonObject.put("id", idGenerateUtil.getId());
+		//jsonObject.put("id", idGenerateUtil.getId());
+		jsonObject.put("id", UuidUtil.getUuid());
 		jsonObject.put("storeId", "1");
 		int addCategory = goodsCategoryMapper.addCategory(jsonObject);
 		if(addCategory > 0){
@@ -60,11 +64,11 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 	}
 	@Override
 	public AppletResult editCategory(JSONObject jsonObject) {
-		String categoryUrl = jsonObject.getString("categoryUrl");
+		/*String categoryUrl = jsonObject.getString("categoryUrl");
 		if(StringUtil.isNotNullStr(categoryUrl)){
 			String savePic = uploadUtil.savePic(categoryUrl);
 			jsonObject.put("categoryUrl", savePic);
-		}
+		}*/
 		int addCategory = goodsCategoryMapper.editCategory(jsonObject);
 		if(addCategory > 0){
 			return ResultUtil.success("修改成功");

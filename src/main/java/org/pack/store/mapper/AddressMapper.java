@@ -32,4 +32,18 @@ public interface AddressMapper {
      * @param addressEntity
      */
     void insertMyAddress(AddressEntity addressEntity);
+
+    /**
+     * 查询用户默认收货地址
+     * @param userId
+     * @return
+     */
+    AddressEntity queryAdressByUserIdAndDefalust(@Param("userId") String userId);
+
+    /**
+     * 编辑收货地址
+     * @param addressEntity
+     */
+    void updateAddress(AddressEntity addressEntity);
+
 }

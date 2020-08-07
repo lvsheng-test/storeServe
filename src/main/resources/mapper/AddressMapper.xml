@@ -7,16 +7,15 @@
         <result column="contact" jdbcType="VARCHAR" property="contact" />
         <result column="sex" jdbcType="CHAR" property="sex" />
         <result column="phone" jdbcType="VARCHAR" property="phone" />
-        <result column="provin" jdbcType="VARCHAR" property="provin" />
-        <result column="city" jdbcType="VARCHAR" property="city" />
-        <result column="area" jdbcType="VARCHAR" property="area" />
+        <result column="city_code" jdbcType="VARCHAR" property="cityCode" />
+        <result column="city_name" jdbcType="VARCHAR" property="cityName" />
         <result column="address" jdbcType="VARCHAR" property="address" />
         <result column="default_address" jdbcType="CHAR" property="defaultAddress" />
         <result column="ts" jdbcType="TIMESTAMP" property="ts" />
     </resultMap>
 
     <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
-        select * from t_address wher id =#{id}
+        select * from t_address where id =#{id}
     </select>
 
     <select id="queryMyAddress" parameterType="java.lang.String" resultMap="BaseResultMap">
@@ -35,14 +34,11 @@
             <if test="phone !=null and phone !=''">
                 phone = #{phone},
             </if>
-            <if test="provin !=null and provin !=''">
-                provin = #{provin},
+            <if test="cityCode !=null and cityCode !=''">
+                city_code = #{cityCode},
             </if>
-            <if test="city !=null and city !=''">
-                city = #{city},
-            </if>
-            <if test="area !=null and area !=''">
-                area = #{area},
+            <if test="cityName !=null and cityName !=''">
+                city_name = #{cityName},
             </if>
             <if test="address !=null and address !=''">
                 address = #{address},
@@ -55,8 +51,40 @@
     </update>
 
     <insert id="insertMyAddress" parameterType="org.pack.store.entity.AddressEntity">
-        insert into t_address(id,user_id,contact,sex,phone,provin,city,area,address,default_address,ts) values
-        (#{id},#{userId},#{contact},#{sex},#{phone},#{provin},#{city},#{area},#{address},#{defaultAddress},#{ts})
+        insert into t_address(id,user_id,contact,sex,phone,city_code,city_name,address,default_address,ts) values
+        (#{id},#{userId},#{contact},#{sex},#{phone},#{cityCode},#{cityName},#{address},#{defaultAddress},#{ts})
     </insert>
+
+    <select id="queryAdressByUserIdAndDefalust" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from t_address where user_id=#{userId} and default_address='Y'
+    </select>
+
+    <update id="updateAddress" parameterType="org.pack.store.entity.AddressEntity">
+        update t_address
+        <set>
+            <if test="contact !=null and contact !=''">
+                contact =#{contact},
+            </if>
+            <if test="sex !=null and sex !=''">
+                sex =#{sex},
+            </if>
+            <if test="phone !=null and phone !=''">
+                phone = #{phone},
+            </if>
+            <if test="cityCode !=null and cityCode !=''">
+                city_code = #{cityCode},
+            </if>
+            <if test="cityName !=null and cityName !=''">
+                city_name = #{cityName},
+            </if>
+            <if test="address !=null and address !=''">
+                address = #{address},
+            </if>
+            <if test="defaultAddress !=null and defaultAddress !=''">
+                default_address = #{defaultAddress},
+            </if>
+        </set>
+        where id=#{id}
+    </update>
 
 </mapper>

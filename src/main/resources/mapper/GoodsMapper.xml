@@ -2,15 +2,17 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.pack.store.mapper.GoodsMapper">
 	<select id="queryGoodsList" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String" >
-		select
-		id, store_id storeId, goods_url goodsUrl, goods_name goodsName, goods_status goodsStatus, goods_price goodsPrice, goods_discount goodsDiscount, discount_type discountType,
-    goods_intro goodsIntro, goods_num goodsNum, create_by createBy, create_time createTime, update_by updateBy, update_time updateTime
+		select id, (SELECT category_name FROM `t_goods_category` WHERE id=category_id) categoryName,category_id categoryId,
+		 goods_url goodsUrl, goods_name goodsName, goods_status goodsStatus, goods_price goodsPrice, goods_discount goodsDiscount, discount_type discountType,
+    	goods_intro goodsIntro, goods_num goodsNum, net_content netContent,save_conditions saveConditions,shelf_life shelfLife,ramark_url ramarkUrl,
+    	create_by createBy, create_time createTime, update_by updateBy, update_time updateTime
 		from t_goods
 		<where>
 			store_id = #{storeId}
 			<if test="categoryId != null">
 				category_id = #{categoryId}
 			</if>
+			order by create_time desc
 		</where>
 	</select>
 	<delete id="delGoods" parameterType="java.lang.String" >
@@ -18,15 +20,16 @@
     where id = #{id,jdbcType=CHAR}
   </delete>
 	<insert id="addGoods" parameterType="com.alibaba.fastjson.JSONObject" >
-    insert into t_goods (id, store_id, goods_url,
+    insert into t_goods (id,category_id,store_id, goods_url,
       goods_name, goods_status, goods_price,
       goods_discount, discount_type, goods_intro,
-      goods_num, create_by, create_time,
+      goods_num,net_content,save_conditions,shelf_life,ramark_url, create_by, create_time,
       update_by, update_time)
-    values (#{id,jdbcType=CHAR}, #{storeId,jdbcType=CHAR}, #{goodsUrl,jdbcType=VARCHAR},
+    values (#{id,jdbcType=CHAR},#{categoryId,jdbcType=CHAR},#{storeId,jdbcType=CHAR}, #{goodsUrl,jdbcType=VARCHAR},
       #{goodsName,jdbcType=VARCHAR}, #{goodsStatus,jdbcType=TINYINT}, #{goodsPrice,jdbcType=DECIMAL},
       #{goodsDiscount,jdbcType=DECIMAL}, #{discountType,jdbcType=TINYINT}, #{goodsIntro,jdbcType=VARCHAR},
-      #{goodsNum,jdbcType=SMALLINT}, #{createBy,jdbcType=CHAR}, now(),
+      #{goodsNum,jdbcType=SMALLINT},#{netContent,jdbcType=SMALLINT},#{saveConditions,jdbcType=VARCHAR},
+       #{shelfLife,jdbcType=SMALLINT},#{ramarkUrl,jdbcType=VARCHAR},#{createBy,jdbcType=CHAR}, now(),
       #{updateBy,jdbcType=CHAR}, now())
   </insert>
 	<update id="editGoods" parameterType="com.alibaba.fastjson.JSONObject" >

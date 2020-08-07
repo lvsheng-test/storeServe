@@ -36,6 +36,13 @@ public class GoodsCategoryController {
         return result;
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "商品类型列表查询")
+    @PostMapping(value = "goodsTypeList",produces = "application/json;charset=UTF-8")
+    public AppletResult goodsTypeList(){
+        return goodsCategoryService.queryGoodsTypeList();
+    }
+
     @ApiOperation(value = "菜品分类添加")
     @PostMapping(value = "addCategory",produces = "application/json;charset=UTF-8")
     @ApiImplicitParam(name = "参数",example = "{\"categoryName\":\"\"}")

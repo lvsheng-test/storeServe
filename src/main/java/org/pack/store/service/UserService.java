@@ -1,6 +1,7 @@
 package org.pack.store.service;
 
 import org.pack.store.requestVo.AddressReq;
+import org.pack.store.requestVo.ParentCodeReq;
 import org.pack.store.utils.AppletResult;
 
 public interface UserService {
@@ -23,5 +24,11 @@ public interface UserService {
      * @param addressReq
      */
     AppletResult insertMyAddress(AddressReq addressReq);
+
+    /**
+     * 查询开通的城市信息
+     * @return
+     */
+    AppletResult queryCommonDict(ParentCodeReq parentCodeReq);
 
 }

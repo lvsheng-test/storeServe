@@ -14,15 +14,13 @@ public class AddressEntity {
 
     private String phone;  //联系人手机号
 
-    private String provin; //省份
+    private String cityCode;//城市编码
 
-    private String city;  //市
-
-    private String area; //区
+    private String cityName;  //城市名称
 
     private String address; //详细地址
 
-    private char defaultAddress;//设置默认地址(1:默认)
+    private char defaultAddress;//设置默认地址(Y:默认,N:不默认)
 
     private Date ts;          //更新时间
 
@@ -70,30 +68,6 @@ public class AddressEntity {
         this.phone = phone;
     }
 
-    public String getProvin() {
-        return provin;
-    }
-
-    public void setProvin(String provin) {
-        this.provin = provin;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -108,5 +82,25 @@ public class AddressEntity {
 
     public void setTs(Date ts) {
         this.ts = ts;
+    }
+
+    public String getCityCode() {
+        return cityCode;
+    }
+
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
+    }
+
+    public char getDefaultAddress() {
+        return defaultAddress;
     }
 }

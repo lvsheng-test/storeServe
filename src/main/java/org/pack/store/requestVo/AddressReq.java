@@ -21,14 +21,11 @@ public class AddressReq {
     @ApiModelProperty(value="联系人手机号",name="phone")
     private String phone;  //联系人手机号
 
-    @ApiModelProperty(value="省份",name="provin")
-    private String provin; //省份
+    @ApiModelProperty(value="城市编码",name="cityCode")
+    private String cityCode; //省份
 
-    @ApiModelProperty(value="市",name="city")
-    private String city;  //市
-
-    @ApiModelProperty(value="区",name="area")
-    private String area; //区
+    @ApiModelProperty(value="城市名称",name="cityName")
+    private String cityName;  //市
 
     @ApiModelProperty(value="详细地址",name="address")
     private String address; //详细地址
@@ -68,28 +65,20 @@ public class AddressReq {
         this.phone = phone;
     }
 
-    public String getProvin() {
-        return provin;
+    public String getCityCode() {
+        return cityCode;
     }
 
-    public void setProvin(String provin) {
-        this.provin = provin;
+    public void setCityCode(String cityCode) {
+        this.cityCode = cityCode;
     }
 
-    public String getCity() {
-        return city;
+    public String getCityName() {
+        return cityName;
     }
 
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 
     public String getAddress() {
