@@ -1,6 +1,7 @@
 package org.pack.store.service;
 
 import com.alibaba.fastjson.JSONObject;
+import org.pack.store.requestVo.PageInfoReq;
 import org.pack.store.utils.AppletResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,4 +34,13 @@ public interface GoodsService {
      * @查询商品图片
      */
     AppletResult queryGoodsPic(String goodsId);
+
+    /**************************小程序接口开发******************************/
+    /**
+     * 获取首页商品猜你喜欢信息列表
+     * @return
+     */
+    AppletResult queryGoodsLike(PageInfoReq PageInfoReq);
+
+
 }

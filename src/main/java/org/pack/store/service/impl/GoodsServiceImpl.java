@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.pack.store.autoconf.DataConfig;
 import org.pack.store.mapper.GoodsMapper;
+import org.pack.store.requestVo.PageInfoReq;
 import org.pack.store.service.GoodsService;
 import org.pack.store.utils.*;
 import org.pack.store.utils.common.UuidUtil;
@@ -127,5 +128,27 @@ public class GoodsServiceImpl implements GoodsService {
         String goodsUrl = dataConfig.getGoodsUrl();
         List<JSONObject> jsonObjects = goodsMapper.queryGoodsPic(goodsId,goodsUrl);
         return ResultUtil.success(jsonObjects);
+    }
+
+    @Override
+    public AppletResult queryGoodsLike(PageInfoReq PageInfoReq){
+        PageInfo<JSONObject> pageInfo = null;
+        List<JSONObject> list =new ArrayList<>();
+        try{
+            PageHelper.startPage(PageInfoReq.getPage(),PageInfoReq.getLimit(),true);
+            List<JSONObject> jsonObjects =goodsMapper.queryGoodsLike();
+            if (jsonObjects.size()>0){
+                for (JSONObject object:jsonObjects) {
+                    String goodsUrl = object.get("goodsUrl").toString();
+                    String arr [] = goodsUrl.split(",");
+                    object.put("goodsUrl",arr[0]);
+                    list.add(object);
+                }
+            }
+            pageInfo = new PageInfo<>(list);
+        }catch (Exception e){
+            logger.error("==>查询猜你喜欢异常",e);
+        }
+        return ResultUtil.success(pageInfo);
     }
 }

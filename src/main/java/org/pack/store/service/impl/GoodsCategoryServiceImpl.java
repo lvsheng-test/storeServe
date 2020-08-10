@@ -82,4 +82,10 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 		if(i > 0){return ResultUtil.success("删除成功");}
 		return ResultUtil.error(0,"删除失败");
 	}
+
+	@Override
+	public AppletResult queryGoodsTypeListByShow(){
+		List<JSONObject> cateList =goodsCategoryMapper.queryGoodsTypeListByShow();
+		return ResultUtil.success(cateList);
+	}
 }

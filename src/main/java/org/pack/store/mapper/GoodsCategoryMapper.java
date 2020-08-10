@@ -18,4 +18,12 @@ public interface GoodsCategoryMapper {
     int editCategory(JSONObject jsonObject);
 
     int delCategory(JSONObject jsonObject);
+
+    /**********************************小程序接口开发************************************/
+    /**
+     *  查询首页商品分类信息
+     * @return
+     */
+    List<JSONObject> queryGoodsTypeListByShow();
+
 }

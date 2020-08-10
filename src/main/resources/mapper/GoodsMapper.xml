@@ -86,4 +86,11 @@
 	<select id="queryGoodsPic" resultType="com.alibaba.fastjson.JSONObject">
 		select id,goods_id goodsId,CONCAT(#{goodsUrl} , goods_url) goodsUrl  from t_goods_picture where goods_id = #{goodsId}
 	</select>
+
+	<select id="queryGoodsLike" resultType="com.alibaba.fastjson.JSONObject">
+		select id,goods_url goodsUrl, goods_name goodsName, goods_price goodsPrice,
+		 goods_discount goodsDiscount,goods_intro goodsIntro
+		from t_goods where goods_num>0 and goods_status=1 order by create_time desc
+	</select>
+
 </mapper>

@@ -52,4 +52,9 @@
   <delete id="delCategory">
   	delete from t_goods_category where id = #{id} and store_id = #{storeId}
   </delete>
+
+   <select id="queryGoodsTypeListByShow" resultType="com.alibaba.fastjson.JSONObject">
+		SELECT id,category_name categoryName,category_url categoryUrl FROM t_goods_category where show_top=1 order by create_time desc
+   </select>
+
 </mapper>

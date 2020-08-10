@@ -33,4 +33,11 @@ public interface GoodsCategoryService {
      * 删除菜品分类
      */
     AppletResult delCategory(JSONObject jsonObject);
+
+    /**********************************小程序接口开发************************************/
+    /**
+     *  查询首页商品分类信息
+     * @return
+     */
+    AppletResult queryGoodsTypeListByShow();
 }

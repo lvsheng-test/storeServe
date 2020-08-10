@@ -21,4 +21,11 @@ public interface GoodsMapper {
     int addPicture(List<JSONObject> list);
 
     List<JSONObject> queryGoodsPic(@Param("goodsId") String goodsId, @Param("goodsUrl") String goodsUrl);
+
+    /***************************小程序开发接口*************************/
+    /**
+     * 获取首页商品猜你喜欢信息列表
+     * @return
+     */
+    List<JSONObject> queryGoodsLike();
 }
