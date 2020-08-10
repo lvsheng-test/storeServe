@@ -5,6 +5,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.pack.store.requestVo.GoodsTypeReq;
 import org.pack.store.requestVo.PageInfoReq;
 import org.pack.store.service.GoodsCategoryService;
 import org.pack.store.service.GoodsService;
@@ -40,6 +41,20 @@ public class GoodsApiController {
     @PostMapping(value = "queryGoodsLike")
     public AppletResult queryGoodsLike(@RequestBody @ApiParam(name="分页对象",value="传入json格式") PageInfoReq pageInfoReq){
         return goodsService.queryGoodsLike(pageInfoReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "获取商品分类信息列表")
+    @PostMapping(value = "queryGoodsType")
+    public AppletResult queryGoodsType(){
+        return goodsCategoryService.queryGoodsType();
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "根据商品类别查询对应商品列表信息")
+    @PostMapping(value = "queryGoodsInfoListByTypeId")
+    public AppletResult queryGoodsInfoListByTypeId(@RequestBody @ApiParam(name="商品分类查询对象",value="传入json格式") GoodsTypeReq goodsTypeReq){
+        return goodsService.queryGoodsInfoListByTypeId(goodsTypeReq);
     }
 
 

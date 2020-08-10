@@ -26,4 +26,10 @@ public interface GoodsCategoryMapper {
      */
     List<JSONObject> queryGoodsTypeListByShow();
 
+    /**
+     * 查询商品分类列表
+     * @return
+     */
+    List<JSONObject> queryGoodsType();
+
 }

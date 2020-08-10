@@ -93,4 +93,10 @@
 		from t_goods where goods_num>0 and goods_status=1 order by create_time desc
 	</select>
 
+	<select id="queryGoodsInfoListByTypeId" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
+		select id,goods_url goodsUrl, goods_name goodsName, goods_price goodsPrice,
+		 goods_discount goodsDiscount,goods_intro goodsIntro,goods_num goodsNum
+		from t_goods where category_id=#{pid} and goods_status=1 order by create_time desc
+	</select>
+
 </mapper>

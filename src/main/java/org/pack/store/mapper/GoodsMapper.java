@@ -28,4 +28,11 @@ public interface GoodsMapper {
      * @return
      */
     List<JSONObject> queryGoodsLike();
+
+    /**
+     *  根据商品分类查询对应商品信息
+     * @param pid
+     * @return
+     */
+    List<JSONObject> queryGoodsInfoListByTypeId(@Param("pid") String pid);
 }

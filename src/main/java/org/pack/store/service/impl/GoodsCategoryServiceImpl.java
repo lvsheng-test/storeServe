@@ -88,4 +88,10 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 		List<JSONObject> cateList =goodsCategoryMapper.queryGoodsTypeListByShow();
 		return ResultUtil.success(cateList);
 	}
+
+	@Override
+	public AppletResult queryGoodsType(){
+		List<JSONObject> cateList =goodsCategoryMapper.queryGoodsType();
+		return ResultUtil.success(cateList);
+	}
 }

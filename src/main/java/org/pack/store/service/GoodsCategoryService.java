@@ -40,4 +40,10 @@ public interface GoodsCategoryService {
      * @return
      */
     AppletResult queryGoodsTypeListByShow();
+
+    /**
+     * 查询商品分类列表
+     * @return
+     */
+    AppletResult queryGoodsType();
 }

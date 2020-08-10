@@ -6,6 +6,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.pack.store.autoconf.DataConfig;
 import org.pack.store.mapper.GoodsMapper;
+import org.pack.store.requestVo.GoodsTypeReq;
 import org.pack.store.requestVo.PageInfoReq;
 import org.pack.store.service.GoodsService;
 import org.pack.store.utils.*;
@@ -137,6 +138,27 @@ public class GoodsServiceImpl implements GoodsService {
         try{
             PageHelper.startPage(PageInfoReq.getPage(),PageInfoReq.getLimit(),true);
             List<JSONObject> jsonObjects =goodsMapper.queryGoodsLike();
+            if (jsonObjects.size()>0){
+                for (JSONObject object:jsonObjects) {
+                    String goodsUrl = object.get("goodsUrl").toString();
+                    String arr [] = goodsUrl.split(",");
+                    object.put("goodsUrl",arr[0]);
+                    list.add(object);
+                }
+            }
+            pageInfo = new PageInfo<>(list);
+        }catch (Exception e){
+            logger.error("==>查询猜你喜欢异常",e);
+        }
+        return ResultUtil.success(pageInfo);
+    }
+    @Override
+    public AppletResult queryGoodsInfoListByTypeId(GoodsTypeReq goodsTypeReq){
+        PageInfo<JSONObject> pageInfo = null;
+        List<JSONObject> list =new ArrayList<>();
+        try{
+            PageHelper.startPage(goodsTypeReq.getPage(),goodsTypeReq.getLimit(),true);
+            List<JSONObject> jsonObjects =goodsMapper.queryGoodsInfoListByTypeId(goodsTypeReq.getPid());
             if (jsonObjects.size()>0){
                 for (JSONObject object:jsonObjects) {
                     String goodsUrl = object.get("goodsUrl").toString();

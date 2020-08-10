@@ -57,4 +57,8 @@
 		SELECT id,category_name categoryName,category_url categoryUrl FROM t_goods_category where show_top=1 order by create_time desc
    </select>
 
+	<select id="queryGoodsType" resultType="com.alibaba.fastjson.JSONObject">
+		SELECT id,category_name categoryName FROM t_goods_category order by create_time desc
+	</select>
+
 </mapper>
