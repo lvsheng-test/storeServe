@@ -5,9 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.pack.store.autoconf.DataConfig;
+import org.pack.store.enums.ResultEnums;
 import org.pack.store.mapper.GoodsMapper;
 import org.pack.store.requestVo.GoodsTypeReq;
 import org.pack.store.requestVo.PageInfoReq;
+import org.pack.store.requestVo.SearchGoodsReq;
+import org.pack.store.resposeVo.GoodsDetailsRes;
+import org.pack.store.resposeVo.SearchVo;
 import org.pack.store.service.GoodsService;
 import org.pack.store.utils.*;
 import org.pack.store.utils.common.UuidUtil;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -172,5 +177,83 @@ public class GoodsServiceImpl implements GoodsService {
             logger.error("==>查询猜你喜欢异常",e);
         }
         return ResultUtil.success(pageInfo);
+    }
+
+    @Override
+    public AppletResult queryGoodsDetails(String goodsId){
+        // 保留两位小数，对应位上无数字填充0
+        DecimalFormat df = new DecimalFormat("#0.00");
+        List<String> list =new ArrayList<>();
+        GoodsDetailsRes goodsDetailsRes =new GoodsDetailsRes();
+        try {
+            JSONObject object = goodsMapper.queryGoodsDetails(goodsId);
+            if (object ==null){//该商品不存在
+                return ResultUtil.error(ResultEnums.NOT_FOUND_DATA);
+            }
+            goodsDetailsRes.setGoodsId(object.getString("id"));
+            goodsDetailsRes.setGoodsName(object.getString("goodsName"));
+            goodsDetailsRes.setGoodsPrice(df.format(object.get("goodsPrice")));
+            goodsDetailsRes.setGoodsDiscount(df.format(object.get("goodsDiscount")));
+            goodsDetailsRes.setGoodsIntro(object.getString("goodsIntro"));
+            goodsDetailsRes.setNetContent(object.getIntValue("netContent"));
+            goodsDetailsRes.setSaveConditions(object.getString("saveConditions"));
+            goodsDetailsRes.setShelfLife(object.getIntValue("shelfLife"));
+            goodsDetailsRes.setRamarkUrl(object.getString("ramarkUrl"));
+            String [] arry = object.getString("goodsUrl").split(",");
+            for(String str:arry){
+                list.add(str);
+            }
+            goodsDetailsRes.setBannerImg(list);
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success(goodsDetailsRes);
+    }
+
+    //关键字搜索
+    @Override
+    public AppletResult searchKeyWords(String keys){
+        PageInfo<JSONObject> pageInfo = null;
+        try{
+            PageHelper.startPage(1,10,true);
+            List<JSONObject> keysList =goodsMapper.searchKeyWords(keys);
+            //将数据封装到pageInfo类中，接下来就可以直接将pageInfo返回给页面进行前端展示了
+            pageInfo = new PageInfo<>(keysList);
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success(pageInfo);
+    }
+    @Override
+    public AppletResult searchGoodsInfoList(SearchGoodsReq searchGoodsReq){
+        List<JSONObject> list =new ArrayList<>();
+        try{
+            if (StringUtil.isNullStr(searchGoodsReq.getKeys())){
+                return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+            }
+            SearchVo searchVo =new SearchVo();
+            searchVo.setKeys(searchGoodsReq.getKeys());
+            if (searchGoodsReq.getNum()==0 || searchGoodsReq.getNum()==1){
+                searchVo.setZongHe("ZongHe");
+            }
+            if (searchGoodsReq.getNum()==2){
+                searchVo.setRising("Rising");
+            }
+            if (searchGoodsReq.getNum()==3){
+                searchVo.setDecline("Decline");
+            }
+            List<JSONObject> catList = goodsMapper.searchGoodsInfoList(searchVo);
+            if (catList.size()>0){
+                for (JSONObject object:catList) {
+                    String goodsUrl = object.get("goodsUrl").toString();
+                    String arr [] = goodsUrl.split(",");
+                    object.put("goodsUrl",arr[0]);
+                    list.add(object);
+                }
+            }
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success(list);
     }
 }

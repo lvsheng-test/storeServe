@@ -48,6 +48,12 @@ public interface UserService {
      */
     AppletResult login(AppVO<JSONObject> jsonObject);
 
+    /**
+     * 查询我的会员卡
+     * @param userId
+     * @return
+     */
+    AppletResult queryMyMembership(String userId);
 
 
 

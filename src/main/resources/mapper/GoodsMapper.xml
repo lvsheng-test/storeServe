@@ -23,13 +23,13 @@
     insert into t_goods (id,category_id,store_id, goods_url,
       goods_name, goods_status, goods_price,
       goods_discount, discount_type, goods_intro,
-      goods_num,net_content,save_conditions,shelf_life,ramark_url, create_by, create_time,
+      goods_num,net_content,save_conditions,shelf_life,ramark_url,key_words, create_by, create_time,
       update_by, update_time)
     values (#{id,jdbcType=CHAR},#{categoryId,jdbcType=CHAR},#{storeId,jdbcType=CHAR}, #{goodsUrl,jdbcType=VARCHAR},
       #{goodsName,jdbcType=VARCHAR}, #{goodsStatus,jdbcType=TINYINT}, #{goodsPrice,jdbcType=DECIMAL},
       #{goodsDiscount,jdbcType=DECIMAL}, #{discountType,jdbcType=TINYINT}, #{goodsIntro,jdbcType=VARCHAR},
       #{goodsNum,jdbcType=SMALLINT},#{netContent,jdbcType=SMALLINT},#{saveConditions,jdbcType=VARCHAR},
-       #{shelfLife,jdbcType=SMALLINT},#{ramarkUrl,jdbcType=VARCHAR},#{createBy,jdbcType=CHAR}, now(),
+       #{shelfLife,jdbcType=SMALLINT},#{ramarkUrl,jdbcType=VARCHAR},#{keyWords,jdbcType=VARCHAR},#{createBy,jdbcType=CHAR}, now(),
       #{updateBy,jdbcType=CHAR}, now())
   </insert>
 	<update id="editGoods" parameterType="com.alibaba.fastjson.JSONObject" >
@@ -97,6 +97,43 @@
 		select id,goods_url goodsUrl, goods_name goodsName, goods_price goodsPrice,
 		 goods_discount goodsDiscount,goods_intro goodsIntro,goods_num goodsNum
 		from t_goods where category_id=#{pid} and goods_status=1 order by create_time desc
+	</select>
+
+	<select id="queryGoodsDetails" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
+		select id,goods_url goodsUrl, goods_name goodsName, goods_price goodsPrice,
+		 goods_discount goodsDiscount,goods_intro goodsIntro,net_content netContent,
+		 save_conditions saveConditions,shelf_life shelfLife,ramark_url ramarkUrl
+		from t_goods where id=#{goodsId}
+	</select>
+
+	<select id="searchKeyWords" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
+		select key_words keyWords from t_goods where goods_status=1
+		<if test="keys !=null and keys !=''">
+			<!--bind 标签的两个属性都是必选项， name 为绑定到上下文的变量名,value为OGNL表达式。-->
+			<bind name="pattern" value="'%' + keys + '%'"/>
+			and CONCAT(key_words) like #{pattern}
+		</if>
+		order by create_time desc
+	</select>
+
+	<select id="searchGoodsInfoList" resultType="com.alibaba.fastjson.JSONObject" parameterType="org.pack.store.resposeVo.SearchVo">
+		select id,goods_url goodsUrl, goods_name goodsName, goods_price goodsPrice,
+		 goods_discount goodsDiscount,goods_intro goodsIntro,goods_num goodsNum
+		from t_goods where goods_status=1
+		<if test="keys !=null and keys !=''">
+			<!--bind 标签的两个属性都是必选项， name 为绑定到上下文的变量名,value为OGNL表达式。-->
+			<bind name="pattern" value="'%' + keys + '%'"/>
+			and CONCAT(key_words,goods_name,goods_intro) like #{pattern}
+		</if>
+		<if test="zongHe !=null and zongHe !=''">
+			order by create_time desc
+		</if>
+		<if test="rising !=null and rising !=''">
+			order by goods_price asc
+		</if>
+		<if test="decline !=null and decline !=''">
+			order by goods_price desc
+		</if>
 	</select>
 
 </mapper>

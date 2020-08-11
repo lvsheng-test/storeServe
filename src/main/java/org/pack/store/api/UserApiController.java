@@ -65,4 +65,22 @@ public class UserApiController {
     public AppletResult login(@RequestBody @ApiParam(name="用户登录对象",value="传入json格式",required = true) AppVO<JSONObject> jsonObject){
         return userService.login(jsonObject);
     }
+
+    @CrossOrigin
+    @ApiOperation(value = "查询我的会员卡")
+    @GetMapping(value = "queryMyMembership/{userId}")
+    public AppletResult queryMyMembership(@ApiParam("用户ID") @PathVariable("userId") String userId){
+        return userService.queryMyMembership(userId);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "解除绑定会员卡")
+    @PostMapping(value = "releaseMembership")
+    public AppletResult releaseMembership(){
+        return null;
+    }
+
+
+
+
 }

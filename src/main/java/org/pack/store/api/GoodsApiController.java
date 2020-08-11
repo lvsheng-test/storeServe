@@ -1,18 +1,16 @@
 package org.pack.store.api;
 
-
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.pack.store.requestVo.GoodsTypeReq;
 import org.pack.store.requestVo.PageInfoReq;
+import org.pack.store.requestVo.SearchGoodsReq;
 import org.pack.store.service.GoodsCategoryService;
 import org.pack.store.service.GoodsService;
 import org.pack.store.utils.AppletResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 
 /**
@@ -59,20 +57,22 @@ public class GoodsApiController {
 
     @CrossOrigin
     @ApiOperation(value = "查询商品详情信息")
-    @GetMapping(value = "queryGoodsDetails")
-    public AppletResult queryGoodsDetails(){
-        return null;
+    @GetMapping(value = "queryGoodsDetails/{goodsId}")
+    public AppletResult queryGoodsDetails(@ApiParam("商品ID") @PathVariable("goodsId") String goodsId){
+        return goodsService.queryGoodsDetails(goodsId);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "商品关键字搜索")
+    @GetMapping(value = "searchKeyWords/{keys}")
+    public AppletResult searchKeyWords(@ApiParam("搜索关键字") @PathVariable("keys") String keys){
+        return goodsService.searchKeyWords(keys);
+    }
 
     @CrossOrigin
     @ApiOperation(value = "条件搜索商品信息")
-    @GetMapping(value = "searchGoodsInfoList")
-    public AppletResult searchGoodsInfoList(){
-        return null;
+    @PostMapping(value = "searchGoodsInfoList")
+    public AppletResult searchGoodsInfoList(@RequestBody @ApiParam(name="商品条件搜索对象",value="传入json格式") SearchGoodsReq searchGoodsReq){
+        return goodsService.searchGoodsInfoList(searchGoodsReq);
     }
-
-
-
-
 }

@@ -18,6 +18,8 @@ public enum ResultEnums {
 
     MOILE_OPEN_NO(207,"该手机号未开通此类型会员卡"),
 
+    BIND_MEMBER_YES(208,"该用户已绑定过此类型会员卡"),
+
     NOT_FOUND_DATA(10001,"数据不存在"),
 
     CUSTOM_STORE_NULL_PARAM(10001,""),

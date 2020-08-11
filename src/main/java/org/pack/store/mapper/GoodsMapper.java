@@ -2,6 +2,7 @@ package org.pack.store.mapper;
 
 import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.annotations.Param;
+import org.pack.store.resposeVo.SearchVo;
 
 import java.util.List;
 
@@ -35,4 +36,26 @@ public interface GoodsMapper {
      * @return
      */
     List<JSONObject> queryGoodsInfoListByTypeId(@Param("pid") String pid);
+
+    /**
+     *  查询商品详情信息
+     * @param goodsId
+     * @return
+     */
+    JSONObject queryGoodsDetails(@Param("goodsId") String goodsId);
+
+    /**
+     * 关键字搜索
+     * @param keys
+     * @return
+     */
+    List<JSONObject> searchKeyWords(@Param("keys") String keys);
+
+    /**
+     * 条件搜索商品
+     * @param searchVo
+     * @return
+     */
+    List<JSONObject> searchGoodsInfoList(SearchVo searchVo);
+
 }

@@ -7,10 +7,7 @@ import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.entity.AddressEntity;
 import org.pack.store.entity.MembershipEntity;
 import org.pack.store.enums.ResultEnums;
-import org.pack.store.mapper.AddressMapper;
-import org.pack.store.mapper.DictMapper;
-import org.pack.store.mapper.MemberMapper;
-import org.pack.store.mapper.MembershipMapper;
+import org.pack.store.mapper.*;
 import org.pack.store.requestVo.AddressReq;
 import org.pack.store.requestVo.AppVO;
 import org.pack.store.requestVo.BindMemberReq;
@@ -23,6 +20,7 @@ import org.pack.store.utils.common.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -48,6 +46,9 @@ public class UserServiceImpl implements UserService {
     private JedisOperator jedisOperator;
     @Resource
     private IDGenerateUtil idGenerateUtil;
+
+    @Resource
+    private UserVipMapper userVipMapper;
 
     public AppletResult queryMyAddress(String userId){
         if (StringUtil.isNullStr(userId)){
@@ -122,6 +123,18 @@ public class UserServiceImpl implements UserService {
     public AppletResult bindingMembership(BindMemberReq bindMemberReq){
         MembershipEntity membership =new MembershipEntity();
         try {
+            if (StringUtil.isNullStr(bindMemberReq.getUserId())){
+                return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+            }
+            if (StringUtil.isNullStr(bindMemberReq.getMemberType())){
+                return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+            }
+            if (StringUtil.isNullStr(bindMemberReq.getCardNo())){
+                return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+            }
+            if (StringUtil.isNullStr(bindMemberReq.getMobile())){
+                return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+            }
             membership.setMobile(bindMemberReq.getMobile());
             membership.setMemberType(bindMemberReq.getMemberType());
             membership.setCardNo(bindMemberReq.getCardNo());
@@ -131,9 +144,22 @@ public class UserServiceImpl implements UserService {
                 return ResultUtil.error(ResultEnums.MOILE_OPEN_NO);
             }
             //校验一下该用户有没有重复绑定会员卡，然后校验用户只允许绑定每种类型卡一张
-
-
-
+            JSONObject object = userVipMapper.queryBindingMember(bindMemberReq);
+            if (object !=null){//该用户已绑定过此类型会员卡
+                return ResultUtil.error(ResultEnums.BIND_MEMBER_YES);
+            }
+            //校验通过完成绑定会员卡操作
+            JSONObject jsonObject =new JSONObject();
+            jsonObject.put("id",UuidUtil.getUuid());
+            jsonObject.put("userId",bindMemberReq.getUserId());
+            jsonObject.put("memberId",memberships.getId());
+            jsonObject.put("vipType",memberships.getMemberType());
+            jsonObject.put("vipName",memberships.getMemberName());
+            jsonObject.put("cardNo",bindMemberReq.getCardNo());
+            int i = userVipMapper.addBindingMember(jsonObject);
+            if(i==0){
+                return ResultUtil.error(ResultEnums.SERVER_ERROR);
+            }
         }catch (Exception e){
             return ResultUtil.error(ResultEnums.SERVER_ERROR);
         }
@@ -176,5 +202,19 @@ public class UserServiceImpl implements UserService {
             memberMapper.insertMember(insertJson);
         }
         return ResultUtil.success(queryMember);
+    }
+    //查询我的会员卡
+    @Override
+    public AppletResult queryMyMembership(String userId){
+        List<JSONObject> list=new ArrayList<>();
+        try{
+            if (StringUtil.isNullStr(userId)){
+                return ResultUtil.error(ResultEnums.USERID_IS_NULL);
+            }
+            list = this.userVipMapper.queryMyMembership(userId);
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success(list);
     }
 }

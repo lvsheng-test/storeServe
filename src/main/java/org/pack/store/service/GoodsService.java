@@ -3,6 +3,7 @@ package org.pack.store.service;
 import com.alibaba.fastjson.JSONObject;
 import org.pack.store.requestVo.GoodsTypeReq;
 import org.pack.store.requestVo.PageInfoReq;
+import org.pack.store.requestVo.SearchGoodsReq;
 import org.pack.store.utils.AppletResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,5 +50,26 @@ public interface GoodsService {
      * @return
      */
     AppletResult queryGoodsInfoListByTypeId(GoodsTypeReq goodsTypeReq);
+
+    /**
+     *  查询商品详情信息
+     * @param goodsId
+     * @return
+     */
+    AppletResult queryGoodsDetails(String goodsId);
+
+    /**
+     * 关键字搜索
+     * @param keys
+     * @return
+     */
+    AppletResult searchKeyWords(String keys);
+
+    /**
+     * 条件搜索商品
+     * @param searchGoodsReq
+     * @return
+     */
+    AppletResult searchGoodsInfoList(SearchGoodsReq searchGoodsReq);
 
 }
