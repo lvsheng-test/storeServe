@@ -112,10 +112,13 @@
             <version>RELEASE</version>
             <scope>compile</scope>
         </dependency>
-		<!-- oss-->
-
 		<dependency>
-
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk15on</artifactId>
+			<version>1.59</version>
+		</dependency>
+		<!-- oss-->
+		<dependency>
 			<groupId>com.aliyun.oss</groupId>
 			<artifactId>aliyun-sdk-oss</artifactId>
 			<version>${aliyun.oss.version}</version>

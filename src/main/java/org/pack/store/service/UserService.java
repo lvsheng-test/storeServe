@@ -1,6 +1,9 @@
 package org.pack.store.service;
 
+import com.alibaba.fastjson.JSONObject;
 import org.pack.store.requestVo.AddressReq;
+import org.pack.store.requestVo.AppVO;
+import org.pack.store.requestVo.BindMemberReq;
 import org.pack.store.requestVo.ParentCodeReq;
 import org.pack.store.utils.AppletResult;
 
@@ -30,5 +33,22 @@ public interface UserService {
      * @return
      */
     AppletResult queryCommonDict(ParentCodeReq parentCodeReq);
+
+    /**
+     * 绑定会员卡操作
+     * @param bindMemberReq
+     * @return
+     */
+    AppletResult bindingMembership(BindMemberReq bindMemberReq);
+
+    /**
+     * 登录操作
+     * @param jsonObject
+     * @return
+     */
+    AppletResult login(AppVO<JSONObject> jsonObject);
+
+
+
 
 }

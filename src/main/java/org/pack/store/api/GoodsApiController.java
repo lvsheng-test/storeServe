@@ -57,5 +57,22 @@ public class GoodsApiController {
         return goodsService.queryGoodsInfoListByTypeId(goodsTypeReq);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "查询商品详情信息")
+    @GetMapping(value = "queryGoodsDetails")
+    public AppletResult queryGoodsDetails(){
+        return null;
+    }
+
+
+    @CrossOrigin
+    @ApiOperation(value = "条件搜索商品信息")
+    @GetMapping(value = "searchGoodsInfoList")
+    public AppletResult searchGoodsInfoList(){
+        return null;
+    }
+
+
+
 
 }

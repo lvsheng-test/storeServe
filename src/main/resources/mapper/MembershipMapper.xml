@@ -43,4 +43,8 @@
         update t_membership set amount =#{amount} where id=#{id}
     </update>
 
+    <select id="getMemberTypeAndCardNo" parameterType="org.pack.store.entity.MembershipEntity" resultMap="BaseResultMap">
+        select * from t_membership where mobile=#{mobile} and member_type=#{memberType} and card_no=#{cardNo} and dr='0'
+    </select>
+
 </mapper>

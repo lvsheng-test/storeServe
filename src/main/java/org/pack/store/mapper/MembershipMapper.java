@@ -47,4 +47,13 @@ public interface MembershipMapper {
      * @return
      */
     int doRechages(MembershipEntity membershipEntity);
+    /*********************************小程序接口开发**********************************/
+    /**
+     * 根据会员卡类型与卡号查询
+     * @param membershipEntity
+     * @return
+     */
+    MembershipEntity getMemberTypeAndCardNo(MembershipEntity membershipEntity);
+
+
 }

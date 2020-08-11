@@ -1,9 +1,12 @@
 package org.pack.store.api;
 
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.pack.store.requestVo.AddressReq;
+import org.pack.store.requestVo.AppVO;
+import org.pack.store.requestVo.BindMemberReq;
 import org.pack.store.requestVo.ParentCodeReq;
 import org.pack.store.service.UserService;
 import org.pack.store.utils.AppletResult;
@@ -44,8 +47,22 @@ public class UserApiController {
 
     @CrossOrigin
     @ApiOperation(value = "查询字典信息API")
-    @PostMapping(value = "queryCommonDict")
+    @GetMapping(value = "queryCommonDict")
     public AppletResult queryCommonDict(@RequestBody @ApiParam(name="字典编码对象",value="传入json格式",required = true) ParentCodeReq parentCodeReq){
         return userService.queryCommonDict(parentCodeReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "绑定会员卡信息")
+    @PostMapping(value = "bindingMembership")
+    public AppletResult bindingMembership(@RequestBody @ApiParam(name="会员卡对象",value="传入json格式",required = true) BindMemberReq bindMemberReq){
+        return userService.bindingMembership(bindMemberReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "登录操作")
+    @PostMapping(value = "login")
+    public AppletResult login(@RequestBody @ApiParam(name="用户登录对象",value="传入json格式",required = true) AppVO<JSONObject> jsonObject){
+        return userService.login(jsonObject);
     }
 }
