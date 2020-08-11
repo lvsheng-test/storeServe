@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.ConfigProportionMapper">
+    <resultMap id="BaseResultMap" type="org.pack.store.entity.ConfigProportionEntity">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="proportion" jdbcType="DECIMAL" property="proportion" />
+        <result column="ts" jdbcType="TIMESTAMP" property="ts" />
+    </resultMap>
+
+    <insert id="insertConfigProportion" parameterType="org.pack.store.entity.ConfigProportionEntity">
+        insert into t_config_proportion(id,type,name,proportion,ts) values (#{id},#{type},#{name},#{proportion},#{ts})
+    </insert>
+
+    <update id="updateConfigProportion" parameterType="org.pack.store.entity.ConfigProportionEntity">
+        update t_config_proportion set proportion =#{proportion},ts =sysdate where id=#{id}
+    </update>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select * from t_config_proportion
+    </select>
+    <select id="getConfigType" parameterType="java.lang.String" resultType="org.pack.store.entity.ConfigProportionEntity">
+        select * from t_config_proportion where type=#{type}
+    </select>
+
+</mapper>
