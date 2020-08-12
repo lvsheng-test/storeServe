@@ -20,6 +20,10 @@ public enum ResultEnums {
 
     BIND_MEMBER_YES(208,"该用户已绑定过此类型会员卡"),
 
+    DEL_BIND_MEMBER_ERROR(209,"解除绑定失败"),
+
+    IS_BIND_MEMBER_YES(210,"此会员卡被绑定"),
+
     NOT_FOUND_DATA(10001,"数据不存在"),
 
     CUSTOM_STORE_NULL_PARAM(10001,""),

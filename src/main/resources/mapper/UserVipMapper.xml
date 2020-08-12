@@ -25,4 +25,17 @@
          FROM t_user_vip v LEFT JOIN t_membership m ON v.member_id=m.id WHERE v.user_id=#{userId}
     </select>
 
+    <delete id="deleteBindingMember" parameterType="java.lang.String">
+        DELETE FROM t_user_vip WHERE id =#{memberId}
+    </delete>
+    <select id="queryIsBinding" resultType="com.alibaba.fastjson.JSONObject" parameterType="org.pack.store.requestVo.BindMemberReq">
+        select id,user_id,member_id,vip_type,vip_name,card_no
+        from t_user_vip where vip_type=#{memberType} and card_no =#{cardNo}
+    </select>
+
+    <insert id="addAccountInfo" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into t_account (id,user_id,balance, integral,ts)
+        values (#{id,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{balance,jdbcType=DECIMAL}, #{integral,jdbcType=SMALLINT},now())
+    </insert>
+
 </mapper>

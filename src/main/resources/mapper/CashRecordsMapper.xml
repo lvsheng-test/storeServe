@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.CashRecordsMapper">
+
+    <insert id="addCashRecordsInfo" parameterType="com.alibaba.fastjson.JSONObject" >
+        insert into t_cash_records (id,user_id,type, name,card_no,bank_name,amount,state,remark,create_time)
+        values (#{id,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{type,jdbcType=SMALLINT}, #{name,jdbcType=VARCHAR},
+          #{cardNo,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR},#{amount,jdbcType=DECIMAL},#{state,jdbcType=SMALLINT},#{remark,jdbcType=VARCHAR}, now())
+    </insert>
+
+    <select id="queryCashRecordsDetails" resultType="com.alibaba.fastjson.JSONObject" parameterType="org.pack.store.requestVo.SearchDateTimeReq">
+        select name,amount,state,remark,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime
+        from t_cash_records where user_id =#{userId} and create_time BETWEEN #{startTime} AND #{endTime}
+    </select>
+</mapper>
