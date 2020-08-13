@@ -1,10 +1,7 @@
 package org.pack.store.service;
 
 import com.alibaba.fastjson.JSONObject;
-import org.pack.store.requestVo.AddressReq;
-import org.pack.store.requestVo.AppVO;
-import org.pack.store.requestVo.BindMemberReq;
-import org.pack.store.requestVo.ParentCodeReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.utils.AppletResult;
 
 public interface UserService {
@@ -55,6 +52,32 @@ public interface UserService {
      */
     AppletResult queryMyMembership(String userId);
 
+    /**
+     * 解除绑定会员卡
+     * @param memberId
+     * @return
+     */
+    AppletResult releaseMembership(String memberId);
 
+    /**
+     * 查询我的佣金明细
+     * @param searchDateTimeReq
+     * @return
+     */
+    AppletResult queryCommissionDetails(SearchDateTimeReq searchDateTimeReq);
+
+    /**
+     * 提现申请
+     * @param applyRecordsReq
+     * @return
+     */
+    AppletResult doCashRecords(ApplyRecordsReq applyRecordsReq);
+
+    /**
+     * 查询我的提现记录
+     * @param searchDateTimeReq
+     * @return
+     */
+    AppletResult queryCashRecordsDetails(SearchDateTimeReq searchDateTimeReq);
 
 }

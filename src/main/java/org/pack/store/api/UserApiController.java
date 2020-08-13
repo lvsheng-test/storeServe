@@ -4,10 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.pack.store.requestVo.AddressReq;
-import org.pack.store.requestVo.AppVO;
-import org.pack.store.requestVo.BindMemberReq;
-import org.pack.store.requestVo.ParentCodeReq;
+import org.apache.commons.lang.ObjectUtils;
+import org.pack.store.requestVo.*;
 import org.pack.store.service.UserService;
 import org.pack.store.utils.AppletResult;
 import org.pack.store.utils.ResultUtil;
@@ -81,12 +79,31 @@ public class UserApiController {
 
     @CrossOrigin
     @ApiOperation(value = "解除绑定会员卡")
-    @PostMapping(value = "releaseMembership")
-    public AppletResult releaseMembership(){
-        return null;
+    @PostMapping(value = "releaseMembership/{memberId}")
+    public AppletResult releaseMembership(@ApiParam("会员卡ID") @PathVariable("memberId") String memberId){
+        return userService.releaseMembership(memberId);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "查询我的佣金明细")
+    @PostMapping(value = "queryCommissionDetails")
+    public AppletResult queryCommissionDetails(@RequestBody @ApiParam(name="搜索对象",value="传入json格式",required = true) SearchDateTimeReq searchDateTimeReq){
+        return userService.queryCommissionDetails(searchDateTimeReq);
+    }
 
+    @CrossOrigin
+    @ApiOperation(value = "提现申请")
+    @PostMapping(value = "doCashRecords")
+    public AppletResult doCashRecords(@RequestBody @ApiParam(name="提现申请对象",value="传入json格式",required = true) ApplyRecordsReq applyRecordsReq){
+        return userService.doCashRecords(applyRecordsReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "查询我的提现记录")
+    @PostMapping(value = "queryCashRecordsDetails")
+    public AppletResult queryCashRecordsDetails(@RequestBody @ApiParam(name="搜索对象",value="传入json格式",required = true) SearchDateTimeReq searchDateTimeReq){
+        return userService.queryCashRecordsDetails(searchDateTimeReq);
+    }
 
 
 }
