@@ -172,11 +172,7 @@ public class UserServiceImpl implements UserService {
      * @param {"code":"微信code","encryptedData":"从微信获取","iv":"从微信获取","nickName":"微信昵称"}
      */
     @Override
-    public AppletResult login(AppVO<JSONObject> jsonObject){
-        JSONObject data = jsonObject.getData();
-        if(null == data){
-            return ResultUtil.error(-1,"缺失参数");
-        }
+    public AppletResult login(JSONObject data){
         int code = data.getIntValue("code");
         String appId = dataConfig.getAppId();
         String appSecret = dataConfig.getAppSecret();
@@ -189,10 +185,10 @@ public class UserServiceImpl implements UserService {
         String sessionKey = jsonObj.getString("session_key");
         jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 30);
         //查用户是否存在
-        JSONObject queryMember = memberMapper.queryMember(openId);
-        if(null == queryMember){
+        JSONObject insertJson = memberMapper.queryMember(openId);
+        if(null == insertJson){
             //插入用户表
-            JSONObject insertJson  = new JSONObject();
+            insertJson  = new JSONObject();
             insertJson.put("userId", idGenerateUtil.getId());
             insertJson.put("openId", openId);
             String str = WXBizDataCrypt.decryptData(sessionKey, appId, encryptedData, iv);
@@ -201,7 +197,8 @@ public class UserServiceImpl implements UserService {
             insertJson.put("nickName", nickName);
             memberMapper.insertMember(insertJson);
         }
-        return ResultUtil.success(queryMember);
+        insertJson.put("token",sessionKey);
+        return ResultUtil.success(insertJson);
     }
     //查询我的会员卡
     @Override

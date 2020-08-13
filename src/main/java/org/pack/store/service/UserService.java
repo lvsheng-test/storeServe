@@ -46,7 +46,7 @@ public interface UserService {
      * @param jsonObject
      * @return
      */
-    AppletResult login(AppVO<JSONObject> jsonObject);
+    AppletResult login(JSONObject jsonObject);
 
     /**
      * 查询我的会员卡

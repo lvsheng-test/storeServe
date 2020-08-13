@@ -10,6 +10,8 @@ import org.pack.store.requestVo.BindMemberReq;
 import org.pack.store.requestVo.ParentCodeReq;
 import org.pack.store.service.UserService;
 import org.pack.store.utils.AppletResult;
+import org.pack.store.utils.ResultUtil;
+import org.pack.store.utils.VerifyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,8 +64,12 @@ public class UserApiController {
     @CrossOrigin
     @ApiOperation(value = "登录操作")
     @PostMapping(value = "login")
-    public AppletResult login(@RequestBody @ApiParam(name="用户登录对象",value="传入json格式",required = true) AppVO<JSONObject> jsonObject){
-        return userService.login(jsonObject);
+    public AppletResult login(@RequestBody @ApiParam(name="用户登录对象",value="传入json格式",required = true) AppVO<JSONObject> data){
+        JSONObject jsonObject = data.getData();
+        if(VerifyUtils.isNotBlanks(jsonObject,"code","encryptedData","iv","nickName")) {
+            return userService.login(jsonObject);
+        }
+        return ResultUtil.error(-1,"缺失参数");
     }
 
     @CrossOrigin
