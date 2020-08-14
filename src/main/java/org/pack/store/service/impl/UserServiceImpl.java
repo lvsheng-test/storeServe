@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     * login
+     * 登录
      *
      * @param {"code":"微信code","encryptedData":"从微信获取","iv":"从微信获取","nickName":"微信昵称"}
      */
