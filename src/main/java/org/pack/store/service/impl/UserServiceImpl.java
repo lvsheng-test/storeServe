@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public AppletResult login(JSONObject data){
-        int code = data.getIntValue("code");
+        String code = data.getString("code");
         String appId = dataConfig.getAppId();
         String appSecret = dataConfig.getAppSecret();
         String encryptedData = data.getString("encryptedData");

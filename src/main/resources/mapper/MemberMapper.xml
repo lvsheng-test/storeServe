@@ -4,7 +4,7 @@
 
 
     <select id="queryMember" parameterType="string" resultType="com.alibaba.fastjson.JSONObject">
-        select user_name userName,mobile from t_user
+        select user_id,open_id,nick_name nickName,mobile from t_user
         where open_id = #{openId}
     </select>
 
