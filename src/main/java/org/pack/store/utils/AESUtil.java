@@ -31,7 +31,7 @@ public class AESUtil {
 	public static byte[] decrypt(byte[] content, byte[] keyByte, byte[] ivByte) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding","BC");
 			Key sKeySpec = new SecretKeySpec(keyByte, "AES");
 			// 生成iv
 			AlgorithmParameters params = AlgorithmParameters.getInstance("AES");

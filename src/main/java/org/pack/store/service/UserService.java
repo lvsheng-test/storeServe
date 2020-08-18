@@ -46,6 +46,13 @@ public interface UserService {
     AppletResult login(JSONObject jsonObject);
 
     /**
+     * 手机号解密操作
+     * @param jsonObject
+     * @return
+     */
+    AppletResult doDecryptionMoblie(JSONObject jsonObject);
+
+    /**
      * 查询我的会员卡
      * @param userId
      * @return

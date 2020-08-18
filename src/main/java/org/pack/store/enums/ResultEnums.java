@@ -24,6 +24,16 @@ public enum ResultEnums {
 
     IS_BIND_MEMBER_YES(210,"此会员卡被绑定"),
 
+    DECRYPTION_ERROR(211,"解密失败"),
+
+    WX_RETRUE_ERROR(212,"微信接口返回失败"),
+
+    WX_LOGIN_ERROR(213,"微信登录失败，请先获取手机号"),
+
+    WX_MOBLIE_ERROR(214,"微信手机号解密失败"),
+
+    USER_UPDATE_ERROR(215,"个人信息更新失败"),
+
     NOT_FOUND_DATA(10001,"数据不存在"),
 
     CUSTOM_STORE_NULL_PARAM(10001,""),

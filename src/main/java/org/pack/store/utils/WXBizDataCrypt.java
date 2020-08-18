@@ -93,4 +93,45 @@ public class WXBizDataCrypt {
 		}
 		return userInfo;
 	}
+
+	/**
+	 * 手机号解密
+	 */
+	public static String decryptData(String encryptData, String sessionKey, String iv) {
+		if (StringUtils.length(sessionKey) != 24) {
+			logger.error("WXBizDataCrypt error: {}", illegalAesKey);
+			return null;
+		}
+		// 对称解密秘钥 aeskey = Base64_Decode(session_key), aeskey 是16字节。
+		byte[] aesKey = Base64.decodeBase64(sessionKey);
+
+		if (StringUtils.length(iv) != 24) {
+			logger.error("WXBizDataCrypt error: {}", illegalIv);
+			return null;
+		}
+		// 对称解密算法初始向量 为Base64_Decode(iv)，其中iv由数据接口返回。
+		byte[] aesIV = Base64.decodeBase64(iv);
+
+		// 对称解密的目标密文为 Base64_Decode(encryptedData)
+		byte[] aesCipher = Base64.decodeBase64(encryptData);
+
+		try {
+			byte[] resultByte = AESUtil.decrypt(aesCipher, aesKey, aesIV);
+			if (null != resultByte && resultByte.length > 0) {
+				String userInfo = new String(resultByte, "UTF-8");
+				return userInfo;
+			}
+			else {
+				logger.error("WXBizDataCrypt error: {}", noData);
+				return null;
+			}
+		}
+		catch (Exception e) {
+			logger.error("error", e);
+		}
+		return null;
+	}
+
+
+
 }

@@ -64,11 +64,25 @@ public class UserApiController {
     @PostMapping(value = "login")
     public AppletResult login(@RequestBody @ApiParam(name="用户登录对象",value="传入json格式",required = true) AppVO<JSONObject> data){
         JSONObject jsonObject = data.getData();
-        if(VerifyUtils.isNotBlanks(jsonObject,"code","encryptedData","iv","nickName")) {
+        //VerifyUtils.isNotBlanks(jsonObject,"code","encryptedData","iv","nickName")
+        if(VerifyUtils.isNotBlanks(jsonObject,"code")) {
             return userService.login(jsonObject);
         }
         return ResultUtil.error(-1,"缺失参数");
     }
+
+    @CrossOrigin
+    @ApiOperation(value = "手机号解密操作")
+    @PostMapping(value = "doDecryptionMoblie")
+    public AppletResult doDecryptionMoblie(@RequestBody @ApiParam(name="手机号解密对象",value="传入json格式",required = true) AppVO<JSONObject> data){
+        JSONObject jsonObject = data.getData();
+        if(VerifyUtils.isNotBlanks(jsonObject,"code","encryptedData","iv","nickName")) {
+            return userService.doDecryptionMoblie(jsonObject);
+        }
+        return ResultUtil.error(-1,"缺失参数");
+    }
+
+
 
     @CrossOrigin
     @ApiOperation(value = "查询我的会员卡")

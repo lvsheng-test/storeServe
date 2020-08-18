@@ -4,14 +4,21 @@
 
 
     <select id="queryMember" parameterType="string" resultType="com.alibaba.fastjson.JSONObject">
-        select user_id,open_id,nick_name nickName,mobile from t_user
+        select user_id,open_id,avatar_url avatarUrl,nick_name nickName,mobile,invitation_code invitationCode from t_user
         where open_id = #{openId}
     </select>
 
     <insert id="insertMember" parameterType="org.pack.store.entity.MemberCardEntity">
-        insert into t_user(user_id,open_id,mobile,nick_name,user_type) values (#{userId},#{openId},#{mobile},#{nickName},#{userType})
+        insert into t_user(user_id,open_id,user_name,mobile,user_type,invitation_code) values (#{userId},#{openId},#{userName},#{mobile},#{userType},#{invitationCode})
     </insert>
 
+    <select id="queryMoblie" parameterType="string" resultType="com.alibaba.fastjson.JSONObject">
+        select user_id,open_id,mobile,invitation_code invitationCode from t_user where open_id = #{openId}
+    </select>
+
+    <update id="updateMember" parameterType="com.alibaba.fastjson.JSONObject">
+        update t_user set avatar_url =#{avatarUrl},nick_name=#{nickName} where open_id =#{openId}
+    </update>
 
 
 </mapper>

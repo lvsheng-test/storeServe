@@ -658,9 +658,35 @@ public class CommonUtils {
 		return null;
 	}
 
+	/**
+	 * 生成六位数邀请码
+	 * @return
+	 */
+	public static int getInvitationCode(){
+		for (int i = 0; i <= 200; i++)
+		{
+			int intFlag = (int)(Math.random() * 1000000);
+			String flag = String.valueOf(intFlag);
+			if (flag.length() == 6 && flag.substring(0, 1).equals("9"))
+			{
+				System.out.println(intFlag);
+				return intFlag;
+			}
+			else
+			{
+				intFlag = intFlag + 100000;
+				System.out.println(intFlag);
+				return intFlag;
+			}
+		}
+		return 0;
+	}
+
+
 	public static void main(String[] args) {
-		String time = getMemberCard("消费卡");
-		System.out.println("time:" + time);
+		//String time = getMemberCard("消费卡");
+		int intFlag = getInvitationCode();
+		System.out.println("邀请码:" + intFlag);
 	}
 
 }

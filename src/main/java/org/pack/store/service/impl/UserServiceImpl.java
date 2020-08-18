@@ -2,10 +2,12 @@ package org.pack.store.service.impl;
 
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.pack.store.autoconf.DataConfig;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.entity.AddressEntity;
 import org.pack.store.entity.MembershipEntity;
+import org.pack.store.entity.WeixinPhoneDecryptInfo;
 import org.pack.store.enums.ResultEnums;
 import org.pack.store.mapper.*;
 import org.pack.store.requestVo.*;
@@ -13,6 +15,7 @@ import org.pack.store.resposeVo.CityInfoRes;
 import org.pack.store.service.UserService;
 import org.pack.store.utils.*;
 import org.pack.store.utils.HttpClient.HttpsUtil;
+import org.pack.store.utils.common.CommonUtils;
 import org.pack.store.utils.common.UuidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -198,30 +201,83 @@ public class UserServiceImpl implements UserService {
         String code = data.getString("code");
         String appId = dataConfig.getAppId();
         String appSecret = dataConfig.getAppSecret();
-        String encryptedData = data.getString("encryptedData");
-        String iv = data.getString("iv");
-        String nickName = data.getString("nickName");
+        //String encryptedData = data.getString("encryptedData");
+        //String iv = data.getString("iv");
+        //String nickName = data.getString("nickName");
         String result = HttpsUtil.httpMethodGet(String.format(LOGIN_URL, appId, appSecret, code));
         JSONObject jsonObj = JSONObject.parseObject(result);
         String openId = jsonObj.getString("openid");
         String sessionKey = jsonObj.getString("session_key");
-        jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 30);
         //查用户是否存在
-        JSONObject insertJson = memberMapper.queryMember(openId);
-        if(null == insertJson){
-            //插入用户表
-            insertJson  = new JSONObject();
-            insertJson.put("userId", idGenerateUtil.getId());
-            insertJson.put("openId", openId);
-            String str = WXBizDataCrypt.decryptData(sessionKey, appId, encryptedData, iv);
-            JSONObject json = JSONObject.parseObject(str);
-            insertJson.put("mobile", json.getString("purePhoneNumber"));
+        JSONObject insertJson = memberMapper.queryMoblie(openId);
+        if (insertJson !=null){
+            jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 30);
+            insertJson.put("token",sessionKey);
+            return ResultUtil.success(insertJson);
+            /*String str = WXBizDataCrypt.decryptData(sessionKey, appId, encryptedData, iv);
+            if (StringUtils.isNotEmpty(str)){
+                JSONObject json = JSONObject.parseObject(str);
+                insertJson.put("avatarUrl",json.getString("avatarUrl"));
+            }else {
+                return ResultUtil.success(ResultEnums.DECRYPTION_ERROR);
+            }
             insertJson.put("nickName", nickName);
-            memberMapper.insertMember(insertJson);
+           int i = memberMapper.updateMember(openId);
+           if (i>0){//修改成功
+               jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 30);
+               insertJson.put("token",sessionKey);
+               return ResultUtil.success(insertJson);
+           }else {
+               return ResultUtil.success(ResultEnums.USER_UPDATE_ERROR);
+           }*/
+        }else {
+            return ResultUtil.success(ResultEnums.WX_LOGIN_ERROR);
         }
-        insertJson.put("token",sessionKey);
-        return ResultUtil.success(insertJson);
     }
+
+    //解密手机号
+    public AppletResult doDecryptionMoblie(JSONObject data){
+        String code = data.getString("code");
+        String appId = dataConfig.getAppId();
+        String appSecret = dataConfig.getAppSecret();
+        String encryptedData = data.getString("encryptedData");
+        String iv = data.getString("iv");
+        String result = HttpsUtil.httpMethodGet(String.format(LOGIN_URL, appId, appSecret, code));
+        JSONObject jsonObj = JSONObject.parseObject(result);
+        String openId = jsonObj.getString("openid");
+        String sessionKey = jsonObj.getString("session_key");
+        if (StringUtil.isNullStr(openId)){
+            return ResultUtil.success(ResultEnums.WX_RETRUE_ERROR);
+        }
+        if (StringUtil.isNullStr(sessionKey)){
+            return ResultUtil.success(ResultEnums.WX_RETRUE_ERROR);
+        }
+        //检查手机号是否已注册
+        String moblie ="";
+        JSONObject jsonObject = memberMapper.queryMoblie(openId);
+        if (jsonObject ==null){
+            AESForWeixinGetPhoneNumber aes=new AESForWeixinGetPhoneNumber(encryptedData,sessionKey,iv);
+            WeixinPhoneDecryptInfo info=aes.decrypt();
+            if (null==info){
+                return ResultUtil.success(ResultEnums.WX_MOBLIE_ERROR);
+            }else {
+                if (!info.getWeixinWaterMark().getAppid().equals(appId)){
+                    System.out.println("wrong appId");
+                }
+                moblie =info.getPurePhoneNumber();
+            }
+            jsonObject  = new JSONObject();
+            jsonObject.put("userId", idGenerateUtil.getId());
+            jsonObject.put("openId", openId);
+            jsonObject.put("mobile", moblie);
+            jsonObject.put("userName",moblie);
+            jsonObject.put("userType",2);
+            jsonObject.put("invitationCode", CommonUtils.getInvitationCode());
+            memberMapper.insertMember(jsonObject);
+        }
+        return ResultUtil.success();
+    }
+
     //查询我的会员卡
     @Override
     public AppletResult queryMyMembership(String userId){
