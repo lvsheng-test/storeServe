@@ -56,4 +56,18 @@ public interface UserVipMapper {
      */
     List<JSONObject> queryBannerList();
 
+    /**
+     * 查询我的个人账户信息
+     * @param userId
+     * @return
+     */
+    JSONObject queryMyAccount(@Param("userId") String userId);
+
+    /**
+     * 查询我绑定的会员卡余额
+     * @param userId
+     * @return
+     */
+    JSONObject queryMyMemberAcount(@Param("userId") String userId);
+
 }

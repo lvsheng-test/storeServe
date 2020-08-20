@@ -394,4 +394,31 @@ public class UserServiceImpl implements UserService {
         List<JSONObject> list = userVipMapper.queryBannerList();
         return ResultUtil.success(list);
     }
+
+    @Override
+    public AppletResult queryMyAccount(String userId){
+        JSONObject json =new JSONObject();
+        try {
+            JSONObject jsonObject = userVipMapper.queryMyAccount(userId);
+            if (jsonObject !=null){
+                json.put("userId",userId);
+                json.put("integral",jsonObject.getIntValue("integral"));//积分
+                json.put("commission",jsonObject.getBigDecimal("balance"));//佣金
+                JSONObject obj = userVipMapper.queryMyMemberAcount(userId);
+                if (obj !=null){
+                    json.put("balance",obj.getBigDecimal("amount"));//会员卡金额
+                }else {
+                    json.put("balance",0.00);//会员卡金额
+                }
+            }else {
+                json.put("userId",userId);
+                json.put("balance",0.00);//会员卡金额
+                json.put("integral",0);//积分
+                json.put("commission",0.00);//佣金
+            }
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success(json);
+    }
 }

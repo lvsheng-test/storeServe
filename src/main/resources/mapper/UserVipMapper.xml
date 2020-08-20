@@ -42,4 +42,11 @@
         SELECT banner_url FROM t_banner WHERE dr=0
     </select>
 
+    <select id="queryMyAccount" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
+        select user_id userId,balance,integral from t_account where user_id =#{userId}
+    </select>
+
+    <select id="queryMyMemberAcount" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
+        SELECT m.amount FROM t_user_vip u LEFT JOIN t_membership m ON u.card_no=m.card_no WHERE u.user_id=#{userId} AND u.vip_name='会员卡'
+    </select>
 </mapper>

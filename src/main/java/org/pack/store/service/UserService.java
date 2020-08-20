@@ -93,4 +93,11 @@ public interface UserService {
      */
     AppletResult queryBannerList();
 
+    /**
+     * 查询我的账户信息
+     * @param userId
+     * @return
+     */
+    AppletResult queryMyAccount(String userId);
+
 }

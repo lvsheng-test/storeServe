@@ -126,5 +126,12 @@ public class UserApiController {
         return userService.queryBannerList();
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "查询我的账户信息")
+    @GetMapping(value = "queryMyAccount/{userId}")
+    public AppletResult queryMyAccount(@ApiParam("用户ID") @PathVariable("userId") String userId){
+        return userService.queryMyAccount(userId);
+    }
+
 
 }
