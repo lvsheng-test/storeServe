@@ -368,13 +368,17 @@ public class UserServiceImpl implements UserService {
                 for (JSONObject object:recordsList){
                     if (object.getIntValue("state")==1){
                         object.put("state","待审核");
-                        object.put("progress","0%");
                     }else if (object.getIntValue("state")==2){
-                        object.put("state","出款完成");
-                        object.put("progress","100%");
+                        object.put("state","已到账");
                     }else if (object.getIntValue("state")==3){
-                        object.put("state","出款失败");
-                        object.put("progress","0%");
+                        object.put("state","审核失败");
+                    }
+                    if (object.getIntValue("type")==1){
+                        object.put("type","微信");
+                    }else if (object.getIntValue("type")==2){
+                        object.put("type","支付宝");
+                    }else if (object.getIntValue("type")==3){
+                        object.put("type","银行卡");
                     }
                     list.add(object);
                 }
@@ -382,6 +386,12 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e){
             return ResultUtil.error(ResultEnums.SERVER_ERROR);
         }
+        return ResultUtil.success(list);
+    }
+
+    @Override
+    public AppletResult queryBannerList(){
+        List<JSONObject> list = userVipMapper.queryBannerList();
         return ResultUtil.success(list);
     }
 }

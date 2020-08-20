@@ -9,7 +9,7 @@
     </insert>
 
     <select id="queryCashRecordsDetails" resultType="com.alibaba.fastjson.JSONObject" parameterType="org.pack.store.requestVo.SearchDateTimeReq">
-        select name,amount,state,remark,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime
+        select type,name,card_no cardNo,bank_name bankName,amount,state,remark,DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime
         from t_cash_records where user_id =#{userId} and create_time BETWEEN #{startTime} AND #{endTime}
     </select>
 </mapper>

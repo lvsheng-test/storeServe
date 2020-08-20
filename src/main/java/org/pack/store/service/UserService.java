@@ -87,4 +87,10 @@ public interface UserService {
      */
     AppletResult queryCashRecordsDetails(SearchDateTimeReq searchDateTimeReq);
 
+    /**
+     * 查询首页轮播图
+     * @return
+     */
+    AppletResult queryBannerList();
+
 }

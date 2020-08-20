@@ -50,4 +50,10 @@ public interface UserVipMapper {
      */
     int addAccountInfo(JSONObject jsonObject);
 
+    /**
+     * 查询首页轮播图列表
+     * @return
+     */
+    List<JSONObject> queryBannerList();
+
 }

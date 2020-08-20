@@ -38,4 +38,8 @@
         values (#{id,jdbcType=VARCHAR},#{userId,jdbcType=VARCHAR},#{balance,jdbcType=DECIMAL}, #{integral,jdbcType=SMALLINT},now())
     </insert>
 
+    <select id="queryBannerList" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT banner_url FROM t_banner WHERE dr=0
+    </select>
+
 </mapper>

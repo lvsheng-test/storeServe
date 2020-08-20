@@ -119,5 +119,12 @@ public class UserApiController {
         return userService.queryCashRecordsDetails(searchDateTimeReq);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "首页轮播图查询")
+    @GetMapping(value = "queryBannerList")
+    public AppletResult queryBannerList(){
+        return userService.queryBannerList();
+    }
+
 
 }
