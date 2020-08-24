@@ -100,4 +100,11 @@ public interface UserService {
      */
     AppletResult queryMyAccount(String userId);
 
+    /**
+     * 删除收货地址信息
+     * @param delAddressReq
+     * @return
+     */
+    AppletResult delAddressInfo(DelAddressReq delAddressReq);
+
 }

@@ -4,6 +4,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.pack.store.entity.AddressEntity;
 import org.pack.store.requestVo.AddressReq;
+import org.pack.store.requestVo.DelAddressReq;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -46,4 +47,9 @@ public interface AddressMapper {
      */
     void updateAddress(AddressEntity addressEntity);
 
+    /**
+     * 删除收货地址信息
+     * @param delAddressReq
+     */
+    void delAddressInfo(DelAddressReq delAddressReq);
 }

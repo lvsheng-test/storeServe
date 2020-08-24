@@ -59,11 +59,23 @@ public class UserServiceImpl implements UserService {
     private CashRecordsMapper cashRecordsMapper;
 
     public AppletResult queryMyAddress(String userId){
+        List<AddressEntity> list =new ArrayList<>();
         if (StringUtil.isNullStr(userId)){
             return ResultUtil.error(ResultEnums.USERID_IS_NULL);
         }
         List<AddressEntity> addressList = addressMapper.queryMyAddress(userId);
-        return ResultUtil.success(addressList);
+        if (addressList.size()>0){
+            for (AddressEntity address :addressList){
+                if (address.getSex()=='0'){
+                    address.setSexName("先生");
+                }
+                if (address.getSex()=='1'){
+                    address.setSexName("女士");
+                }
+                list.add(address);
+            }
+        }
+        return ResultUtil.success(list);
     }
 
     public AppletResult updateMyAddress(AddressReq addressReq){
@@ -420,5 +432,17 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.error(ResultEnums.SERVER_ERROR);
         }
         return ResultUtil.success(json);
+    }
+
+    public AppletResult delAddressInfo(DelAddressReq delAddressReq){
+        try {
+            if (StringUtil.isNullStr(delAddressReq.getUserId()) && StringUtil.isNullStr(delAddressReq.getAddressId())){
+                return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+            }
+            addressMapper.delAddressInfo(delAddressReq);
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success();
     }
 }

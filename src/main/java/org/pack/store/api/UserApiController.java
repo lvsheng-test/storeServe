@@ -47,7 +47,7 @@ public class UserApiController {
 
     @CrossOrigin
     @ApiOperation(value = "查询字典信息API")
-    @GetMapping(value = "queryCommonDict")
+    @PostMapping(value = "queryCommonDict")
     public AppletResult queryCommonDict(@RequestBody @ApiParam(name="字典编码对象",value="传入json格式",required = true) ParentCodeReq parentCodeReq){
         return userService.queryCommonDict(parentCodeReq);
     }
@@ -132,6 +132,14 @@ public class UserApiController {
     public AppletResult queryMyAccount(@ApiParam("用户ID") @PathVariable("userId") String userId){
         return userService.queryMyAccount(userId);
     }
+
+    @CrossOrigin
+    @ApiOperation(value = "删除收货地址")
+    @PostMapping(value = "delAddressInfo")
+    public AppletResult delAddressInfo(@RequestBody @ApiParam(name="删除地址对象",value="传入json格式",required = true) DelAddressReq delAddressReq){
+        return userService.delAddressInfo(delAddressReq);
+    }
+
 
 
 }

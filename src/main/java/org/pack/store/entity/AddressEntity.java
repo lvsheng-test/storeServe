@@ -24,6 +24,17 @@ public class AddressEntity {
 
     private Date ts;          //更新时间
 
+    /*************************扩展字段************************/
+    private String sexName;//性别翻译
+
+    public String getSexName() {
+        return sexName;
+    }
+
+    public void setSexName(String sexName) {
+        this.sexName = sexName;
+    }
+
     public String getId() {
         return id;
     }

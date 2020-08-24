@@ -87,4 +87,8 @@
         where id=#{id}
     </update>
 
+    <delete id="delAddressInfo" parameterType="org.pack.store.requestVo.DelAddressReq">
+        delete from t_address where id=#{addressId} and user_id=#{userId}
+    </delete>
+
 </mapper>
