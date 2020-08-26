@@ -4,11 +4,12 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang.ObjectUtils;
+import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.requestVo.*;
 import org.pack.store.service.UserService;
 import org.pack.store.utils.AppletResult;
 import org.pack.store.utils.ResultUtil;
+import org.pack.store.utils.StringUtil;
 import org.pack.store.utils.VerifyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +25,17 @@ public class UserApiController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JedisOperator jedisOperator;
+
     @CrossOrigin
     @ApiOperation(value = "获取收货地址信息")
-    @GetMapping(value = "queryMyAddress/{userId}")
-    public AppletResult queryMyAddress(@ApiParam("用户ID") @PathVariable("userId") String userId){
+    @GetMapping(value = "queryMyAddress/{userId}&{token}")
+    public AppletResult queryMyAddress(@ApiParam("用户ID") @PathVariable("userId") String userId,@ApiParam("token值") @PathVariable("token") String token){
+        String openId = jedisOperator.get(token);
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
         return userService.queryMyAddress(userId);
     }
 
@@ -86,8 +94,12 @@ public class UserApiController {
 
     @CrossOrigin
     @ApiOperation(value = "查询我的会员卡")
-    @GetMapping(value = "queryMyMembership/{userId}")
-    public AppletResult queryMyMembership(@ApiParam("用户ID") @PathVariable("userId") String userId){
+    @GetMapping(value = "queryMyMembership/{userId}&{token}")
+    public AppletResult queryMyMembership(@ApiParam("用户ID") @PathVariable("userId") String userId,@ApiParam("token值") @PathVariable("token") String token){
+        String openId = jedisOperator.get(token);
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
         return userService.queryMyMembership(userId);
     }
 
@@ -102,6 +114,10 @@ public class UserApiController {
     @ApiOperation(value = "查询我的佣金明细")
     @PostMapping(value = "queryCommissionDetails")
     public AppletResult queryCommissionDetails(@RequestBody @ApiParam(name="搜索对象",value="传入json格式",required = true) SearchDateTimeReq searchDateTimeReq){
+        String openId = jedisOperator.get(searchDateTimeReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
         return userService.queryCommissionDetails(searchDateTimeReq);
     }
 
@@ -109,6 +125,10 @@ public class UserApiController {
     @ApiOperation(value = "提现申请")
     @PostMapping(value = "doCashRecords")
     public AppletResult doCashRecords(@RequestBody @ApiParam(name="提现申请对象",value="传入json格式",required = true) ApplyRecordsReq applyRecordsReq){
+        String openId = jedisOperator.get(applyRecordsReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
         return userService.doCashRecords(applyRecordsReq);
     }
 
@@ -116,6 +136,10 @@ public class UserApiController {
     @ApiOperation(value = "查询我的提现记录")
     @PostMapping(value = "queryCashRecordsDetails")
     public AppletResult queryCashRecordsDetails(@RequestBody @ApiParam(name="搜索对象",value="传入json格式",required = true) SearchDateTimeReq searchDateTimeReq){
+        String openId = jedisOperator.get(searchDateTimeReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
         return userService.queryCashRecordsDetails(searchDateTimeReq);
     }
 
@@ -128,8 +152,12 @@ public class UserApiController {
 
     @CrossOrigin
     @ApiOperation(value = "查询我的账户信息")
-    @GetMapping(value = "queryMyAccount/{userId}")
-    public AppletResult queryMyAccount(@ApiParam("用户ID") @PathVariable("userId") String userId){
+    @GetMapping(value = "queryMyAccount/{userId}&{token}")
+    public AppletResult queryMyAccount(@ApiParam("用户ID") @PathVariable("userId") String userId,@ApiParam("token值") @PathVariable("token") String token){
+        String openId = jedisOperator.get(token);
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
         return userService.queryMyAccount(userId);
     }
 

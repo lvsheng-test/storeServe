@@ -6,6 +6,9 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value="apply对象",description="申请提现JSON格式传参")
 public class ApplyRecordsReq {
 
+    @ApiModelProperty(value="token值",name="token",required=true)
+    private String token;
+
     @ApiModelProperty(value="用户ID",name="userId",required=true)
     private String userId; //用户主键ID
 
@@ -70,5 +73,13 @@ public class ApplyRecordsReq {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }
