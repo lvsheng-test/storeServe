@@ -107,4 +107,11 @@ public interface UserService {
      */
     AppletResult delAddressInfo(DelAddressReq delAddressReq);
 
+    /**
+     * 我的邀请有礼
+     * @param userReq
+     * @return
+     */
+    AppletResult myInviteCourtesy(UserReq userReq);
+
 }

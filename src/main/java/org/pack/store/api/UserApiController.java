@@ -168,6 +168,14 @@ public class UserApiController {
         return userService.delAddressInfo(delAddressReq);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "邀请有礼界面展示接口")
+    @PostMapping(value = "myInviteCourtesy")
+    public AppletResult myInviteCourtesy(@RequestBody @ApiParam(name="用户对象",value="传入json格式",required = true) UserReq userReq){
+        return userService.myInviteCourtesy(userReq);
+    }
+
+
 
 
 }
