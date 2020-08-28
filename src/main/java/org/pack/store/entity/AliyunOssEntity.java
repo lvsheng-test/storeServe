@@ -1,32 +1,25 @@
-package org.pack.store.oss;
+package org.pack.store.entity;
 
-/*@Configuration*/
-public class AliyunConfig {
+public class AliyunOssEntity {
 
-    // 地域节点
-    /*@Value("${aliyun.oss.endpoint}")
-    private String endpoint;
-    @Value("${aliyun.accessKeyId}")
+    private String id;
+
     private String accessKeyId;
-    @Value("${aliyun.accessKeySecret}")
+
     private String accessKeySecret;
 
-    @Value("${aliyun.oss.bucketName}")
+    private String endpoint;
+
     private String bucketName;
-    @Value("${aliyun.oss.urlPrefix}")
+
     private String urlPrefix;
 
-    @Bean
-    public OSSClient ossClient() {
-        return new OSSClient(endpoint, accessKeyId, accessKeySecret);
+    public String getId() {
+        return id;
     }
 
-    public String getEndpoint() {
-        return endpoint;
-    }
-
-    public void setEndpoint(String endpoint) {
-        this.endpoint = endpoint;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getAccessKeyId() {
@@ -45,6 +38,14 @@ public class AliyunConfig {
         this.accessKeySecret = accessKeySecret;
     }
 
+    public String getEndpoint() {
+        return endpoint;
+    }
+
+    public void setEndpoint(String endpoint) {
+        this.endpoint = endpoint;
+    }
+
     public String getBucketName() {
         return bucketName;
     }
@@ -59,5 +60,5 @@ public class AliyunConfig {
 
     public void setUrlPrefix(String urlPrefix) {
         this.urlPrefix = urlPrefix;
-    }*/
+    }
 }

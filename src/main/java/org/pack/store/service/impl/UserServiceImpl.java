@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.pack.store.autoconf.DataConfig;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.entity.AddressEntity;
+import org.pack.store.entity.AliyunOssEntity;
 import org.pack.store.entity.MembershipEntity;
 import org.pack.store.entity.WeixinPhoneDecryptInfo;
 import org.pack.store.enums.ResultEnums;
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private AliyunOssMapper aliyunOssMapper;
 
     @Autowired
     private DictMapper dictMapper;
@@ -63,6 +67,8 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private InviteCourtesyMapper inviteCourtesyMapper;
+
+
 
     @Override
     public AppletResult queryMyAddress(String userId){
@@ -490,5 +496,10 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e){
             return ResultUtil.error(ResultEnums.SERVER_ERROR);
         }
+    }
+
+    @Override
+    public AliyunOssEntity getAliyunOssInfo(){
+        return aliyunOssMapper.getAliyunOssInfo();
     }
 }

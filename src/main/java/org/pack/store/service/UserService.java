@@ -1,6 +1,7 @@
 package org.pack.store.service;
 
 import com.alibaba.fastjson.JSONObject;
+import org.pack.store.entity.AliyunOssEntity;
 import org.pack.store.requestVo.*;
 import org.pack.store.utils.AppletResult;
 
@@ -113,5 +114,11 @@ public interface UserService {
      * @return
      */
     AppletResult myInviteCourtesy(UserReq userReq);
+
+    /**
+     * 获取OOS信息
+     * @return
+     */
+    AliyunOssEntity getAliyunOssInfo();
 
 }
