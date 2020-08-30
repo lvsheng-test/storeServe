@@ -32,4 +32,11 @@ public interface MemberMapper {
      */
     int updateMember(JSONObject jsonObject);
 
+    /**
+     * 根据用户主键查询用户信息
+     * @param userId
+     * @return
+     */
+    JSONObject getUserInfo(String userId);
+
 }

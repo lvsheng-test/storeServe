@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.AliyunOssMapper">
+
+    <resultMap id="BaseResultMap" type="org.pack.store.entity.AliyunOssEntity">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="access_key_id" jdbcType="VARCHAR" property="accessKeyId" />
+        <result column="access_key_secret" jdbcType="VARCHAR" property="accessKeySecret" />
+        <result column="endpoint" jdbcType="VARCHAR" property="endpoint" />
+        <result column="bucket_name" jdbcType="VARCHAR" property="bucketName" />
+        <result column="url_prefix" jdbcType="VARCHAR" property="urlPrefix" />
+    </resultMap>
+
+
+    <select id="getAliyunOssInfo" resultMap="BaseResultMap">
+        select * from t_aliyun_oss where id='1'
+    </select>
+
+</mapper>

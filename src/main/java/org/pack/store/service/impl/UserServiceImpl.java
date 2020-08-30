@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 import org.pack.store.autoconf.DataConfig;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.entity.AddressEntity;
+import org.pack.store.entity.AliyunOssEntity;
 import org.pack.store.entity.MembershipEntity;
 import org.pack.store.entity.WeixinPhoneDecryptInfo;
 import org.pack.store.enums.ResultEnums;
@@ -35,6 +36,9 @@ public class UserServiceImpl implements UserService {
     private AddressMapper addressMapper;
 
     @Autowired
+    private AliyunOssMapper aliyunOssMapper;
+
+    @Autowired
     private DictMapper dictMapper;
 
     @Autowired
@@ -42,10 +46,13 @@ public class UserServiceImpl implements UserService {
 
     @Resource
     private MemberMapper memberMapper;
+
     @Resource
     private DataConfig dataConfig;
+
     @Resource
     private JedisOperator jedisOperator;
+
     @Resource
     private IDGenerateUtil idGenerateUtil;
 
@@ -58,6 +65,12 @@ public class UserServiceImpl implements UserService {
     @Resource
     private CashRecordsMapper cashRecordsMapper;
 
+    @Resource
+    private InviteCourtesyMapper inviteCourtesyMapper;
+
+
+
+    @Override
     public AppletResult queryMyAddress(String userId){
         List<AddressEntity> list =new ArrayList<>();
         if (StringUtil.isNullStr(userId)){
@@ -78,6 +91,7 @@ public class UserServiceImpl implements UserService {
         return ResultUtil.success(list);
     }
 
+    @Override
     public AppletResult updateMyAddress(AddressReq addressReq){
         try{
             if (StringUtil.isNullStr(addressReq.getId())){
@@ -107,6 +121,7 @@ public class UserServiceImpl implements UserService {
         return ResultUtil.success();
     }
 
+    @Override
     public AppletResult insertMyAddress(AddressReq addressReq){
         if (StringUtil.isNullStr(addressReq.getUserId())){
             return ResultUtil.error(ResultEnums.USERID_IS_NULL);
@@ -135,6 +150,7 @@ public class UserServiceImpl implements UserService {
         return ResultUtil.success();
     }
 
+    @Override
     public AppletResult queryCommonDict(ParentCodeReq parentCodeReq){
         List<CityInfoRes> list = dictMapper.queryCommonParentCode(parentCodeReq.getParentCode());
         return ResultUtil.success(list);
@@ -435,6 +451,7 @@ public class UserServiceImpl implements UserService {
         return ResultUtil.success(json);
     }
 
+    @Override
     public AppletResult delAddressInfo(DelAddressReq delAddressReq){
         try {
             if (StringUtil.isNullStr(delAddressReq.getUserId()) && StringUtil.isNullStr(delAddressReq.getAddressId())){
@@ -445,5 +462,45 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.error(ResultEnums.SERVER_ERROR);
         }
         return ResultUtil.success();
+    }
+
+    @Override
+    public AppletResult myInviteCourtesy(UserReq userReq){
+        JSONObject json =new JSONObject();
+        try {
+            if (StringUtil.isNullStr(userReq.getUserId())){
+                List<JSONObject> inviteYes =new ArrayList<>();
+                List<JSONObject> inviteNo =new ArrayList<>();
+                json.put("inviteNum",0);
+                json.put("inviteYes",inviteYes);//有效邀请
+                json.put("inviteNo",inviteNo);//无效邀请
+                return ResultUtil.success(json);
+            }
+            JSONObject userObj = memberMapper.getUserInfo(userReq.getUserId());
+            if (userObj ==null){
+                return ResultUtil.error(ResultEnums.NOT_FOUND_USER);
+            }
+            //查询有效邀请的个数
+            int count = inviteCourtesyMapper.getCount(userObj.getIntValue("invitationCode"));
+            //查询有效邀请列表
+            JSONObject jsonObject =new JSONObject();
+            jsonObject.put("superiorCode",userObj.getIntValue("invitationCode"));
+            jsonObject.put("state",1);
+            List<JSONObject> inviteYes= inviteCourtesyMapper.queryInviteCourtesyByState(jsonObject);
+            //查询无效邀请列表
+            jsonObject.put("state",0);
+            List<JSONObject> inviteNo= inviteCourtesyMapper.queryInviteCourtesyByState(jsonObject);
+            json.put("inviteNum",count);
+            json.put("inviteYes",inviteYes);//有效邀请
+            json.put("inviteNo",inviteNo);//无效邀请
+            return ResultUtil.success(json);
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+    }
+
+    @Override
+    public AliyunOssEntity getAliyunOssInfo(){
+        return aliyunOssMapper.getAliyunOssInfo();
     }
 }

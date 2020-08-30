@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.InviteCourtesyMapper">
+
+
+    <select id="getCount" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(*) from t_invite_courtesy where superior_code=#{superiorCode} and state=1
+    </select>
+
+    <select id="queryInviteCourtesyByState" parameterType="com.alibaba.fastjson.JSONObject" resultType="com.alibaba.fastjson.JSONObject">
+        select DATE_FORMAT(p.ts,'%Y-%m-%d %H:%i:%s') createTime,
+        (select mobile from t_user where invitation_code=p.invitation_code) mobile
+        from t_invite_courtesy p left join t_user u on p.superior_code=u.invitation_code where p.superior_code=#{superiorCode} and p.state=#{state}
+    </select>
+
+
+</mapper>
