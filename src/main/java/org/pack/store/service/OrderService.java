@@ -9,6 +9,12 @@ import org.pack.store.utils.AppletResult;
 public interface OrderService {
 
     /**
+     * 查询订单详情
+     * @return
+     */
+    JSONObject getByOrderId(JSONObject jsonObject);
+
+    /**
      * 下单
      * @param jsonObject
      * @return

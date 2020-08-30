@@ -49,4 +49,18 @@ public class OrderApiController {
         return ResultUtil.success("下单成功");
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "查询订单详情")
+    @PostMapping(value = "/orderDetail")
+    public AppletResult orderDetail(@RequestBody AppVO<JSONObject> appVo){
+        JSONObject data = appVo.getData();
+        String openId = jedisOperator.get(appVo.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
+        data.put("openId",openId);
+        JSONObject jsonObject = orderService.getByOrderId(data);
+        return ResultUtil.success(jsonObject);
+    }
+
 }

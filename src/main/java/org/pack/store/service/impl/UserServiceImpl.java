@@ -278,6 +278,7 @@ public class UserServiceImpl implements UserService {
                 }
                 moblie =info.getPurePhoneNumber();
             }
+            jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 30);
             jsonObject  = new JSONObject();
             jsonObject.put("userId", idGenerateUtil.getId());
             jsonObject.put("openId", openId);
@@ -287,7 +288,7 @@ public class UserServiceImpl implements UserService {
             jsonObject.put("invitationCode", CommonUtils.getInvitationCode());
             memberMapper.insertMember(jsonObject);
         }
-        return ResultUtil.success();
+        return ResultUtil.success(sessionKey);
     }
 
     //查询我的会员卡

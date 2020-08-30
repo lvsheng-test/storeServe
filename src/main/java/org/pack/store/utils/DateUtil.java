@@ -268,4 +268,19 @@ public class DateUtil {
 		String date2 = sdf.format(calendar.getTime());
 		return date2;
 	}
+
+	/**
+	 * 判断当前时间距离第二天凌晨的时间
+	 *
+	 * @return 返回单位为[s:秒]
+	 */
+	public static Long getNextDateSeconds() {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return (cal.getTimeInMillis() - System.currentTimeMillis()) / 1000;
+	}
 }

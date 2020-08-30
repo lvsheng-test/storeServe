@@ -425,12 +425,15 @@ public class JedisOperator {
 	 * @param key
 	 * @return
 	 */
-	public Long incr(String key) {
+	public Long incr(String key,Integer second) {
 		Jedis jedis = null;
-		long value = 10000000;
+		long value = 1;
 		try {
 			jedis = getResource();
 			value = jedis.incr(key);
+			if(null != second){
+				expire(key,second);
+			}
 		}
 		catch (Exception e) {
 			logger.error("从Jedis自增长值出现异常：", e);

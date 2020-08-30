@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.OrderMapper">
+
+    <select id="getByOrderId" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select order_id orderId, order_serial orderSerial, store_phone,
+      receiveName, receivePhone, receiveAddress,
+      receiveLat, receiveLng, payMode, totalPrice, preferencesPrice,
+      integralPrice, deliveryFee, esArriveTime,
+      remark from t_order where order_id =#{orderId} and open_id = #{openId}
+    </select>
+
+    <insert id="placeOrder" parameterType="com.alibaba.fastjson.JSONObject" >
+    insert into t_order (order_id, order_serial, store_id,
+      store_name, store_phone, open_id,
+      receive_name, receive_phone, receive_address,
+      receive_lat, receive_lng, pay_mode,total_price, preferences_price,
+      integral_price, delivery_fee, es_arrive_time,
+      remark, create_time)
+    values (#{orderId,jdbcType=VARCHAR}, #{orderSerial,jdbcType=INTEGER}, #{storeId,jdbcType=VARCHAR},
+      #{storeName,jdbcType=VARCHAR}, #{storePhone,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR},
+      #{receiveName,jdbcType=VARCHAR}, #{receivePhone,jdbcType=VARCHAR}, #{receiveAddress,jdbcType=VARCHAR},
+      #{receiveLat,jdbcType=DECIMAL}, #{receiveLng,jdbcType=DECIMAL}, #{payMode,jdbcType=TINYINT},
+      #{totalPrice,jdbcType=DECIMAL}, #{preferencesPrice,jdbcType=DECIMAL},
+      #{integralPrice,jdbcType=DECIMAL}, #{deliveryFee,jdbcType=DECIMAL}, #{esArriveTime,jdbcType=TIMESTAMP},
+      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+    <insert id="insertDetail" parameterType="java.util.List">
+        insert into t_order_detail(id,order_id,goods_name,goods_number,goods_price,goods_img,create_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id},#{item.orderId},#{item.goodsName},#{item.goodsNumber},#{item.goodsPrice},#{item.goodsImg},now())
+        </foreach>
+    </insert>
+
+    <select id="goodsDetail" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT
+            goods_name goodsName,
+            goods_number goodsNumber,
+            goods_price goodsPrice,
+            goods_img goodsImg
+        FROM
+            t_order_detail
+        WHERE
+            order_id = #{orderId}
+    </select>
+</mapper>

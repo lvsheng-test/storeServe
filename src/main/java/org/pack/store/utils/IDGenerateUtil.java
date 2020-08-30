@@ -20,12 +20,9 @@ public class IDGenerateUtil {
         long oid = Long.parseLong(date);
         if(StringUtil.isNullStr(key)) {
             key = IDGenerateUtil.key;
-            long hincr = redisUtil.incr(key);
-            oid = oid + hincr;
-        }else{
-            long hincr = redisUtil.incr(key);
-            oid = oid + hincr;
         }
+        long hincr = redisUtil.incr(key);
+        oid = oid + hincr;
         int secondsNextEarlyMorning = getSecondsNextEarlyMorning().intValue();
         redisUtil.expire(key,secondsNextEarlyMorning);
         return String.valueOf(oid);
