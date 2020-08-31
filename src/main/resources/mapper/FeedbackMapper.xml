@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.FeedbackMapper">
+
+    <insert id="addFeedback" parameterType="org.pack.store.entity.FeedbackEntity">
+        insert into t_feedback(id,user_id,content,url) values (#{id},#{userId},#{content},#{url})
+    </insert>
+
+
+</mapper>
