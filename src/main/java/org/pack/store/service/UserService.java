@@ -128,4 +128,10 @@ public interface UserService {
      */
     AppletResult addFeedback(FeedbackReq feedbackReq);
 
+    /**
+     * 查询常见问题接口
+     * @return
+     */
+    AppletResult queryQuestions();
+
 }

@@ -119,6 +119,7 @@ public class OrderServiceImpl implements OrderService {
         json.put("deliveryFee",0);
         //获取送达时间
         json.put("sendTime",DateUtil.getSystmeTimeOldTime());
+        json.put("proportion",0.05);
         return ResultUtil.success(json);
     }
 }

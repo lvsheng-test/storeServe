@@ -186,6 +186,12 @@ public class UserApiController {
         return userService.addFeedback(feedbackReq);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "常见问题信息接口")
+    @GetMapping(value = "queryQuestions")
+    public AppletResult queryQuestions(){
+        return userService.queryQuestions();
+    }
 
 
 

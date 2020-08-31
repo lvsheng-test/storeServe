@@ -68,6 +68,9 @@ public class UserServiceImpl implements UserService {
     @Resource
     private FeedbackMapper feedbackMapper;
 
+    @Resource
+    private QuestionsMapper questionsMapper;
+
     @Override
     public AppletResult queryMyAddress(String userId){
         List<AddressEntity> list =new ArrayList<>();
@@ -517,5 +520,11 @@ public class UserServiceImpl implements UserService {
             return ResultUtil.error(ResultEnums.SERVER_ERROR);
         }
         return ResultUtil.success();
+    }
+
+    @Override
+    public AppletResult queryQuestions(){
+        List<QuestionsEntity> questionsList = questionsMapper.queryQuestionsList();
+        return ResultUtil.success(questionsList);
     }
 }
