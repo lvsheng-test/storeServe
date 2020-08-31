@@ -7,10 +7,7 @@ import io.swagger.annotations.ApiParam;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.autoconf.RabbitConfig;
 import org.pack.store.common.rabbitmq.producer.RabbitMqSender;
-import org.pack.store.requestVo.AddressReq;
-import org.pack.store.requestVo.AppVO;
-import org.pack.store.requestVo.BindMemberReq;
-import org.pack.store.requestVo.ParentCodeReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.service.OrderService;
 import org.pack.store.service.UserService;
 import org.pack.store.utils.AppletResult;
@@ -62,5 +59,19 @@ public class OrderApiController {
         JSONObject jsonObject = orderService.getByOrderId(data);
         return ResultUtil.success(jsonObject);
     }
+
+    @CrossOrigin
+    @ApiOperation(value = "去结算接口")
+    @PostMapping(value = "/goSettlement")
+    public AppletResult goSettlement(@RequestBody @ApiParam(name="用户TOKEN对象",value="传入json格式",required = true) UserTokenReq userTokenReq){
+        String openId = jedisOperator.get(userTokenReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
+        return orderService.goSettlement(userTokenReq);
+    }
+
+
+
 
 }

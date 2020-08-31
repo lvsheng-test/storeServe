@@ -1,10 +1,15 @@
 package org.pack.store.mapper;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.pack.store.requestVo.BindMemberReq;
+import org.springframework.stereotype.Component;
+
 import java.util.List;
 
+@Component
+@Mapper
 public interface UserVipMapper {
 
     /**
@@ -69,5 +74,12 @@ public interface UserVipMapper {
      * @return
      */
     JSONObject queryMyMemberAcount(@Param("userId") String userId);
+
+    /**
+     * 查询我的消费卷
+     * @param userId
+     * @return
+     */
+    JSONObject queryMyXiaoFeiJuan(@Param("userId") String userId);
 
 }

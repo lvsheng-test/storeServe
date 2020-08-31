@@ -49,4 +49,9 @@
     <select id="queryMyMemberAcount" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
         SELECT m.amount FROM t_user_vip u LEFT JOIN t_membership m ON u.card_no=m.card_no WHERE u.user_id=#{userId} AND u.vip_name='会员卡'
     </select>
+
+    <select id="queryMyXiaoFeiJuan" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
+        SELECT m.amount FROM t_user_vip u LEFT JOIN t_membership m ON u.card_no=m.card_no WHERE u.user_id=#{userId} AND u.vip_name='消费卡'
+    </select>
+
 </mapper>

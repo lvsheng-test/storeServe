@@ -2,9 +2,15 @@ package org.pack.store.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import org.pack.store.autoconf.JedisOperator;
+import org.pack.store.entity.AddressEntity;
+import org.pack.store.enums.ResultEnums;
+import org.pack.store.mapper.AddressMapper;
 import org.pack.store.mapper.OrderMapper;
+import org.pack.store.mapper.UserVipMapper;
+import org.pack.store.requestVo.UserTokenReq;
 import org.pack.store.service.OrderService;
 import org.pack.store.utils.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,6 +25,12 @@ public class OrderServiceImpl implements OrderService {
     private JedisOperator jedisOperator;
     @Resource
     private OrderMapper orderMapper;
+
+    @Autowired
+    private AddressMapper addressMapper;
+
+    @Autowired
+    private UserVipMapper userVipMapper;
 
     /**
      * 查看订单详情
@@ -71,5 +83,42 @@ public class OrderServiceImpl implements OrderService {
      */
     public AppletResult payAccount(JSONObject jsonObject){
         return null;
+    }
+
+    @Override
+    public AppletResult goSettlement(UserTokenReq userTokenReq){
+        JSONObject json =new JSONObject();
+        if (StringUtil.isNullStr(userTokenReq.getUserId())){
+            return ResultUtil.error(ResultEnums.USERID_IS_NULL);
+        }
+        //查询用户有没有设置默认地址
+        AddressEntity addressEntity = addressMapper.queryAdressByUserIdAndDefalust(userTokenReq.getUserId());
+        if (addressEntity !=null){
+            if (addressEntity.getSex()=='0'){
+                addressEntity.setSexName("先生");
+            }
+            if (addressEntity.getSex()=='1'){
+                addressEntity.setSexName("女士");
+            }
+        }
+        json.put("addressInfo",addressEntity);
+        //查询用户积分
+        JSONObject jsonObject = userVipMapper.queryMyAccount(userTokenReq.getUserId());
+        if (jsonObject==null){
+            json.put("integral",0);
+        }else {
+            json.put("integral",jsonObject.getIntValue("integral"));
+        }
+        //查询用户消费券
+        JSONObject  obj = userVipMapper.queryMyXiaoFeiJuan(userTokenReq.getUserId());
+        if (obj ==null){
+            json.put("consumption",0);
+        }else {
+            json.put("consumption",obj.getBigDecimal("amount"));
+        }
+        json.put("deliveryFee",0);
+        //获取送达时间
+        json.put("sendTime",DateUtil.getSystmeTimeOldTime());
+        return ResultUtil.success(json);
     }
 }
