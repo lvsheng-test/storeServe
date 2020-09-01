@@ -44,4 +44,26 @@
         WHERE
             order_id = #{orderId}
     </select>
+
+
+    <!--支付流水-->
+    <insert id="inertTrans" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO t_transaction_detail (
+        id,
+        user_id,
+        order_id,
+        amount,
+        STATUS,
+        in_out,
+        remark,
+        ts
+    )
+    VALUES
+        (
+            #{id},#{userId},#{orderId},#{amount},#{status},#P{inOut},#{remark},now())
+    </insert>
+    <!--下单扣余额-->
+    <update id="updateBalance" parameterType="com.alibaba.fastjson.JSONObject">
+        update t_account set balance = balance - #{amount} where user_id = #{userId} and balance - #{amount} > 0
+    </update>
 </mapper>

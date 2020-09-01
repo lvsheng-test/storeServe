@@ -21,4 +21,8 @@ public interface OrderMapper {
     int insertDetail(List<JSONObject> list);
 
     List<JSONObject> goodsDetail(String orderId);
+
+    int inertTrans(JSONObject jsonObject);
+
+    int updateBalance(JSONObject jsonObject);
 }

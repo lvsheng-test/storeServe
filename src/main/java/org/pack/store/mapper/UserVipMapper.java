@@ -70,4 +70,6 @@ public interface UserVipMapper {
      */
     JSONObject queryMyMemberAcount(@Param("userId") String userId);
 
+    JSONObject queryUserInfo(String openId);
+
 }

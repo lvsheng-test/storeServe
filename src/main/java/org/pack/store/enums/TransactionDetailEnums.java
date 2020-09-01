@@ -7,7 +7,10 @@ public enum TransactionDetailEnums {
 
     RECHARGE_MEMBER("101","会员卡充值"),
     DEPOSIT_MEMBER("102","缴纳押金"),
-    RETURN_MOENY("103","充值返现");
+    RETURN_MOENY("103","充值返现"),
+    ORDER_PAY("104","下单扣款"),
+    ORDER_REFUND("105","订单退款"),
+    ;
 
 
     private String code;

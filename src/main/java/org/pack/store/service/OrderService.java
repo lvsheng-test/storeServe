@@ -21,4 +21,12 @@ public interface OrderService {
      */
     AppletResult placeOrder(JSONObject jsonObject);
 
+
+    /**
+     * 下单扣款
+     * @param jsonObject
+     * @return
+     */
+    public AppletResult payAccount(JSONObject jsonObject);
+
 }

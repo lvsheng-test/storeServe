@@ -2,6 +2,7 @@ package org.pack.store.api;
 
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.pack.store.autoconf.JedisOperator;
@@ -61,6 +62,25 @@ public class OrderApiController {
         data.put("openId",openId);
         JSONObject jsonObject = orderService.getByOrderId(data);
         return ResultUtil.success(jsonObject);
+    }
+
+    /**
+     * AppVO层与其他接口一致（token必传）
+     * 参数：data层：{"orderId":"订单号","amount":"支付金额","remark":"备注"}
+     */
+    @CrossOrigin
+    @ApiOperation(value = "支付扣款")
+    @PostMapping(value = "/payAccount")
+    @ApiImplicitParam(value = "{\"orderId\":\"订单号\",\"amount\":\"支付金额\",\"remark\":\"备注\"}")
+    public AppletResult payAccount(@RequestBody AppVO<JSONObject> jsonObject){
+        JSONObject data = jsonObject.getData();
+        String openId = jedisOperator.get(jsonObject.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
+        data.put("openId",openId);
+        AppletResult appletResult = orderService.payAccount(data);
+        return appletResult;
     }
 
 }
