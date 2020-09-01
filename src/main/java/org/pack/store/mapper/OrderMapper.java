@@ -25,4 +25,6 @@ public interface OrderMapper {
     int inertTrans(JSONObject jsonObject);
 
     int updateBalance(JSONObject jsonObject);
+
+    int editOrder(JSONObject jsonObject);
 }

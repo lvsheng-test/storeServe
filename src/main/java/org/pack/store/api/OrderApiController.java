@@ -8,16 +8,12 @@ import io.swagger.annotations.ApiParam;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.autoconf.RabbitConfig;
 import org.pack.store.common.rabbitmq.producer.RabbitMqSender;
-import org.pack.store.requestVo.AddressReq;
 import org.pack.store.requestVo.AppVO;
-import org.pack.store.requestVo.BindMemberReq;
-import org.pack.store.requestVo.ParentCodeReq;
+import org.pack.store.requestVo.UserTokenReq;
 import org.pack.store.service.OrderService;
-import org.pack.store.service.UserService;
 import org.pack.store.utils.AppletResult;
 import org.pack.store.utils.ResultUtil;
 import org.pack.store.utils.StringUtil;
-import org.pack.store.utils.VerifyUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -66,7 +62,7 @@ public class OrderApiController {
 
     /**
      * AppVO层与其他接口一致（token必传）
-     * 参数：data层：{"orderId":"订单号","amount":"支付金额","remark":"备注"}
+     * 参数：data层：{"orderId":"订单号","amount":"支付金额","payMode":"支付方式(0:会员卡，1:微信)","remark":"备注"}
      */
     @CrossOrigin
     @ApiOperation(value = "支付扣款")

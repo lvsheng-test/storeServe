@@ -3,13 +3,18 @@ package org.pack.store.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import org.pack.store.autoconf.JedisOperator;
 
+import org.pack.store.entity.AddressEntity;
+import org.pack.store.enums.OrderEnums;
+import org.pack.store.enums.ResultEnums;
 import org.pack.store.enums.TransactionDetailEnums;
 
 
+import org.pack.store.mapper.AddressMapper;
 import org.pack.store.mapper.OrderMapper;
 
 import org.pack.store.mapper.UserVipMapper;
 
+import org.pack.store.requestVo.UserTokenReq;
 import org.pack.store.service.OrderService;
 import org.pack.store.utils.*;
 
@@ -34,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     private OrderMapper orderMapper;
     @Resource
     private UserVipMapper userVipMapper;
+    @Resource
+    private AddressMapper addressMapper;
 
     /**
      * 查看订单详情
@@ -74,7 +81,6 @@ public class OrderServiceImpl implements OrderService {
                 jsonObj.put("orderId",orderId);
             }
             orderMapper.insertDetail(detailList);
-            return ResultUtil.success("下单成功");
             JSONObject reusltJson = new JSONObject();
             reusltJson.put("orderId",orderId);
             return ResultUtil.success(reusltJson);
@@ -90,7 +96,6 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public AppletResult payAccount(JSONObject jsonObject){
-        return null;
         String openId = jsonObject.getString("openId");
         String orderId = jsonObject.getString("orderId");
         JSONObject userInfo = userVipMapper.queryUserInfo(openId);
@@ -103,7 +108,10 @@ public class OrderServiceImpl implements OrderService {
             if(updateBalance == 0){
                 return ResultUtil.error(0,"未开通会员账户或账户余额不足");
             }
-            orderMapper.inertTrans(jsonObject);
+            if(orderMapper.inertTrans(jsonObject) > 0) {
+                jsonObject.put("orderStatus", OrderEnums.ORDER_AL_PAY.getCode());
+                orderMapper.editOrder(jsonObject);
+            }
         } catch (Exception e) {
             if (e instanceof DuplicateKeyException) {
                 return ResultUtil.error(0,"订单已付款，请勿重复操作");
@@ -112,7 +120,7 @@ public class OrderServiceImpl implements OrderService {
         }
         return ResultUtil.success(orderId);
     }
- @Override
+    @Override
     public AppletResult goSettlement(UserTokenReq userTokenReq){
         JSONObject json =new JSONObject();
         if (StringUtil.isNullStr(userTokenReq.getUserId())){

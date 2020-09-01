@@ -3,10 +3,10 @@
 <mapper namespace="org.pack.store.mapper.OrderMapper">
 
     <select id="getByOrderId" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
-        select order_id orderId, order_serial orderSerial, store_phone,
-      receiveName, receivePhone, receiveAddress,
-      receiveLat, receiveLng, payMode, totalPrice, preferencesPrice,
-      integralPrice, deliveryFee, esArriveTime,
+        select order_id orderId, order_serial orderSerial, store_phone storePhone,
+      receive_name receiveName, receive_phone receivePhone, receive_address receiveAddress,
+      receive_lat receiveLat, receive_lng receiveLng, pay_mode payMode, total_price totalPrice, preferences_price preferencesPrice,
+      integral_price integralPrice, delivery_fee deliveryFee, es_arrive_time esArriveTime,order_status orderStatus,
       remark from t_order where order_id =#{orderId} and open_id = #{openId}
     </select>
 
@@ -44,8 +44,18 @@
         WHERE
             order_id = #{orderId}
     </select>
-
-
+    <update id="editOrder" parameterType="com.alibaba.fastjson.JSONObject">
+        update t_order
+        <set>
+            <if test="orderStatus != null">
+                order_status = #{orderStatus}
+            </if>
+            <if test="payMode != null">
+                pay_mode = #{payMode}
+            </if>
+        </set>
+        where order_id = #{orderId}
+    </update>
     <!--支付流水-->
     <insert id="inertTrans" parameterType="com.alibaba.fastjson.JSONObject">
         INSERT INTO t_transaction_detail (
