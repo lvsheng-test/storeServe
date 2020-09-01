@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.pack.store.autoconf.DataConfig;
 import org.pack.store.autoconf.JedisOperator;
-import org.pack.store.entity.AddressEntity;
-import org.pack.store.entity.AliyunOssEntity;
-import org.pack.store.entity.MembershipEntity;
-import org.pack.store.entity.WeixinPhoneDecryptInfo;
+import org.pack.store.entity.*;
 import org.pack.store.enums.ResultEnums;
 import org.pack.store.mapper.*;
 import org.pack.store.requestVo.*;
@@ -68,7 +65,11 @@ public class UserServiceImpl implements UserService {
     @Resource
     private InviteCourtesyMapper inviteCourtesyMapper;
 
+    @Resource
+    private FeedbackMapper feedbackMapper;
 
+    @Resource
+    private QuestionsMapper questionsMapper;
 
     @Override
     public AppletResult queryMyAddress(String userId){
@@ -502,5 +503,28 @@ public class UserServiceImpl implements UserService {
     @Override
     public AliyunOssEntity getAliyunOssInfo(){
         return aliyunOssMapper.getAliyunOssInfo();
+    }
+
+    @Override
+    public AppletResult addFeedback(FeedbackReq feedbackReq){
+        if (StringUtil.isNullStr(feedbackReq.getUserId())){
+            return ResultUtil.error(ResultEnums.USERID_IS_NULL);
+        }
+        FeedbackEntity feedbackEntity =new FeedbackEntity();
+        feedbackEntity.setId(UuidUtil.getUuid());
+        feedbackEntity.setUrl(feedbackReq.getImageUrl());
+        feedbackEntity.setUserId(feedbackReq.getUserId());
+        feedbackEntity.setContent(feedbackReq.getContent());
+        int i = feedbackMapper.addFeedback(feedbackEntity);
+        if (i==0){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success();
+    }
+
+    @Override
+    public AppletResult queryQuestions(){
+        List<QuestionsEntity> questionsList = questionsMapper.queryQuestionsList();
+        return ResultUtil.success(questionsList);
     }
 }

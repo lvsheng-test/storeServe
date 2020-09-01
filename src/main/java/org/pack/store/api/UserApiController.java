@@ -175,6 +175,23 @@ public class UserApiController {
         return userService.myInviteCourtesy(userReq);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "提交意见反馈接口")
+    @PostMapping(value = "addFeedback")
+    public AppletResult addFeedback(@RequestBody @ApiParam(name="意见反馈对象",value="传入json格式",required = true) FeedbackReq feedbackReq){
+        String openId = jedisOperator.get(feedbackReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
+        return userService.addFeedback(feedbackReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "常见问题信息接口")
+    @GetMapping(value = "queryQuestions")
+    public AppletResult queryQuestions(){
+        return userService.queryQuestions();
+    }
 
 
 

@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.pack.store.requestVo.AddressReq;
 import org.pack.store.requestVo.BindMemberReq;
 import org.pack.store.requestVo.ParentCodeReq;
+import org.pack.store.requestVo.UserTokenReq;
 import org.pack.store.utils.AppletResult;
 
 public interface OrderService {
@@ -21,12 +22,14 @@ public interface OrderService {
      */
     AppletResult placeOrder(JSONObject jsonObject);
 
-
     /**
+     * 购物车去结算接口
+     * @param userTokenReq
+     * @return
+     */
+    AppletResult goSettlement(UserTokenReq userTokenReq);    /**
      * 下单扣款
      * @param jsonObject
      * @return
      */
-    public AppletResult payAccount(JSONObject jsonObject);
-
-}
+    public AppletResult payAccount(JSONObject jsonObject);}

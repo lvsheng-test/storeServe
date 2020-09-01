@@ -121,4 +121,17 @@ public interface UserService {
      */
     AliyunOssEntity getAliyunOssInfo();
 
+    /**
+     * 添加意见反馈内容
+     * @param feedbackReq
+     * @return
+     */
+    AppletResult addFeedback(FeedbackReq feedbackReq);
+
+    /**
+     * 查询常见问题接口
+     * @return
+     */
+    AppletResult queryQuestions();
+
 }

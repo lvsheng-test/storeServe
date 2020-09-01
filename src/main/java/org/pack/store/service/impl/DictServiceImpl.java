@@ -4,13 +4,13 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.pack.store.entity.ConfigProportionEntity;
 import org.pack.store.entity.DictEntity;
+import org.pack.store.entity.QuestionsEntity;
 import org.pack.store.enums.ConfigEnums;
+import org.pack.store.enums.ResultEnums;
 import org.pack.store.mapper.ConfigProportionMapper;
 import org.pack.store.mapper.DictMapper;
-import org.pack.store.requestVo.ConfigAddReq;
-import org.pack.store.requestVo.ConfigReq;
-import org.pack.store.requestVo.DictByParentCodeReq;
-import org.pack.store.requestVo.DictReq;
+import org.pack.store.mapper.QuestionsMapper;
+import org.pack.store.requestVo.*;
 import org.pack.store.resposeVo.DictRes;
 import org.pack.store.service.DictService;
 import org.pack.store.utils.AppletResult;
@@ -34,6 +34,9 @@ public class DictServiceImpl implements DictService {
 
     @Autowired
     private ConfigProportionMapper configProportionMapper;
+
+    @Autowired
+    private QuestionsMapper questionsMapper;
 
     public AppletResult queryDictAll(DictReq dictReq){
         DictRes dictRes =new DictRes();
@@ -61,6 +64,18 @@ public class DictServiceImpl implements DictService {
         PageHelper.startPage(configReq.getPage(),configReq.getLimit(),true);
         List<ConfigProportionEntity> configList = configProportionMapper.selectAll();
         return ResultUtil.success(configList,configList.size());
+    }
+
+    public AppletResult addQuestionsInfo(QuestionsReq questionsReq){
+        QuestionsEntity QuestionsEntity =new QuestionsEntity();
+        QuestionsEntity.setId(UuidUtil.getUuid());
+        QuestionsEntity.setTitle(questionsReq.getTitle());
+        QuestionsEntity.setContent(questionsReq.getContent());
+        int i = questionsMapper.addQuestionsInfo(QuestionsEntity);
+        if (i==0){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success();
     }
 
     public void inserDictInfo(DictEntity dictInfo){

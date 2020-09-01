@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.pack.store.mapper.QuestionsMapper">
+
+    <resultMap id="BaseResultMap" type="org.pack.store.entity.QuestionsEntity">
+        <id column="id" jdbcType="VARCHAR" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    </resultMap>
+
+    <insert id="addQuestionsInfo" parameterType="org.pack.store.entity.QuestionsEntity">
+        insert into t_questions(id,title,content) values (#{id},#{title},#{content})
+    </insert>
+
+    <select id="queryQuestionsList" resultMap="BaseResultMap">
+        select * from t_questions
+    </select>
+
+</mapper>

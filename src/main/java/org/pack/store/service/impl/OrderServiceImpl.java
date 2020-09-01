@@ -2,11 +2,17 @@ package org.pack.store.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import org.pack.store.autoconf.JedisOperator;
+
 import org.pack.store.enums.TransactionDetailEnums;
+
+
 import org.pack.store.mapper.OrderMapper;
+
 import org.pack.store.mapper.UserVipMapper;
+
 import org.pack.store.service.OrderService;
 import org.pack.store.utils.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -68,6 +74,7 @@ public class OrderServiceImpl implements OrderService {
                 jsonObj.put("orderId",orderId);
             }
             orderMapper.insertDetail(detailList);
+            return ResultUtil.success("下单成功");
             JSONObject reusltJson = new JSONObject();
             reusltJson.put("orderId",orderId);
             return ResultUtil.success(reusltJson);
@@ -77,11 +84,13 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 支付
+     * @param jsonObject
      * @param
      * @return
      */
     @Override
     public AppletResult payAccount(JSONObject jsonObject){
+        return null;
         String openId = jsonObject.getString("openId");
         String orderId = jsonObject.getString("orderId");
         JSONObject userInfo = userVipMapper.queryUserInfo(openId);
@@ -102,5 +111,42 @@ public class OrderServiceImpl implements OrderService {
             logger.error("==>支付异常",e);
         }
         return ResultUtil.success(orderId);
+    }
+ @Override
+    public AppletResult goSettlement(UserTokenReq userTokenReq){
+        JSONObject json =new JSONObject();
+        if (StringUtil.isNullStr(userTokenReq.getUserId())){
+            return ResultUtil.error(ResultEnums.USERID_IS_NULL);
+        }
+        //查询用户有没有设置默认地址
+        AddressEntity addressEntity = addressMapper.queryAdressByUserIdAndDefalust(userTokenReq.getUserId());
+        if (addressEntity !=null){
+            if (addressEntity.getSex()=='0'){
+                addressEntity.setSexName("先生");
+            }
+            if (addressEntity.getSex()=='1'){
+                addressEntity.setSexName("女士");
+            }
+        }
+        json.put("addressInfo",addressEntity);
+        //查询用户积分
+        JSONObject jsonObject = userVipMapper.queryMyAccount(userTokenReq.getUserId());
+        if (jsonObject==null){
+            json.put("integral",0);
+        }else {
+            json.put("integral",jsonObject.getIntValue("integral"));
+        }
+        //查询用户消费券
+        JSONObject  obj = userVipMapper.queryMyXiaoFeiJuan(userTokenReq.getUserId());
+        if (obj ==null){
+            json.put("consumption",0);
+        }else {
+            json.put("consumption",obj.getBigDecimal("amount"));
+        }
+        json.put("deliveryFee",0);
+        //获取送达时间
+        json.put("sendTime",DateUtil.getSystmeTimeOldTime());
+        json.put("proportion",0.05);
+        return ResultUtil.success(json);
     }
 }

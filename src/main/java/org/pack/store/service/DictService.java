@@ -1,10 +1,7 @@
 package org.pack.store.service;
 
 import org.pack.store.entity.DictEntity;
-import org.pack.store.requestVo.ConfigAddReq;
-import org.pack.store.requestVo.ConfigReq;
-import org.pack.store.requestVo.DictByParentCodeReq;
-import org.pack.store.requestVo.DictReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.utils.AppletResult;
 import org.pack.store.utils.JSONResult;
 
@@ -48,5 +45,12 @@ public interface DictService {
      * @param configAddReq
      */
     void insertConfigProportion(ConfigAddReq configAddReq);
+
+    /**
+     * 添加常见问题信息
+     * @param questionsReq
+     * @return
+     */
+    AppletResult addQuestionsInfo(QuestionsReq questionsReq);
 
 }

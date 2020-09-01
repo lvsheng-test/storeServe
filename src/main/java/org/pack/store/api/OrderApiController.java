@@ -83,4 +83,15 @@ public class OrderApiController {
         return appletResult;
     }
 
+@CrossOrigin
+    @ApiOperation(value = "去结算接口")
+    @PostMapping(value = "/goSettlement")
+    public AppletResult goSettlement(@RequestBody @ApiParam(name="用户TOKEN对象",value="传入json格式",required = true) UserTokenReq userTokenReq){
+        String openId = jedisOperator.get(userTokenReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
+        return orderService.goSettlement(userTokenReq);
+    }
+
 }

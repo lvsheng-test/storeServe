@@ -109,4 +109,13 @@ public class DictController {
         return ResultUtil.success(lsit);
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "添加常见问题信息")
+    @PostMapping(value = "addQuestionsInfo")
+    public AppletResult addQuestionsInfo(@RequestBody QuestionsReq questionsReq){
+        return dictService.addQuestionsInfo(questionsReq);
+    }
+
+
+
 }

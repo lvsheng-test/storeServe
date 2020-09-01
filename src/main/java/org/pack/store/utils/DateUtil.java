@@ -283,4 +283,16 @@ public class DateUtil {
 		cal.set(Calendar.MILLISECOND, 0);
 		return (cal.getTimeInMillis() - System.currentTimeMillis()) / 1000;
 	}
+
+	public static String getSystmeTimeOldTime(){
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.HOUR_OF_DAY, calendar.get(Calendar.HOUR_OF_DAY) + 1);
+		SimpleDateFormat df = new SimpleDateFormat("HH:mm");
+		return df.format(calendar.getTime());
+	}
+
+	public static void main(String[] args) {
+		//System.out.println(UuidUtil.getUuid());
+		System.out.println("获取下一个月日期：" + getSystmeTimeOldTime());
+	}
 }
