@@ -103,10 +103,16 @@ public class OrderServiceImpl implements OrderService {
         jsonObject.put("userId",null != userInfo ? userInfo.get("userId") : "");
         jsonObject.put("status", TransactionDetailEnums.ORDER_PAY.getCode());
         jsonObject.put("inOut", 1);
-        try {
-            int updateBalance = orderMapper.updateBalance(jsonObject);
+        try {//会员卡扣款
+
+            JSONObject acountObj = userVipMapper.queryMyMemberInfo(jsonObject.getString("userId"));
+            if(acountObj ==null){
+                return ResultUtil.error(0,"支付失败，未开通会员账户！");
+            }
+            acountObj.put("money",jsonObject.getBigDecimal("amount"));
+            int updateBalance = orderMapper.updateBalance(acountObj);
             if(updateBalance == 0){
-                return ResultUtil.error(0,"未开通会员账户或账户余额不足");
+                return ResultUtil.error(0,"支付失败，账户余额不足");
             }
             if(orderMapper.inertTrans(jsonObject) > 0) {
                 jsonObject.put("orderStatus", OrderEnums.ORDER_AL_PAY.getCode());

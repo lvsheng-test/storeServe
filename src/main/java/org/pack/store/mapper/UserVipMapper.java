@@ -82,4 +82,12 @@ public interface UserVipMapper {
      */
     JSONObject queryMyXiaoFeiJuan(@Param("userId") String userId);
 
- 	JSONObject queryUserInfo(String openId);}
+ 	JSONObject queryUserInfo(String openId);
+
+    /**
+     * 查询我绑定的会员卡信息
+     * @param userId
+     * @return
+     */
+    JSONObject queryMyMemberInfo(@Param("userId") String userId);
+}

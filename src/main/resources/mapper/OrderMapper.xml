@@ -74,6 +74,6 @@
     </insert>
     <!--下单扣余额-->
     <update id="updateBalance" parameterType="com.alibaba.fastjson.JSONObject">
-        update t_account set balance = balance - #{amount} where user_id = #{userId} and balance - #{amount} > 0
+        update t_membership set amount=amount-#{money} where id=#{id} and amount-#{money} > 0
     </update>
 </mapper>

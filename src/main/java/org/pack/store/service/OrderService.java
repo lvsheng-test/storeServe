@@ -27,9 +27,12 @@ public interface OrderService {
      * @param userTokenReq
      * @return
      */
-    AppletResult goSettlement(UserTokenReq userTokenReq);    /**
+    AppletResult goSettlement(UserTokenReq userTokenReq);
+    /**
      * 下单扣款
      * @param jsonObject
      * @return
      */
-    public AppletResult payAccount(JSONObject jsonObject);}
+    public AppletResult payAccount(JSONObject jsonObject);
+
+}
