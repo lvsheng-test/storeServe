@@ -240,7 +240,7 @@ public class UserServiceImpl implements UserService {
         //查用户是否存在
         JSONObject insertJson = memberMapper.queryMoblie(openId);
         if (insertJson !=null){
-            jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 30);
+            jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 10);
             insertJson.put("token",sessionKey);
             return ResultUtil.success(insertJson);
             /*String str = WXBizDataCrypt.decryptData(sessionKey, appId, encryptedData, iv);
@@ -295,7 +295,7 @@ public class UserServiceImpl implements UserService {
                 }
                 moblie =info.getPurePhoneNumber();
             }
-            jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 30);
+            jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 10);
             jsonObject  = new JSONObject();
             jsonObject.put("userId", idGenerateUtil.getId());
             jsonObject.put("openId", openId);

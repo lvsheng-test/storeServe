@@ -3,7 +3,10 @@ package org.pack.store.enums;
 public enum OrderEnums {
 
     ORDER_WAIT_PAY("0","待支付"),
-    ORDER_AL_PAY("1","已支付")
+    ORDER_AL_PAY("1","已支付（待分拣）"),
+    ORDER_DELIVERY("2","已支付（已发货）"),
+    ORDER_COMPLETED("3","已完成"),
+    ORDER_CANCELLATION("4","已取消")
     ;
 
 

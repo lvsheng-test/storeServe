@@ -14,22 +14,22 @@
     insert into t_order (order_id, order_serial, store_id,
       store_name, store_phone, open_id,
       receive_name, receive_phone, receive_address,
-      receive_lat, receive_lng, pay_mode,total_price, preferences_price,
+      receive_lat, receive_lng,total_price, preferences_price,
       integral_price, delivery_fee, es_arrive_time,
       remark, create_time)
     values (#{orderId,jdbcType=VARCHAR}, #{orderSerial,jdbcType=INTEGER}, #{storeId,jdbcType=VARCHAR},
       #{storeName,jdbcType=VARCHAR}, #{storePhone,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR},
       #{receiveName,jdbcType=VARCHAR}, #{receivePhone,jdbcType=VARCHAR}, #{receiveAddress,jdbcType=VARCHAR},
-      #{receiveLat,jdbcType=DECIMAL}, #{receiveLng,jdbcType=DECIMAL}, #{payMode,jdbcType=TINYINT},
+      #{receiveLat,jdbcType=DECIMAL}, #{receiveLng,jdbcType=DECIMAL},
       #{totalPrice,jdbcType=DECIMAL}, #{preferencesPrice,jdbcType=DECIMAL},
       #{integralPrice,jdbcType=DECIMAL}, #{deliveryFee,jdbcType=DECIMAL}, #{esArriveTime,jdbcType=TIMESTAMP},
-      #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP})
+      #{remark,jdbcType=VARCHAR}, now())
   </insert>
     <insert id="insertDetail" parameterType="java.util.List">
-        insert into t_order_detail(id,order_id,goods_name,goods_number,goods_price,goods_img,create_time)
+        insert into t_order_detail(id,order_id,gooods_id,goods_name,goods_number,goods_price,goods_img,create_time)
         values
         <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.id},#{item.orderId},#{item.goodsName},#{item.goodsNumber},#{item.goodsPrice},#{item.goodsImg},now())
+            (#{item.id},#{item.orderId},#{item.gooodsId},#{item.goodsName},#{item.goodsNumber},#{item.goodsPrice},#{item.goodsImg},now())
         </foreach>
     </insert>
 
@@ -76,4 +76,44 @@
     <update id="updateBalance" parameterType="com.alibaba.fastjson.JSONObject">
         update t_membership set amount=amount-#{money} where id=#{id} and amount-#{money} > 0
     </update>
+    <!-- 查询个人所有订单列表信息-->
+    <select id="queryOrderByOpenIdAll" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select order_id orderId,total_price totalPrice,
+        (CASE order_status WHEN 0 THEN '待支付'
+        WHEN 1 THEN '分拣中'
+        WHEN 2 THEN '派送中'
+        WHEN 3 THEN '已完成'
+        WHEN 4 THEN '已取消'
+        ELSE '已退款' END) orderStatus,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order where open_id=#{openId}
+    </select>
+    <!--查询个人待支付所有订单列表信息 -->
+    <select id="queryOrderByOpenIdAndPending" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select order_id orderId,total_price totalPrice,
+        (CASE order_status WHEN 0 THEN '待支付'
+        WHEN 1 THEN '分拣中'
+        WHEN 2 THEN '派送中'
+        WHEN 3 THEN '已完成'
+        WHEN 4 THEN '已取消'
+        ELSE '已退款' END) orderStatus,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order
+        where open_id=#{openId} and order_status =0
+    </select>
+
+    <select id="queryOrderByOpenIdAndReceipt" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select order_id orderId,total_price totalPrice,
+        (CASE order_status WHEN 0 THEN '待支付'
+        WHEN 1 THEN '分拣中'
+        WHEN 2 THEN '派送中'
+        WHEN 3 THEN '已完成'
+        WHEN 4 THEN '已取消'
+        ELSE '已退款' END) orderStatus,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order
+        where open_id=#{openId} and order_status in (1,2)
+    </select>
+
+    <select id="queryOrderDetail" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select gooods_id goodsId,goods_name goodsName,goods_img goodsImg,goods_number goodsNumber,goods_price goodsPrice
+        from t_order_detail where order_id=#{orderId}
+    </select>
 </mapper>

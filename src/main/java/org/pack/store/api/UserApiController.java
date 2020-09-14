@@ -30,13 +30,13 @@ public class UserApiController {
 
     @CrossOrigin
     @ApiOperation(value = "获取收货地址信息")
-    @GetMapping(value = "queryMyAddress/{userId}&{token}")
-    public AppletResult queryMyAddress(@ApiParam("用户ID") @PathVariable("userId") String userId,@ApiParam("token值") @PathVariable("token") String token){
-        String openId = jedisOperator.get(token);
+    @PostMapping(value = "queryMyAddress")
+    public AppletResult queryMyAddress(@RequestBody @ApiParam(name="用户ID",value="传入json格式",required = true) UserTokenReq userTokenReq){
+        String openId = jedisOperator.get(userTokenReq.getToken());
         if(StringUtil.isNullStr(openId)){
             return ResultUtil.error(-1,"token失效，请重新登录");
         }
-        return userService.queryMyAddress(userId);
+        return userService.queryMyAddress(userTokenReq.getUserId());
     }
 
     @CrossOrigin
@@ -94,13 +94,13 @@ public class UserApiController {
 
     @CrossOrigin
     @ApiOperation(value = "查询我的会员卡")
-    @GetMapping(value = "queryMyMembership/{userId}&{token}")
-    public AppletResult queryMyMembership(@ApiParam("用户ID") @PathVariable("userId") String userId,@ApiParam("token值") @PathVariable("token") String token){
-        String openId = jedisOperator.get(token);
+    @PostMapping(value = "queryMyMembership")
+    public AppletResult queryMyMembership(@RequestBody @ApiParam(name="用户ID",value="传入json格式",required = true) UserTokenReq userTokenReq){
+        String openId = jedisOperator.get(userTokenReq.getToken());
         if(StringUtil.isNullStr(openId)){
             return ResultUtil.error(-1,"token失效，请重新登录");
         }
-        return userService.queryMyMembership(userId);
+        return userService.queryMyMembership(userTokenReq.getUserId());
     }
 
     @CrossOrigin
@@ -152,13 +152,13 @@ public class UserApiController {
 
     @CrossOrigin
     @ApiOperation(value = "查询我的账户信息")
-    @GetMapping(value = "queryMyAccount/{userId}&{token}")
-    public AppletResult queryMyAccount(@ApiParam("用户ID") @PathVariable("userId") String userId,@ApiParam("token值") @PathVariable("token") String token){
-        String openId = jedisOperator.get(token);
+    @PostMapping(value = "queryMyAccount")
+    public AppletResult queryMyAccount(@RequestBody @ApiParam(name="用户ID",value="传入json格式",required = true) UserTokenReq userTokenReq){
+        String openId = jedisOperator.get(userTokenReq.getToken());
         if(StringUtil.isNullStr(openId)){
             return ResultUtil.error(-1,"token失效，请重新登录");
         }
-        return userService.queryMyAccount(userId);
+        return userService.queryMyAccount(userTokenReq.getUserId());
     }
 
     @CrossOrigin

@@ -2,29 +2,24 @@ package org.pack.store.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import org.pack.store.autoconf.JedisOperator;
-
 import org.pack.store.entity.AddressEntity;
 import org.pack.store.enums.OrderEnums;
 import org.pack.store.enums.ResultEnums;
 import org.pack.store.enums.TransactionDetailEnums;
-
-
 import org.pack.store.mapper.AddressMapper;
 import org.pack.store.mapper.OrderMapper;
-
 import org.pack.store.mapper.UserVipMapper;
-
+import org.pack.store.requestVo.OrderSerchReq;
 import org.pack.store.requestVo.UserTokenReq;
 import org.pack.store.service.OrderService;
 import org.pack.store.utils.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -71,8 +66,7 @@ public class OrderServiceImpl implements OrderService {
         storeId = StringUtil.isNullStr(storeId) ? "1" : storeId;
         Long nextDateSeconds = DateUtil.getNextDateSeconds();
         Long orderSerial = jedisOperator.incr(RedisKey.ORDER_SERAL + storeId, nextDateSeconds.intValue());
-        String orderId = IDGenerateUtil.getId();
-        jsonObject.put("orderId",orderId);
+        String orderId = jsonObject.getString("orderId");
         jsonObject.put("orderSerial",orderSerial);
         List<JSONObject> detailList = jsonObject.getJSONArray("orderDatail").toJavaList(JSONObject.class);
         int i = orderMapper.placeOrder(jsonObject);
@@ -164,5 +158,37 @@ public class OrderServiceImpl implements OrderService {
         json.put("sendTime",DateUtil.getSystmeTimeOldTime());
         json.put("proportion",0.05);
         return ResultUtil.success(json);
+    }
+
+    @Override
+    public AppletResult queryOrderListAll(OrderSerchReq orderSerchReq,String openId){
+        List<JSONObject> orderList =new ArrayList<>();
+        try{
+            if (StringUtil.isNullStr(orderSerchReq.getUserId())){
+                return ResultUtil.error(ResultEnums.USERID_IS_NULL);
+            }
+            if (StringUtil.isNullStr(orderSerchReq.getType())){
+                return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+            }
+            if (orderSerchReq.getType().equals("101")){//查询个人全部
+                orderList =orderMapper.queryOrderByOpenIdAll(openId);
+            }
+            if (orderSerchReq.getType().equals("102")){
+                orderList =orderMapper.queryOrderByOpenIdAndPending(openId);
+            }
+            if (orderSerchReq.getType().equals("103")){
+                orderList =orderMapper.queryOrderByOpenIdAndReceipt(openId);
+            }
+            if (orderList.size()>0){
+                for (JSONObject jsonObject:orderList){
+                    List<JSONObject> goodsList = orderMapper.queryOrderDetail(jsonObject.get("orderId").toString());
+                    jsonObject.put("orderSerial",goodsList);
+                }
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage());
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.success(orderList);
     }
 }

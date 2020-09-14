@@ -9,9 +9,11 @@ import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.autoconf.RabbitConfig;
 import org.pack.store.common.rabbitmq.producer.RabbitMqSender;
 import org.pack.store.requestVo.AppVO;
+import org.pack.store.requestVo.OrderSerchReq;
 import org.pack.store.requestVo.UserTokenReq;
 import org.pack.store.service.OrderService;
 import org.pack.store.utils.AppletResult;
+import org.pack.store.utils.IDGenerateUtil;
 import org.pack.store.utils.ResultUtil;
 import org.pack.store.utils.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +34,9 @@ public class OrderApiController {
     @Autowired
     private RabbitMqSender rabbitMqSender;
 
+    @Autowired
+    private IDGenerateUtil iDGenerateUtil;
+
     @CrossOrigin
     @ApiOperation(value = "下单")
     @PostMapping(value = "/placeOrder")
@@ -42,8 +47,12 @@ public class OrderApiController {
             return ResultUtil.error(-1,"token失效，请重新登录");
         }
         data.put("openId",openId);
+        String orderId = iDGenerateUtil.getId();
+        data.put("orderId",orderId);
         rabbitMqSender.senderMq(RabbitConfig.CREATE_RDER,data.toJSONString());
-        return ResultUtil.success("下单成功");
+        JSONObject order = appVo.getData();
+        order.put("orderId",orderId);
+        return ResultUtil.success(order);
     }
 
     @CrossOrigin
@@ -79,7 +88,7 @@ public class OrderApiController {
         return appletResult;
     }
 
-@CrossOrigin
+    @CrossOrigin
     @ApiOperation(value = "去结算接口")
     @PostMapping(value = "/goSettlement")
     public AppletResult goSettlement(@RequestBody @ApiParam(name="用户TOKEN对象",value="传入json格式",required = true) UserTokenReq userTokenReq){
@@ -88,6 +97,17 @@ public class OrderApiController {
             return ResultUtil.error(-1,"token失效，请重新登录");
         }
         return orderService.goSettlement(userTokenReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "查询订单列表信息接口")
+    @PostMapping(value = "/queryOrderListAll")
+    public AppletResult queryOrderListAll(@RequestBody @ApiParam(name="ORDER查询对象",value="传入json格式",required = true) OrderSerchReq orderSerchReq){
+        String openId = jedisOperator.get(orderSerchReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
+        return orderService.queryOrderListAll(orderSerchReq,openId);
     }
 
 }

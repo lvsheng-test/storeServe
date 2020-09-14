@@ -27,4 +27,32 @@ public interface OrderMapper {
     int updateBalance(JSONObject jsonObject);
 
     int editOrder(JSONObject jsonObject);
+
+    /**
+     * 查询个人所有订单
+     * @param openId
+     * @return
+     */
+    List<JSONObject> queryOrderByOpenIdAll(String openId);
+
+    /**
+     * 查询个人待支付状态下的订单列表信息
+     * @param openId
+     * @return
+     */
+    List<JSONObject> queryOrderByOpenIdAndPending(String openId);
+
+    /**
+     * 查询个人待收货状态下的订单列表信息
+     * @param openId
+     * @return
+     */
+    List<JSONObject> queryOrderByOpenIdAndReceipt(String openId);
+
+    /**
+     * 根据订单号查询订单购买的商品信息
+     * @param orderId
+     * @return
+     */
+    List<JSONObject> queryOrderDetail(String orderId);
 }
