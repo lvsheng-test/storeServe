@@ -7,7 +7,7 @@
       receive_name receiveName, receive_phone receivePhone, receive_address receiveAddress,
       receive_lat receiveLat, receive_lng receiveLng, pay_mode payMode, total_price totalPrice, preferences_price preferencesPrice,
       integral_price integralPrice, delivery_fee deliveryFee, es_arrive_time esArriveTime,order_status orderStatus,
-      remark from t_order where order_id =#{orderId} and open_id = #{openId}
+      remark from t_order where order_id =#{orderId} and open_id = #{openId} and dr=0
     </select>
 
     <insert id="placeOrder" parameterType="com.alibaba.fastjson.JSONObject" >
@@ -22,7 +22,7 @@
       #{receiveName,jdbcType=VARCHAR}, #{receivePhone,jdbcType=VARCHAR}, #{receiveAddress,jdbcType=VARCHAR},
       #{receiveLat,jdbcType=DECIMAL}, #{receiveLng,jdbcType=DECIMAL},
       #{totalPrice,jdbcType=DECIMAL}, #{preferencesPrice,jdbcType=DECIMAL},
-      #{integralPrice,jdbcType=DECIMAL}, #{deliveryFee,jdbcType=DECIMAL}, #{esArriveTime,jdbcType=TIMESTAMP},
+      #{integralPrice,jdbcType=DECIMAL}, #{deliveryFee,jdbcType=DECIMAL}, #{esArriveTime,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, now())
   </insert>
     <insert id="insertDetail" parameterType="java.util.List">
@@ -70,7 +70,7 @@
     )
     VALUES
         (
-            #{id},#{userId},#{orderId},#{amount},#{status},#P{inOut},#{remark},now())
+            #{id},#{userId},#{orderId},#{amount},#{status},#{inOut},#{remark},now())
     </insert>
     <!--下单扣余额-->
     <update id="updateBalance" parameterType="com.alibaba.fastjson.JSONObject">
@@ -85,7 +85,7 @@
         WHEN 3 THEN '已完成'
         WHEN 4 THEN '已取消'
         ELSE '已退款' END) orderStatus,
-        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order where open_id=#{openId}
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order where open_id=#{openId} and dr=0
     </select>
     <!--查询个人待支付所有订单列表信息 -->
     <select id="queryOrderByOpenIdAndPending" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
@@ -97,7 +97,7 @@
         WHEN 4 THEN '已取消'
         ELSE '已退款' END) orderStatus,
         DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order
-        where open_id=#{openId} and order_status =0
+        where open_id=#{openId} and order_status =0 and dr=0
     </select>
 
     <select id="queryOrderByOpenIdAndReceipt" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
@@ -109,11 +109,30 @@
         WHEN 4 THEN '已取消'
         ELSE '已退款' END) orderStatus,
         DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order
-        where open_id=#{openId} and order_status in (1,2)
+        where open_id=#{openId} and order_status in (1,2) and dr=0
     </select>
 
     <select id="queryOrderDetail" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
         select gooods_id goodsId,goods_name goodsName,goods_img goodsImg,goods_number goodsNumber,goods_price goodsPrice
         from t_order_detail where order_id=#{orderId}
+    </select>
+
+    <select id="queryOrderInfo" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select order_id orderId, order_serial orderSerial,
+      receive_name receiveName, receive_phone receivePhone, receive_address receiveAddress,
+      receive_lat receiveLat, receive_lng receiveLng, pay_mode payMode, total_price totalPrice, preferences_price preferencesPrice,
+      integral_price integralPrice, delivery_fee deliveryFee, es_arrive_time esArriveTime,order_status status,
+      (CASE order_status WHEN 0 THEN '待支付'
+        WHEN 1 THEN '分拣中'
+        WHEN 2 THEN '派送中'
+        WHEN 3 THEN '已完成'
+        WHEN 4 THEN '已取消'
+        ELSE '已退款' END) orderStatus,
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime,
+      remark from t_order where order_id =#{orderId} and open_id = #{openId} and dr=0
+    </select>
+
+    <select id="queryOrderDeliveryInfo" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select rider_name riderName,rider_phone riderPhone,rider_img riderImg from t_order_delivery where order_id=#{orderId}
     </select>
 </mapper>

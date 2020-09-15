@@ -33,26 +33,41 @@ public interface OrderMapper {
      * @param openId
      * @return
      */
-    List<JSONObject> queryOrderByOpenIdAll(String openId);
+    List<JSONObject> queryOrderByOpenIdAll(@Param("openId") String openId);
 
     /**
      * 查询个人待支付状态下的订单列表信息
      * @param openId
      * @return
      */
-    List<JSONObject> queryOrderByOpenIdAndPending(String openId);
+    List<JSONObject> queryOrderByOpenIdAndPending(@Param("openId") String openId);
 
     /**
      * 查询个人待收货状态下的订单列表信息
      * @param openId
      * @return
      */
-    List<JSONObject> queryOrderByOpenIdAndReceipt(String openId);
+    List<JSONObject> queryOrderByOpenIdAndReceipt(@Param("openId") String openId);
 
     /**
      * 根据订单号查询订单购买的商品信息
      * @param orderId
      * @return
      */
-    List<JSONObject> queryOrderDetail(String orderId);
+    List<JSONObject> queryOrderDetail(@Param("orderId") String orderId);
+
+    /**
+     * 查询订单详情
+     * @param orderId
+     * @param openId
+     * @return
+     */
+    JSONObject queryOrderInfo(@Param("orderId") String orderId,@Param("openId") String openId);
+
+    /**
+     * 查询该订单的配送员信息
+     * @param orderId
+     * @return
+     */
+    JSONObject queryOrderDeliveryInfo(@Param("orderId") String orderId);
 }

@@ -47,10 +47,14 @@ public class OrderServiceImpl implements OrderService {
     public JSONObject getByOrderId(JSONObject jsonObject) {
         String orderId = jsonObject.getString("orderId");
         String openId = jsonObject.getString("openId");
-        JSONObject orderJson = orderMapper.getByOrderId(orderId, openId);
+        JSONObject orderJson = orderMapper.queryOrderInfo(orderId, openId);
         if(null != orderJson){
-            List<JSONObject> detailList = orderMapper.goodsDetail(orderId);
+            //查询订单下购买的商品信息
+            List<JSONObject> detailList = orderMapper.queryOrderDetail(orderId);
             orderJson.put("detailList",detailList);
+            //查询该订单的配送员信息
+            JSONObject deliveryJson = orderMapper.queryOrderDeliveryInfo(orderId);
+            orderJson.put("horsemanInfo",deliveryJson);
         }
         return orderJson;
     }
@@ -67,7 +71,9 @@ public class OrderServiceImpl implements OrderService {
         Long nextDateSeconds = DateUtil.getNextDateSeconds();
         Long orderSerial = jedisOperator.incr(RedisKey.ORDER_SERAL + storeId, nextDateSeconds.intValue());
         String orderId = jsonObject.getString("orderId");
+
         jsonObject.put("orderSerial",orderSerial);
+        jsonObject.put("esArriveTime",jsonObject.getString("reqTime"));
         List<JSONObject> detailList = jsonObject.getJSONArray("orderDatail").toJavaList(JSONObject.class);
         int i = orderMapper.placeOrder(jsonObject);
         if(i > 0){
@@ -99,6 +105,7 @@ public class OrderServiceImpl implements OrderService {
         jsonObject.put("userId",null != userInfo ? userInfo.get("userId") : "");
         jsonObject.put("status", TransactionDetailEnums.ORDER_PAY.getCode());
         jsonObject.put("inOut", 1);
+        jsonObject.put("remark",TransactionDetailEnums.ORDER_PAY.getMessage());
         try {//会员卡扣款
 
             JSONObject acountObj = userVipMapper.queryMyMemberInfo(jsonObject.getString("userId"));
