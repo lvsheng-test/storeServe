@@ -9,6 +9,7 @@ import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.autoconf.RabbitConfig;
 import org.pack.store.common.rabbitmq.producer.RabbitMqSender;
 import org.pack.store.requestVo.AppVO;
+import org.pack.store.requestVo.OrderReq;
 import org.pack.store.requestVo.OrderSerchReq;
 import org.pack.store.requestVo.UserTokenReq;
 import org.pack.store.service.OrderService;
@@ -110,6 +111,15 @@ public class OrderApiController {
         return orderService.queryOrderListAll(orderSerchReq,openId);
     }
 
-
+    @CrossOrigin
+    @ApiOperation(value = "删除订单接口")
+    @PostMapping(value = "/doDeleteOrder")
+    public AppletResult doDeleteOrder(@RequestBody @ApiParam(name="DEL查询对象",value="传入json格式",required = true) OrderReq orderReq){
+        String openId = jedisOperator.get(orderReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
+        return orderService.doDeleteOrder(orderReq.getOrderId(),openId);
+    }
 
 }

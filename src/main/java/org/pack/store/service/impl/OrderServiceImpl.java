@@ -198,4 +198,16 @@ public class OrderServiceImpl implements OrderService {
         }
         return ResultUtil.success(orderList);
     }
+
+    @Override
+    public AppletResult doDeleteOrder(String orderId,String openId){
+        if (StringUtil.isNullStr(orderId)){
+            return ResultUtil.error(ResultEnums.USERID_IS_NULL);
+        }
+        int i = orderMapper.deleteOrderInfo(orderId,openId);
+        if (i>0){
+            return ResultUtil.success();
+        }
+        return ResultUtil.error(ResultEnums.ORDER_DEL_ERROR);
+    }
 }

@@ -34,6 +34,8 @@ public enum ResultEnums {
 
     USER_UPDATE_ERROR(215,"个人信息更新失败"),
 
+    ORDER_DEL_ERROR(216,"订单信息不存在"),
+
     NOT_FOUND_DATA(10001,"数据不存在"),
 
     CUSTOM_STORE_NULL_PARAM(10001,""),

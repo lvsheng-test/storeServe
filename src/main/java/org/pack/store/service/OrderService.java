@@ -38,4 +38,12 @@ public interface OrderService {
      * @return
      */
     AppletResult queryOrderListAll(OrderSerchReq orderSerchReq,String openId);
+
+    /**
+     * 逻辑删除订单信息
+     * @param orderId
+     * @param openId
+     * @return
+     */
+    AppletResult doDeleteOrder(String orderId,String openId);
 }

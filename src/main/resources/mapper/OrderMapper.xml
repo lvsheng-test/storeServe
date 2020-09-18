@@ -135,4 +135,8 @@
     <select id="queryOrderDeliveryInfo" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
         select rider_name riderName,rider_phone riderPhone,rider_img riderImg from t_order_delivery where order_id=#{orderId}
     </select>
+
+    <update id="deleteOrderInfo" parameterType="java.lang.String">
+        update t_order set dr =1 where order_id=#{orderId} and open_id=#{openId}
+    </update>
 </mapper>
