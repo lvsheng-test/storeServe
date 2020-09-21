@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * rabbitMQ配置
  */
@@ -22,6 +25,16 @@ public class RabbitConfig {
 	 * 下单
 	 */
 	public static final String CREATE_RDER = "create_order";
+
+	/**
+	 * 订单5分钟自动取消
+	 */
+	public static final String ORDER_CANCEL = "order_cancel";
+
+	/**
+	 * 订单5分钟自动取消
+	 */
+	public static final String ORDER_CANCEL_DELAY = "order_cancel_delay";
 	
 	/**
 	 * 每个消费者获取最大投递数量 (默认50)
@@ -75,4 +88,16 @@ public class RabbitConfig {
 		return new Queue(CREATE_RDER, true);
 	}
 
+	@Bean
+	public Queue waitQueue() {
+		return new Queue(ORDER_CANCEL_DELAY, true, false, false);
+	}
+
+	@Bean
+	public Queue waitHandleQueue() {
+		Map<String, Object> arguments = new HashMap<>();
+		arguments.put("x-dead-letter-exchange", "");
+		arguments.put("x-dead-letter-routing-key", ORDER_CANCEL_DELAY);
+		return new Queue(ORDER_CANCEL, true, false, false, arguments);
+	}
 }

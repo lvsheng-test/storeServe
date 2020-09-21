@@ -72,4 +72,9 @@ public interface OrderMapper {
     JSONObject queryOrderDeliveryInfo(@Param("orderId") String orderId);
 
     int deleteOrderInfo(@Param("orderId") String orderId,@Param("openId") String openId);
+
+    /**
+     * 取消订单
+     */
+    int cancelOrder(@Param("orderId") String orderId,@Param("openId") String openId,@Param("orderStatus") Integer orderStatus);
 }

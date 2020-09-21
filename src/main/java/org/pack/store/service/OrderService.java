@@ -46,4 +46,10 @@ public interface OrderService {
      * @return
      */
     AppletResult doDeleteOrder(String orderId,String openId);
+    /**
+     * 取消订单
+     * @param orderId
+     * @return
+     */
+    AppletResult cancelOrder(String orderId,String openId);
 }

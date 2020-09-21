@@ -2,6 +2,8 @@ package org.pack.store.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import org.pack.store.autoconf.JedisOperator;
+import org.pack.store.autoconf.RabbitConfig;
+import org.pack.store.common.rabbitmq.producer.RabbitMqSender;
 import org.pack.store.entity.AddressEntity;
 import org.pack.store.enums.OrderEnums;
 import org.pack.store.enums.ResultEnums;
@@ -37,6 +39,8 @@ public class OrderServiceImpl implements OrderService {
     private UserVipMapper userVipMapper;
     @Resource
     private AddressMapper addressMapper;
+    @Resource
+    private RabbitMqSender rabbitMqSender;
 
     /**
      * 查看订单详情
@@ -84,6 +88,7 @@ public class OrderServiceImpl implements OrderService {
             orderMapper.insertDetail(detailList);
             JSONObject reusltJson = new JSONObject();
             reusltJson.put("orderId",orderId);
+            rabbitMqSender.queueDealy(RabbitConfig.ORDER_CANCEL,reusltJson.toJSONString(),5 * 60);
             return ResultUtil.success(reusltJson);
         }
         return ResultUtil.error(0,"下单失败");
@@ -209,5 +214,22 @@ public class OrderServiceImpl implements OrderService {
             return ResultUtil.success();
         }
         return ResultUtil.error(ResultEnums.ORDER_DEL_ERROR);
+    }
+
+    /**
+     * 取消订单
+     *
+     * @param orderId
+     * @param openId
+     * @return
+     */
+    @Override
+    public AppletResult cancelOrder(String orderId, String openId) {
+        int i = orderMapper.cancelOrder(orderId, openId, Integer.parseInt(OrderEnums.ORDER_WAIT_PAY.getCode()));
+        if(i > 0){
+            return ResultUtil.success("取消成功");
+        }
+        logger.info("==>订单状态发生变化，无法取消orderId={}",orderId);
+        return ResultUtil.success("订单状态发生变化，无法取消");
     }
 }

@@ -139,4 +139,7 @@
     <update id="deleteOrderInfo" parameterType="java.lang.String">
         update t_order set dr =1 where order_id=#{orderId} and open_id=#{openId}
     </update>
+    <update id="cancelOrder" parameterType="java.lang.String">
+        update set order_status = 4 where order_id = #{orderId} and order_status = #{orderStatus}
+    </update>
 </mapper>
