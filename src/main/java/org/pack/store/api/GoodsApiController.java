@@ -75,4 +75,13 @@ public class GoodsApiController {
     public AppletResult searchGoodsInfoList(@RequestBody @ApiParam(name="商品条件搜索对象",value="传入json格式") SearchGoodsReq searchGoodsReq){
         return goodsService.searchGoodsInfoList(searchGoodsReq);
     }
+
+    @CrossOrigin
+    @ApiOperation(value = "查询限时抢购商品")
+    @GetMapping(value = "queryTimeLimit")
+    public AppletResult queryTimeLimit(){
+        return goodsService.queryTimeLimit();
+    }
+
+
 }

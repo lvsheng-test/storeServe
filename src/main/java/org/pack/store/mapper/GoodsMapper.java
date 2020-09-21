@@ -58,4 +58,17 @@ public interface GoodsMapper {
      */
     List<JSONObject> searchGoodsInfoList(SearchVo searchVo);
 
+    /**
+     * 查询有效的活动
+     * @return
+     */
+    JSONObject queryActivities();
+
+    /**
+     * 根据活动ID查询限时抢购商品
+     * @param activeId
+     * @return
+     */
+    List<JSONObject> queryTimeLimitList(@Param("activeId") String activeId);
+
 }

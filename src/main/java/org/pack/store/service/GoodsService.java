@@ -72,4 +72,10 @@ public interface GoodsService {
      */
     AppletResult searchGoodsInfoList(SearchGoodsReq searchGoodsReq);
 
+    /**
+     * 查询限时抢购商品
+     * @return
+     */
+    AppletResult queryTimeLimit();
+
 }

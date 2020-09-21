@@ -193,6 +193,13 @@ public class UserApiController {
         return userService.queryQuestions();
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "查询关于我们接口信息")
+    @GetMapping(value = "getAbout")
+    public AppletResult getAbout(){
+        return userService.getAbout();
+    }
+
 
 
 }

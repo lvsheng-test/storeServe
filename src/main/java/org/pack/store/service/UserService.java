@@ -134,4 +134,10 @@ public interface UserService {
      */
     AppletResult queryQuestions();
 
+    /**
+     * 关于我们
+     * @return
+     */
+    AppletResult getAbout();
+
 }

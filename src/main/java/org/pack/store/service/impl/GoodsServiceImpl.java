@@ -256,4 +256,27 @@ public class GoodsServiceImpl implements GoodsService {
         }
         return ResultUtil.success(list);
     }
+
+    @Override
+    public AppletResult queryTimeLimit(){
+        try{
+            JSONObject jsonObject = goodsMapper.queryActivities();
+            if (jsonObject !=null){
+               List<JSONObject> goodsList = goodsMapper.queryTimeLimitList(jsonObject.getString("activeId"));
+               if (goodsList.size()>0){
+                    for (JSONObject obj :goodsList){
+                        String [] img =obj.getString("goodsUrl").split(",");
+                        obj.put("goodsUrl",img[0]);
+                        obj.put("soldNum",obj.getInteger("limitNum")-obj.getInteger("goodsNum"));
+                        obj.put("popularity","1.2万");
+                    }
+               }
+                jsonObject.put("goodsList",goodsList);
+                return ResultUtil.success(jsonObject);
+            }
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.error(ResultEnums.SERVER_ERROR);
+    }
 }

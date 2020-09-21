@@ -136,4 +136,15 @@
 		</if>
 	</select>
 
+	<select id="queryActivities" resultType="com.alibaba.fastjson.JSONObject">
+		  select id as activeId,title,content,begin_time,end_time from t_activities where state=1 and dr =0
+	</select>
+
+	<select id="queryTimeLimitList" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+		  SELECT g.id AS goodsId,g.goods_url AS goodsUrl,g.goods_name AS goodsName,
+			g.goods_price AS goodsPrice,g.goods_discount AS goodsDiscount,g.goods_num AS goodsNum,g.limit_num AS limitNum
+			 FROM t_goods g INNER JOIN t_active_goods a ON g.id =a.goods_id
+			WHERE a.active_id=#{activeId} AND g.goods_status=1
+	</select>
+
 </mapper>
