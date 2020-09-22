@@ -76,5 +76,5 @@ public interface OrderMapper {
     /**
      * 取消订单
      */
-    int cancelOrder(@Param("orderId") String orderId,@Param("openId") String openId,@Param("orderStatus") Integer orderStatus);
+    int cancelOrder(@Param("orderId") String orderId);
 }

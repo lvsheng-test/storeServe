@@ -225,7 +225,7 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public AppletResult cancelOrder(String orderId, String openId) {
-        int i = orderMapper.cancelOrder(orderId, openId, Integer.parseInt(OrderEnums.ORDER_WAIT_PAY.getCode()));
+        int i = orderMapper.cancelOrder(orderId);
         if(i > 0){
             return ResultUtil.success("取消成功");
         }
