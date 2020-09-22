@@ -71,4 +71,11 @@ public interface GoodsMapper {
      */
     List<JSONObject> queryTimeLimitList(@Param("activeId") String activeId);
 
+    /**
+     * 查询限时抢购商品详情接口
+     * @param goodsId
+     * @return
+     */
+    JSONObject queryTimeLimitInfo(@Param("activeId") String activeId,@Param("goodsId") String goodsId);
+
 }

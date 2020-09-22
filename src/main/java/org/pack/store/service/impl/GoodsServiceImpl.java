@@ -279,4 +279,27 @@ public class GoodsServiceImpl implements GoodsService {
         }
         return ResultUtil.error(ResultEnums.SERVER_ERROR);
     }
+
+    @Override
+    public AppletResult queryTimeLimitInfo(String goodsId){
+        try{
+            if (StringUtil.isNullStr(goodsId)){
+                return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+            }
+            JSONObject jsonObject = goodsMapper.queryActivities();
+            if (jsonObject !=null){
+                JSONObject goodsObj = goodsMapper.queryTimeLimitInfo(jsonObject.getString("activeId"),goodsId);
+                if (goodsObj ==null){
+                    return ResultUtil.error(ResultEnums.NOT_FOUND_DATA);
+                }
+                goodsObj.put("soldNum",goodsObj.getInteger("limitNum")-goodsObj.getInteger("goodsNum"));
+                goodsObj.put("begin_time",jsonObject.getString("begin_time"));
+                goodsObj.put("end_time",jsonObject.getString("end_time"));
+                return ResultUtil.success(goodsObj);
+            }
+        }catch (Exception e){
+            return ResultUtil.error(ResultEnums.SERVER_ERROR);
+        }
+        return ResultUtil.error(ResultEnums.SERVER_ERROR);
+    }
 }

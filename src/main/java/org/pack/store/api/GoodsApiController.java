@@ -83,5 +83,12 @@ public class GoodsApiController {
         return goodsService.queryTimeLimit();
     }
 
+    @CrossOrigin
+    @ApiOperation(value = "限时抢购商品详情接口")
+    @GetMapping(value = "queryTimeLimitInfo/{goodsId}")
+    public AppletResult queryTimeLimitInfo(@ApiParam("商品ID") @PathVariable("goodsId") String goodsId){
+        return goodsService.queryTimeLimitInfo(goodsId);
+    }
+
 
 }

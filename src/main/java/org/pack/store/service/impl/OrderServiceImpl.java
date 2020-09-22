@@ -161,7 +161,7 @@ public class OrderServiceImpl implements OrderService {
         //查询用户消费券
         JSONObject  obj = userVipMapper.queryMyXiaoFeiJuan(userTokenReq.getUserId());
         if (obj ==null){
-            json.put("consumption",0);
+            json.put("consumption","");
         }else {
             json.put("consumption",obj.getBigDecimal("amount"));
         }

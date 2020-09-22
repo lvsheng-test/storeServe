@@ -147,4 +147,12 @@
 			WHERE a.active_id=#{activeId} AND g.goods_status=1
 	</select>
 
+	<select id="queryTimeLimitInfo" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+		  SELECT g.id AS goodsId,g.goods_url AS goodsUrl,g.goods_name AS goodsName,
+			g.goods_price AS goodsPrice,g.goods_discount AS goodsDiscount,g.goods_num AS goodsNum,g.limit_num AS limitNum,
+			g.goods_intro AS goodsIntro,g.net_content AS netContent,g.save_conditions AS saveConditions,g.shelf_life AS shelfLife,
+			g.ramark_url AS ramarkUrl FROM t_goods g INNER JOIN t_active_goods a ON g.id =a.goods_id
+			WHERE a.active_id=#{activeId} AND g.goods_status=1 AND g.id=#{goodsId}
+	</select>
+
 </mapper>

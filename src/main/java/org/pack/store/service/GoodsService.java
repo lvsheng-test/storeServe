@@ -78,4 +78,11 @@ public interface GoodsService {
      */
     AppletResult queryTimeLimit();
 
+    /**
+     * 查询限时抢购商品详情接口
+     * @param goodsId
+     * @return
+     */
+    AppletResult queryTimeLimitInfo(String goodsId);
+
 }
