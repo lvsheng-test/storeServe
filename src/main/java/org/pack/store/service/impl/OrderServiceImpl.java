@@ -21,6 +21,7 @@ import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,10 +76,13 @@ public class OrderServiceImpl implements OrderService {
         Long nextDateSeconds = DateUtil.getNextDateSeconds();
         Long orderSerial = jedisOperator.incr(RedisKey.ORDER_SERAL + storeId, nextDateSeconds.intValue());
         String orderId = jsonObject.getString("orderId");
-
         jsonObject.put("orderSerial",orderSerial);
         jsonObject.put("esArriveTime",jsonObject.getString("reqTime"));
         List<JSONObject> detailList = jsonObject.getJSONArray("orderDatail").toJavaList(JSONObject.class);
+        BigDecimal decimal =jsonObject.getBigDecimal("preferencesPrice");
+        if (decimal ==null){
+            jsonObject.put("preferencesPrice",0);
+        }
         int i = orderMapper.placeOrder(jsonObject);
         if(i > 0){
             for (JSONObject jsonObj:detailList) {

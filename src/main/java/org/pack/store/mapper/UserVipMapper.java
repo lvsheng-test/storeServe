@@ -90,4 +90,14 @@ public interface UserVipMapper {
      * @return
      */
     JSONObject queryMyMemberInfo(@Param("userId") String userId);
+
+    int updateAcountBalance(JSONObject jsonObject);
+
+    /**
+     * 生成一条提现流水明细
+     * @param jsonObject
+     */
+    void insertTransactionDetail(JSONObject jsonObject);
+
+
 }

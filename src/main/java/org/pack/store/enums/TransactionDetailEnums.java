@@ -10,6 +10,7 @@ public enum TransactionDetailEnums {
     RETURN_MOENY("103","充值返现"),
     ORDER_PAY("104","下单扣款"),
     ORDER_REFUND("105","订单退款"),
+    CASH_MONEY("106","账户提现"),
     ;
 
 

@@ -7,6 +7,7 @@ import org.pack.store.autoconf.DataConfig;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.entity.*;
 import org.pack.store.enums.ResultEnums;
+import org.pack.store.enums.TransactionDetailEnums;
 import org.pack.store.mapper.*;
 import org.pack.store.requestVo.*;
 import org.pack.store.resposeVo.CityInfoRes;
@@ -355,6 +356,7 @@ public class UserServiceImpl implements UserService {
     }
     //提现申请
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public AppletResult doCashRecords(ApplyRecordsReq applyRecordsReq){
         JSONObject jsonObject =new JSONObject();
         try{
@@ -376,8 +378,23 @@ public class UserServiceImpl implements UserService {
             jsonObject.put("cardNo",applyRecordsReq.getCardNo());
             jsonObject.put("amount",applyRecordsReq.getAmount());
             jsonObject.put("state",1);
-            int i =cashRecordsMapper.addCashRecordsInfo(jsonObject);
-            if (i==0)return ResultUtil.error(ResultEnums.SERVER_ERROR);
+            //判断一下，提现金额是否大于账户余额
+            if (userVipMapper.updateAcountBalance(jsonObject)>0){//账户余额扣款成功，生成一条流水明细
+                int i =cashRecordsMapper.addCashRecordsInfo(jsonObject);
+                if (i==0){
+                    return ResultUtil.error(ResultEnums.SERVER_ERROR);
+                }
+                JSONObject json =new JSONObject();
+                json.put("id",UuidUtil.getUuid());
+                json.put("userId",applyRecordsReq.getUserId());
+                json.put("amount",applyRecordsReq.getAmount());
+                json.put("status", TransactionDetailEnums.CASH_MONEY.getCode());
+                json.put("inOut", 1);
+                json.put("remark",TransactionDetailEnums.CASH_MONEY.getMessage());
+                userVipMapper.insertTransactionDetail(json);
+            }else {
+                return ResultUtil.error(-1,"账户余额不足，提现失败！");
+            }
         }catch (Exception e){
             return ResultUtil.error(ResultEnums.SERVER_ERROR);
         }

@@ -61,4 +61,24 @@
     <select id="queryMyMemberInfo" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
         SELECT m.id,m.card_no cardNo FROM t_user_vip u LEFT JOIN t_membership m ON u.card_no=m.card_no WHERE u.user_id=#{userId} AND u.vip_name='会员卡'
     </select>
+
+    <update id="updateAcountBalance" parameterType="com.alibaba.fastjson.JSONObject">
+        update t_account set balance=balance-#{amount} where user_id=#{userId} and balance-#{amount} > 0
+    </update>
+
+    <!--提现流水-->
+    <insert id="insertTransactionDetail" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO t_transaction_detail (
+        id,
+        user_id,
+        amount,
+        status,
+        in_out,
+        remark,
+        ts
+    )
+    VALUES
+        (
+            #{id},#{userId},#{amount},#{status},#{inOut},#{remark},now())
+    </insert>
 </mapper>
