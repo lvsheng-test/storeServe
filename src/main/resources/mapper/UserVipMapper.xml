@@ -59,11 +59,11 @@
     </select>
 
     <select id="queryMyMemberInfo" resultType="com.alibaba.fastjson.JSONObject" parameterType="java.lang.String">
-        SELECT m.id,m.card_no cardNo FROM t_user_vip u LEFT JOIN t_membership m ON u.card_no=m.card_no WHERE u.user_id=#{userId} AND u.vip_name='会员卡'
+        SELECT m.id,m.card_no cardNo FROM t_user_vip u LEFT JOIN t_membership m ON u.card_no=m.card_no WHERE u.user_id=#{userId} AND u.vip_name=#{typeName}
     </select>
 
     <update id="updateAcountBalance" parameterType="com.alibaba.fastjson.JSONObject">
-        update t_account set balance=balance-#{amount} where user_id=#{userId} and balance-#{amount} > 0
+        update t_account set balance=balance-#{amount} where user_id=#{userId} and balance-#{amount} >= 0
     </update>
 
     <!--提现流水-->
@@ -81,4 +81,8 @@
         (
             #{id},#{userId},#{amount},#{status},#{inOut},#{remark},now())
     </insert>
+
+    <update id="updateAcountIntegral" parameterType="com.alibaba.fastjson.JSONObject">
+        update t_account set integral=integral-#{amount} where user_id=#{userId} and integral-#{amount} >= 0
+    </update>
 </mapper>

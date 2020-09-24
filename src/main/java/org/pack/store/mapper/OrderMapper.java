@@ -77,4 +77,11 @@ public interface OrderMapper {
      * 取消订单
      */
     int cancelOrder(@Param("orderId") String orderId);
+
+    /**
+     * 查询当前订单是否是待支付状态
+     * @param orderId
+     * @return
+     */
+    JSONObject queryOrderPending(@Param("orderId") String orderId,@Param("openId") String openId);
 }

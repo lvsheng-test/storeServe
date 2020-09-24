@@ -115,7 +115,7 @@ public class MemberCardServiceImpl implements MemberCardService {
                 if (cardInfo.getMemberName().equals("押金卡")){
                     TransactionDetailEntity transactionDetail =new TransactionDetailEntity();
                     transactionDetail.setId(UuidUtil.getUuid());
-                    transactionDetail.setMobile(cardNoAndMoblieReq.getMobile());
+                    transactionDetail.setUserId(cardNoAndMoblieReq.getMobile());
                     transactionDetail.setAmount(actualAmount);
                     transactionDetail.setStatus("102");
                     transactionDetail.setInOut('0');
@@ -126,7 +126,7 @@ public class MemberCardServiceImpl implements MemberCardService {
                 if (cardInfo.getMemberName().equals("会员卡")){
                     TransactionDetailEntity transactionDetail =new TransactionDetailEntity();
                     transactionDetail.setId(UuidUtil.getUuid());
-                    transactionDetail.setMobile(cardNoAndMoblieReq.getMobile());
+                    transactionDetail.setUserId(cardNoAndMoblieReq.getMobile());
                     transactionDetail.setAmount(actualAmount);
                     transactionDetail.setStatus("101");
                     transactionDetail.setInOut('0');
@@ -136,7 +136,7 @@ public class MemberCardServiceImpl implements MemberCardService {
 
                     TransactionDetailEntity detail =new TransactionDetailEntity();
                     detail.setId(UuidUtil.getUuid());
-                    detail.setMobile(cardNoAndMoblieReq.getMobile());
+                    detail.setUserId(cardNoAndMoblieReq.getMobile());
                     detail.setAmount(money);
                     detail.setStatus("103");
                     detail.setInOut('1');
@@ -167,7 +167,7 @@ public class MemberCardServiceImpl implements MemberCardService {
 
         TransactionDetailEntity transactionDetail =new TransactionDetailEntity();
         transactionDetail.setId(UuidUtil.getUuid());
-        transactionDetail.setMobile(rechargeMemberReq.getMobile());
+        transactionDetail.setUserId(rechargeMemberReq.getMobile());
         transactionDetail.setAmount(rechargeBalance);
         transactionDetail.setStatus("101");
         transactionDetail.setInOut('0');
@@ -177,7 +177,7 @@ public class MemberCardServiceImpl implements MemberCardService {
 
         TransactionDetailEntity detail =new TransactionDetailEntity();
         detail.setId(UuidUtil.getUuid());
-        detail.setMobile(rechargeMemberReq.getMobile());
+        detail.setUserId(rechargeMemberReq.getMobile());
         detail.setAmount(money);
         detail.setStatus("103");
         detail.setInOut('1');

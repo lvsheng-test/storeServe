@@ -1,6 +1,7 @@
 package org.pack.store.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.lang.StringUtils;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.autoconf.RabbitConfig;
 import org.pack.store.common.rabbitmq.producer.RabbitMqSender;
@@ -116,8 +117,13 @@ public class OrderServiceImpl implements OrderService {
         jsonObject.put("inOut", 1);
         jsonObject.put("remark",TransactionDetailEnums.ORDER_PAY.getMessage());
         try {//会员卡扣款
-
-            JSONObject acountObj = userVipMapper.queryMyMemberInfo(jsonObject.getString("userId"));
+            //查询订单是否是待支付状态
+            JSONObject order = orderMapper.queryOrderPending(orderId,openId);
+            if (order ==null){
+                return ResultUtil.error(0,"支付失败，该订单不是待支付状态！");
+            }
+            //查询当前用户有没有开通会员账户信息
+            JSONObject acountObj = userVipMapper.queryMyMemberInfo(jsonObject.getString("userId"),"会员卡");
             if(acountObj ==null){
                 return ResultUtil.error(0,"支付失败，未开通会员账户！");
             }
@@ -125,6 +131,19 @@ public class OrderServiceImpl implements OrderService {
             int updateBalance = orderMapper.updateBalance(acountObj);
             if(updateBalance == 0){
                 return ResultUtil.error(0,"支付失败，账户余额不足");
+            }
+            //判断订单中有没有消费券抵扣金额、积分抵扣金额、配送费，如果有则产生相应的交易明细
+            String preferencesPrice = order.getString("preferencesPrice");//消费抵扣金额
+            String integralPrice =order.getString("integralPrice");//积分抵扣金额
+            String deliveryFee =order.getString("deliveryFee");//配送费
+            if (StringUtils.isNotEmpty(preferencesPrice) || !preferencesPrice.equals("0.00")){
+                insertDetail(jsonObject.getString("userId"),orderId,preferencesPrice,1);
+            }
+            if (StringUtils.isNotEmpty(integralPrice) || !integralPrice.equals("0.00")){
+                insertDetail(jsonObject.getString("userId"),orderId,integralPrice,2);
+            }
+            if (StringUtils.isNotEmpty(deliveryFee) || !deliveryFee.equals("0.00")){
+                insertDetail(jsonObject.getString("userId"),orderId,deliveryFee,3);
             }
             if(orderMapper.inertTrans(jsonObject) > 0) {
                 jsonObject.put("orderStatus", OrderEnums.ORDER_AL_PAY.getCode());
@@ -138,6 +157,40 @@ public class OrderServiceImpl implements OrderService {
         }
         return ResultUtil.success(orderId);
     }
+
+    /**
+     * 生成交易流水明细
+     * @param userId  用户ID
+     * @param value   值
+     * @param type    类型(1、消费卷抵扣，2、积分抵扣，3、配送费抵扣)
+     */
+    public void insertDetail(String userId,String orderId,String value,int type){
+        BigDecimal money =new BigDecimal(value);
+        if (type ==1){
+            JSONObject acountObj = userVipMapper.queryMyMemberInfo(userId,"消费卡");
+            if(acountObj !=null){
+                acountObj.put("money",money);
+                int updateBalance = orderMapper.updateBalance(acountObj);
+                if (updateBalance>0){
+                    logger.info("消费卷抵扣金额流水明细暂时不加");
+                    //消费卷抵扣金额流水明细暂时不加
+                }
+            }
+        }else if (type ==2){
+            JSONObject acountObj =new JSONObject();
+            acountObj.put("userId",userId);
+            acountObj.put("amount",money.multiply(new BigDecimal(100)));
+            int i= userVipMapper.updateAcountIntegral(acountObj);
+            if (i>0){
+                logger.info("积分扣金额流水明细暂时不加");
+            }
+        }else if (type ==3){
+            logger.info("配送费流水明细暂时不加");
+        }else {
+            logger.info("类型错误");
+        }
+    }
+
     @Override
     public AppletResult goSettlement(UserTokenReq userTokenReq){
         JSONObject json =new JSONObject();

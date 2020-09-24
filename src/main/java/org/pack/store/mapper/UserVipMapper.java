@@ -89,7 +89,7 @@ public interface UserVipMapper {
      * @param userId
      * @return
      */
-    JSONObject queryMyMemberInfo(@Param("userId") String userId);
+    JSONObject queryMyMemberInfo(@Param("userId") String userId,@Param("typeName") String typeName);
 
     int updateAcountBalance(JSONObject jsonObject);
 
@@ -98,6 +98,13 @@ public interface UserVipMapper {
      * @param jsonObject
      */
     void insertTransactionDetail(JSONObject jsonObject);
+
+    /**
+     * 扣除账户积分
+     * @param jsonObject
+     * @return
+     */
+    int updateAcountIntegral(JSONObject jsonObject);
 
 
 }

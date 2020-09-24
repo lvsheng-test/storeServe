@@ -7,7 +7,7 @@ public class TransactionDetailEntity {
 
     private String id;      //主键ID
 
-    private String mobile;  //会员手机号
+    private String userId;  //会员手机号
 
     private BigDecimal amount; //金额
 
@@ -27,12 +27,12 @@ public class TransactionDetailEntity {
         this.id = id;
     }
 
-    public String getMobile() {
-        return mobile;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getStatus() {

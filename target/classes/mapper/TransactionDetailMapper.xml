@@ -3,7 +3,7 @@
 <mapper namespace="org.pack.store.mapper.TransactionDetailMapper">
     <resultMap id="BaseResultMap" type="org.pack.store.entity.TransactionDetailEntity">
         <id column="id" jdbcType="VARCHAR" property="id" />
-        <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+        <result column="user_id" jdbcType="VARCHAR" property="userId" />
         <result column="amount" jdbcType="DECIMAL" property="amount" />
         <result column="status" jdbcType="VARCHAR" property="status" />
         <result column="in_out" jdbcType="VARCHAR" property="inOut" />
@@ -12,7 +12,7 @@
     </resultMap>
 
     <insert id="insertTransactionDetailInfo" parameterType="org.pack.store.entity.TransactionDetailEntity">
-        insert into t_transaction_detail(id,mobile,amount,status,in_out,remark,ts) values (#{id},#{mobile},#{amount},#{status},#{inOut},#{remark},#{ts})
+        insert into t_transaction_detail(id,user_id,amount,status,in_out,remark,ts) values (#{id},#{userId},#{amount},#{status},#{inOut},#{remark},#{ts})
     </insert>
 
 </mapper>
