@@ -24,5 +24,12 @@
         select user_id,open_id,mobile,invitation_code invitationCode from t_user where user_id = #{userId}
     </select>
 
+    <select id="queryUserLoginState" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select open_id as openId,mobile from t_user where mobile=#{mobile}
+    </select>
+
+    <insert id="insertInviteCourtesy" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into t_invite_courtesy(id,superior_code,invitation_code) values (#{id},#{superiorCode},#{invitationCode})
+    </insert>
 
 </mapper>

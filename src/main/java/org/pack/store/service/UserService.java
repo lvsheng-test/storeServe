@@ -140,4 +140,11 @@ public interface UserService {
      */
     AppletResult getAbout();
 
+    /**
+     * 判断用户是否注册过
+     * @param userLoginReq
+     * @return
+     */
+    AppletResult queryUserLoginState(UserLoginReq userLoginReq);
+
 }

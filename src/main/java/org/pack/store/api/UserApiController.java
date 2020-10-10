@@ -200,6 +200,11 @@ public class UserApiController {
         return userService.getAbout();
     }
 
-
+    @CrossOrigin
+    @ApiOperation(value = "判断用户是否注册")
+    @PostMapping(value = "queryUserLoginState")
+    public AppletResult queryUserLoginState(@RequestBody @ApiParam(name="判断用户登录",value="传入json格式",required = true) UserLoginReq userLoginReq){
+        return userService.queryUserLoginState(userLoginReq);
+    }
 
 }

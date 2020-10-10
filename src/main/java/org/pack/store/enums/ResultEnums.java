@@ -36,7 +36,7 @@ public enum ResultEnums {
 
     ORDER_DEL_ERROR(216,"订单信息不存在"),
 
-
+    USER_REGIST_YES(217,"该用户已注册过了"),
 
     NOT_FOUND_DATA(10001,"数据不存在"),
 

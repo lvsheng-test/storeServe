@@ -39,4 +39,18 @@ public interface MemberMapper {
      */
     JSONObject getUserInfo(String userId);
 
+    /**
+     * 判断用户手机号是否注册过
+     * @param mobile
+     * @return
+     */
+    JSONObject queryUserLoginState(String mobile);
+
+    /**
+     * 添加上级与下级绑定关系
+     * @param jsonObject
+     * @return
+     */
+    int insertInviteCourtesy(JSONObject jsonObject);
+
 }

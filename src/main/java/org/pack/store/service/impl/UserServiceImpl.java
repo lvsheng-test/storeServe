@@ -297,16 +297,26 @@ public class UserServiceImpl implements UserService {
                 moblie =info.getPurePhoneNumber();
             }
             jedisOperator.setex(sessionKey,openId,60 * 60 * 24 * 10);
+            int codeNo =CommonUtils.getInvitationCode();//邀请码
             jsonObject  = new JSONObject();
             jsonObject.put("userId", idGenerateUtil.getId());
             jsonObject.put("openId", openId);
             jsonObject.put("mobile", moblie);
             jsonObject.put("userName",moblie);
             jsonObject.put("userType",2);
-            jsonObject.put("invitationCode", CommonUtils.getInvitationCode());
+            jsonObject.put("invitationCode",codeNo);
             memberMapper.insertMember(jsonObject);
+            String invitationCode = data.getString("invitationCode");//上级邀请码
+            if (StringUtils.isNotEmpty(invitationCode)){//上级邀请码不为空
+                JSONObject invite =new JSONObject();
+                invite.put("id",UuidUtil.getUuid());
+                invite.put("superiorCode",Integer.parseInt(invitationCode));
+                invite.put("invitationCode",codeNo);
+                memberMapper.insertInviteCourtesy(invite);
+            }
+            return ResultUtil.success();
         }
-        return ResultUtil.success(sessionKey);
+        return ResultUtil.error(ResultEnums.SERVER_ERROR);
     }
 
     //查询我的会员卡
@@ -552,5 +562,19 @@ public class UserServiceImpl implements UserService {
         aboutEntity.setShopAdress("上海市青浦区淞虹路1180弄24号");
         aboutEntity.setShopPhone("021-56036734");
         return ResultUtil.success(aboutEntity);
+    }
+    @Override
+    public AppletResult queryUserLoginState(UserLoginReq userLoginReq){
+        JSONObject jsonObject =new JSONObject();
+        if (StringUtil.isNullStr(userLoginReq.getMobile())){
+            return ResultUtil.error(ResultEnums.PARAM_IS_NULL);
+        }
+        JSONObject object = memberMapper.queryUserLoginState(userLoginReq.getMobile());
+        if (object !=null){
+            jsonObject.put("boolean",false);
+            return ResultUtil.success(jsonObject);
+        }
+        jsonObject.put("boolean",true);
+        return ResultUtil.success(jsonObject);
     }
 }
