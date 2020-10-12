@@ -3,6 +3,7 @@ package org.pack.store.service;
 import com.alibaba.fastjson.JSONObject;
 import org.pack.store.requestVo.*;
 import org.pack.store.utils.AppletResult;
+import org.pack.store.utils.JSONResult;
 
 public interface OrderService {
 
@@ -52,4 +53,11 @@ public interface OrderService {
      * @return
      */
     AppletResult cancelOrder(String orderId,String openId);
+
+    /**
+     * 订单列表查询
+     * @param orderListReq
+     * @return
+     */
+    AppletResult queryOrderList(OrderListReq orderListReq);
 }

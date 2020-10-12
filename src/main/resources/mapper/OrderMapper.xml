@@ -85,7 +85,7 @@
         WHEN 3 THEN '已完成'
         WHEN 4 THEN '已取消'
         ELSE '已退款' END) orderStatus,
-        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order where open_id=#{openId} and dr=0
+        DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order where open_id=#{openId} and dr=0 order by create_time desc
     </select>
     <!--查询个人待支付所有订单列表信息 -->
     <select id="queryOrderByOpenIdAndPending" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
@@ -97,7 +97,7 @@
         WHEN 4 THEN '已取消'
         ELSE '已退款' END) orderStatus,
         DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order
-        where open_id=#{openId} and order_status =0 and dr=0
+        where open_id=#{openId} and order_status =0 and dr=0 order by create_time desc
     </select>
 
     <select id="queryOrderByOpenIdAndReceipt" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
@@ -109,7 +109,7 @@
         WHEN 4 THEN '已取消'
         ELSE '已退款' END) orderStatus,
         DATE_FORMAT(create_time,'%Y-%m-%d %H:%i:%s') createTime from t_order
-        where open_id=#{openId} and order_status in (1,2) and dr=0
+        where open_id=#{openId} and order_status in (1,2) and dr=0 order by create_time desc
     </select>
 
     <select id="queryOrderDetail" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
@@ -147,5 +147,30 @@
         select order_id as orderId,order_status as orderStatus,pay_mode as payMode,
         total_price as totalPrice,preferences_price as preferencesPrice,integral_price as integralPrice,
         delivery_fee as deliveryFee from t_order where order_id=#{orderId} and open_id=#{openId} and order_status=0
+    </select>
+
+
+    <!-- 后台管理系统订单模块接口-->
+    <select id="queryOrderList" parameterType="org.pack.store.requestVo.OrderListReq" resultType="com.alibaba.fastjson.JSONObject">
+        select order_id as orderNo,receive_name as receiveName,receive_phone as receivePhone,order_status as orderStatus,
+        pay_mode as payMode,total_price as totalPrice,preferences_price as preferencesPrice,integral_price as integralPrice,
+        delivery_fee as deliveryFee,create_time as createTime,es_arrive_time as esArriveTime from t_order where dr=0
+        <if test="beginTime !=null and beginTime !=''">
+            <![CDATA[
+              and DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') >=  DATE_FORMAT(#{beginTime}, '%Y-%m-%d %H:%i:%s')
+            ]]>
+        </if>
+        <if test="endTime !=null and endTime !=''">
+            <![CDATA[
+              and DATE_FORMAT(create_time, '%Y-%m-%d %H:%i:%s') <=  DATE_FORMAT(#{endTime}, '%Y-%m-%d %H:%i:%s')
+            ]]>
+        </if>
+        <if test="orderNo !=null and orderNo !=''">
+            and order_id =#{orderNo}
+        </if>
+        <if test="orderState !=null and orderState !=''">
+            and order_status =#{orderState}
+        </if>
+        order by create_time desc
     </select>
 </mapper>

@@ -1,6 +1,8 @@
 package org.pack.store.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.apache.commons.lang.StringUtils;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.autoconf.RabbitConfig;
@@ -12,6 +14,7 @@ import org.pack.store.enums.TransactionDetailEnums;
 import org.pack.store.mapper.AddressMapper;
 import org.pack.store.mapper.OrderMapper;
 import org.pack.store.mapper.UserVipMapper;
+import org.pack.store.requestVo.OrderListReq;
 import org.pack.store.requestVo.OrderSerchReq;
 import org.pack.store.requestVo.UserTokenReq;
 import org.pack.store.service.OrderService;
@@ -288,5 +291,19 @@ public class OrderServiceImpl implements OrderService {
         }
         logger.info("==>订单状态发生变化，无法取消orderId={}",orderId);
         return ResultUtil.success("订单状态发生变化，无法取消");
+    }
+
+    @Override
+    public AppletResult queryOrderList(OrderListReq orderListReq){
+        PageInfo<JSONObject> pageInfo = null;
+        try{
+            PageHelper.startPage(orderListReq.getPage(),orderListReq.getLimit(),true);
+            List<JSONObject> orderList = orderMapper.queryOrderList(orderListReq);
+            //将数据封装到pageInfo类中，接下来就可以直接将pageInfo返回给页面进行前端展示了
+            pageInfo = new PageInfo<>(orderList);
+        }catch (Exception e){
+            logger.error("==>查询后台订单列表异常",e);
+        }
+        return ResultUtil.success(pageInfo);
     }
 }

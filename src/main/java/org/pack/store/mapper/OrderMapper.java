@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.pack.store.entity.AddressEntity;
 import org.pack.store.requestVo.AddressReq;
 import org.pack.store.requestVo.DelAddressReq;
+import org.pack.store.requestVo.OrderListReq;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -84,4 +85,14 @@ public interface OrderMapper {
      * @return
      */
     JSONObject queryOrderPending(@Param("orderId") String orderId,@Param("openId") String openId);
+
+    /***********************后台管理系统订单模块接口*****************/
+
+    /**
+     * 条件查询所有订单信息
+     * @param orderListReq
+     * @return
+     */
+    List<JSONObject> queryOrderList(OrderListReq orderListReq);
+
 }
