@@ -8,17 +8,17 @@ import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.autoconf.RabbitConfig;
 import org.pack.store.common.rabbitmq.producer.RabbitMqSender;
 import org.pack.store.entity.AddressEntity;
+import org.pack.store.enums.ConfigEnums;
 import org.pack.store.enums.OrderEnums;
 import org.pack.store.enums.ResultEnums;
 import org.pack.store.enums.TransactionDetailEnums;
 import org.pack.store.mapper.AddressMapper;
 import org.pack.store.mapper.OrderMapper;
 import org.pack.store.mapper.UserVipMapper;
-import org.pack.store.requestVo.OrderListReq;
-import org.pack.store.requestVo.OrderSerchReq;
-import org.pack.store.requestVo.UserTokenReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.service.OrderService;
 import org.pack.store.utils.*;
+import org.pack.store.utils.common.UuidUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DuplicateKeyException;
@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -87,7 +88,22 @@ public class OrderServiceImpl implements OrderService {
         if (decimal ==null){
             jsonObject.put("preferencesPrice",0);
         }
-        int i = orderMapper.placeOrder(jsonObject);
+        //获取门店地址
+        JSONObject storeJson = userVipMapper.queryStoresInfo();
+        jsonObject.put("storeId",storeJson.getString("id"));
+        jsonObject.put("storeName",storeJson.getString("name"));
+        jsonObject.put("storePhone",storeJson.getString("phone"));
+        jsonObject.put("storeAddress",storeJson.getString("address"));
+        //判断一下订单配速方式 0:配送，1：自取
+        int i=0;
+        if(jsonObject.getInteger("deliveryMode")==0){//配送
+            i = orderMapper.placeOrder(jsonObject);
+        }
+        if(jsonObject.getInteger("deliveryMode")==1){//自取
+            jsonObject.put("selfTime",DateUtil.systemFormat(new Date())+" "+jsonObject.getString("selfTime"));
+            i = orderMapper.insertSelfOrder(jsonObject);
+        }
+
         if(i > 0){
             for (JSONObject jsonObj:detailList) {
                 jsonObj.put("id",IDGenerateUtil.getId());
@@ -221,7 +237,7 @@ public class OrderServiceImpl implements OrderService {
         //查询用户消费券
         JSONObject  obj = userVipMapper.queryMyXiaoFeiJuan(userTokenReq.getUserId());
         if (obj ==null){
-            json.put("consumption","");
+            json.put("consumption",0);
         }else {
             json.put("consumption",obj.getBigDecimal("amount"));
         }
@@ -305,5 +321,135 @@ public class OrderServiceImpl implements OrderService {
             logger.error("==>查询后台订单列表异常",e);
         }
         return ResultUtil.success(pageInfo);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public AppletResult doAllocationHorseman(OrderReq orderReq){//默认取本店一个骑手派送，后续新增骑手自行接单模块
+        try {
+            //查询默认一个骑手用户信息
+            JSONObject horseman = userVipMapper.queryHorsemanInfo();
+            if (horseman ==null){
+                return ResultUtil.error(ResultEnums.HORSEMAN_NULL);
+            }
+            //生成骑手与订单关联
+            JSONObject jsonObject=new JSONObject();
+            jsonObject.put("orderId",orderReq.getOrderId());
+            jsonObject.put("riderName",horseman.getString("nickName"));
+            jsonObject.put("riderPhone",horseman.getString("mobile"));
+            jsonObject.put("riderImg",horseman.getString("avatarUrl"));
+            int i = orderMapper.insertOrderDelivery(jsonObject);
+            if (i>0){//改变订单状态为派送中
+                orderMapper.updateOrderStatus(orderReq.getOrderId());
+            }
+        }catch (Exception e){
+            logger.error("==>后台分配骑手派送订单异常",e);
+        }
+        return ResultUtil.success();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public AppletResult doConfirmationCompletion(OrderReq orderReq){//订单确认收货操作
+        try{
+            //1.订单状态更新为已完成
+            JSONObject orderInfo =orderMapper.queryOrderByOrderId(orderReq.getOrderId());
+            if (orderInfo ==null){
+                return ResultUtil.error(ResultEnums.ORDER_DEL_ERROR);
+            }
+            int i = orderMapper.updateOrderStatusByEnd(orderReq.getOrderId());
+            if (i>0){
+                //2.给该用户添加消费积分，四舍五入取整数
+                JSONObject userInfo = userVipMapper.queryUserAccountInfo(orderInfo.getString("openId"));
+                if (userInfo==null){
+                    return ResultUtil.error(ResultEnums.NOT_FOUND_USER);
+                }
+                //原账户积分+消费增送积分
+                userInfo.put("integral",userInfo.getInteger("integral")+(new Double(orderInfo.getDouble("totalPrice"))).intValue());
+                if (userVipMapper.updateIntegral(userInfo)>0){//添加赠送积分明细
+                    JSONObject detail =new JSONObject();
+                    detail.put("id", UuidUtil.getUuid());
+                    detail.put("userId",userInfo.getString("userId"));
+                    detail.put("money",orderInfo.getBigDecimal("totalPrice"));
+                    detail.put("integral",(new Double(orderInfo.getDouble("totalPrice"))).intValue());
+                    userVipMapper.insertIntegralDetail(detail);
+                }
+                //3.判断一下改用户是否有上级，如果有上级则给上级返佣金，否则不做任何操作
+                JSONObject inviteSuper = userVipMapper.queryIsSuperior(userInfo.getString("userId"));
+                if(inviteSuper !=null){//当前用户存在上级，根据用户消费的金额给上级返佣金
+                    if (inviteSuper.getInteger("state")==0){//邀请状态变更为有效
+                        userVipMapper.updateInviteCourtesy(inviteSuper);
+                    }
+                    JSONObject proportion = userVipMapper.queryProportion(ConfigEnums.COMMISSION_MEMBER.getCode());
+                    BigDecimal totalPrice =orderInfo.getBigDecimal("totalPrice");//订单消费金额
+                    proportion.put("money",totalPrice.multiply(proportion.getBigDecimal("proportion")));//返现佣金
+                    proportion.put("superiorCode",inviteSuper.getString("superiorCode"));//上级邀请码
+                    if (userVipMapper.updateAccountBanlance(proportion)>0){//给上级账户返现成功，添加一个佣金明细
+                        JSONObject commissiondetails = userVipMapper.queryUserInfoByInvitationCode(Integer.parseInt(inviteSuper.getString("superiorCode")));
+                        if (commissiondetails !=null){
+                            commissiondetails.put("id",UuidUtil.getUuid());
+                            String mobile = userVipMapper.queryUserInfoByMoblie(Integer.parseInt(inviteSuper.getString("invitationCode")));
+                            commissiondetails.put("mobile",mobile);
+                            commissiondetails.put("consumption",totalPrice);
+                            commissiondetails.put("rebateAmount",totalPrice.multiply(proportion.getBigDecimal("proportion")));
+                            userVipMapper.insertCommissiondetails(commissiondetails);
+                        }
+                    }
+                }
+            }
+        }catch (Exception e){
+            logger.error("==>后台订单确认收货异常",e);
+        }
+        return ResultUtil.success();
+    }
+
+    @Override
+    public AppletResult goToStore(GoStoreReq goStoreReq){
+
+        JSONObject json =new JSONObject();
+        if (StringUtil.isNullStr(goStoreReq.getUserId())){
+            return ResultUtil.error(ResultEnums.USERID_IS_NULL);
+        }
+        //查询用户有没有设置默认地址
+        JSONObject storeJson = userVipMapper.queryStoresInfo();
+        json.put("storeAddr",storeJson.getString("address")); //门店地址
+        json.put("zqTime",DateUtil.getSystmeTime());//自取时间
+        String distance = LocationUtils.getDistance(goStoreReq.getLongitude(),goStoreReq.getLatitude(),storeJson.getString("address"));
+        json.put("distance",distance); //距离门店公里数
+        String coordinate = EntCoordSyncJob.getCoordinate(storeJson.getString("address"));
+        String [] arg =coordinate.split(",");
+        if (arg.length>0){
+            double longitude =Double.parseDouble(arg[0]);
+            double latitude = Double.parseDouble(arg[1]);
+            json.put("longitude",longitude); //经度
+            json.put("latitude",latitude); //纬度
+        }
+        String moblie = userVipMapper.getMoblie(goStoreReq.getUserId());
+        json.put("moblie",moblie); //预留手机号
+        //查询用户积分
+        JSONObject jsonObject = userVipMapper.queryMyAccount(goStoreReq.getUserId());
+        if (jsonObject==null){
+            json.put("integral",0);
+        }else {
+            json.put("integral",jsonObject.getIntValue("integral"));
+        }
+        //查询用户消费券
+        JSONObject  obj = userVipMapper.queryMyXiaoFeiJuan(goStoreReq.getUserId());
+        if (obj ==null){
+            json.put("consumption",0);
+        }else {
+            json.put("consumption",obj.getBigDecimal("amount"));
+        }
+        json.put("deliveryFee",0);
+        //获取送达时间
+        //json.put("sendTime",DateUtil.getSystmeTimeOldTime());
+        json.put("proportion",0.05);
+        return ResultUtil.success(json);
+    }
+    //获取自取时间
+    @Override
+    public AppletResult querySelfTime(){
+        JSONObject timeJson = DateUtil.getSelfTime(DateUtil.getSystmeTime());
+        return ResultUtil.success(timeJson);
     }
 }

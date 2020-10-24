@@ -82,6 +82,11 @@ public interface UserVipMapper {
      */
     JSONObject queryMyXiaoFeiJuan(@Param("userId") String userId);
 
+    /**
+     * 根据openId 查询用户ID和手机号
+     * @param openId
+     * @return
+     */
  	JSONObject queryUserInfo(String openId);
 
     /**
@@ -106,5 +111,91 @@ public interface UserVipMapper {
      */
     int updateAcountIntegral(JSONObject jsonObject);
 
+
+    /**
+     * 默认查询一个骑手信息
+     * @return
+     */
+    JSONObject queryHorsemanInfo();
+
+    /**
+     * 根据openId 查询个人账户信息
+     * @param openId
+     * @return
+     */
+    JSONObject queryUserAccountInfo(String openId);
+
+    /**
+     * 修改个人账户积分
+     * @param jsonObject
+     * @return
+     */
+    int updateIntegral(JSONObject jsonObject);
+
+    /**
+     * 添加积分明细
+     * @param jsonObject
+     */
+    void insertIntegralDetail(JSONObject jsonObject);
+
+    /**
+     * 查询当前人是否有上级
+     * @param userId
+     * @return
+     */
+    JSONObject queryIsSuperior(@Param("userId") String userId);
+
+    /**
+     * 根据类型编码查询配置返现比例
+     * @param type
+     * @return
+     */
+    JSONObject queryProportion(@Param("type") String type);
+
+    /**
+     * 根据邀请码给上级账户赠送返现余额
+     * @param jsonObject
+     * @return
+     */
+    int updateAccountBanlance(JSONObject jsonObject);
+
+    /**
+     * 根据邀请码查询用户ID
+     * @param invitationCode
+     * @return
+     */
+    JSONObject queryUserInfoByInvitationCode(int invitationCode);
+
+    /**
+     * 根据邀请码查询用户手机号
+     * @param invitationCode
+     * @return
+     */
+    String queryUserInfoByMoblie(int invitationCode);
+
+    /**
+     * 添加返现佣金明细
+     * @param jsonObject
+     */
+    void insertCommissiondetails(JSONObject jsonObject);
+
+    /**
+     * 邀请状态变更为有效
+     * @param jsonObject
+     */
+    void updateInviteCourtesy(JSONObject jsonObject);
+
+    /**
+     * 查询门店信息
+     * @return
+     */
+    JSONObject queryStoresInfo();
+
+    /**
+     * 根据用户ID获取手机号
+     * @param userId
+     * @return
+     */
+    String getMoblie(String userId);
 
 }

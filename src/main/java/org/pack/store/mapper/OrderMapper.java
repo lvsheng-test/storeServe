@@ -19,6 +19,8 @@ public interface OrderMapper {
 
     int placeOrder(JSONObject jsonObject);
 
+    int insertSelfOrder(JSONObject jsonObject);
+
     int insertDetail(List<JSONObject> list);
 
     List<JSONObject> goodsDetail(String orderId);
@@ -94,5 +96,32 @@ public interface OrderMapper {
      * @return
      */
     List<JSONObject> queryOrderList(OrderListReq orderListReq);
+
+    /**
+     * 订单添加骑手信息
+     * @param jsonObject
+     * @return
+     */
+    int insertOrderDelivery(JSONObject jsonObject);
+
+    /**
+     * 修改派送中订单
+     */
+    int updateOrderStatus(@Param("orderId") String orderId);
+
+    /**
+     * 修改订单状态为已完成
+     * @param orderId
+     * @return
+     */
+    int updateOrderStatusByEnd(@Param("orderId") String orderId);
+
+    /**
+     * 根据订单ID查询订单详情信息
+     * @param orderId
+     * @return
+     */
+    JSONObject queryOrderByOrderId(@Param("orderId") String orderId);
+
 
 }

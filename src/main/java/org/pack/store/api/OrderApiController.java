@@ -8,10 +8,7 @@ import io.swagger.annotations.ApiParam;
 import org.pack.store.autoconf.JedisOperator;
 import org.pack.store.autoconf.RabbitConfig;
 import org.pack.store.common.rabbitmq.producer.RabbitMqSender;
-import org.pack.store.requestVo.AppVO;
-import org.pack.store.requestVo.OrderReq;
-import org.pack.store.requestVo.OrderSerchReq;
-import org.pack.store.requestVo.UserTokenReq;
+import org.pack.store.requestVo.*;
 import org.pack.store.service.OrderService;
 import org.pack.store.utils.AppletResult;
 import org.pack.store.utils.IDGenerateUtil;
@@ -120,6 +117,24 @@ public class OrderApiController {
             return ResultUtil.error(-1,"token失效，请重新登录");
         }
         return orderService.doDeleteOrder(orderReq.getOrderId(),openId);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "到店自取接口")
+    @PostMapping(value = "/goToStore")
+    public AppletResult goToStore(@RequestBody @ApiParam(name="自取信息对象",value="传入json格式",required = true) GoStoreReq goStoreReq){
+        String openId = jedisOperator.get(goStoreReq.getToken());
+        if(StringUtil.isNullStr(openId)){
+            return ResultUtil.error(-1,"token失效，请重新登录");
+        }
+        return orderService.goToStore(goStoreReq);
+    }
+
+    @CrossOrigin
+    @ApiOperation(value = "查询自取时间接口")
+    @PostMapping(value = "/querySelfTime")
+    public AppletResult querySelfTime(){
+        return orderService.querySelfTime();
     }
 
 }

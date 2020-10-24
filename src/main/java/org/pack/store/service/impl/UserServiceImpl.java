@@ -557,10 +557,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public AppletResult getAbout(){
         AboutEntity aboutEntity= new AboutEntity();
-        aboutEntity.setImages("https://20200809.oss-cn-shanghai.aliyuncs.com/images/about/about.png");
-        aboutEntity.setShopName("森红生鲜便利店");
-        aboutEntity.setShopAdress("上海市青浦区淞虹路1180弄24号");
-        aboutEntity.setShopPhone("021-56036734");
+        JSONObject jsonObject =userVipMapper.queryStoresInfo();
+        aboutEntity.setImages(jsonObject.getString("images"));
+        aboutEntity.setShopName(jsonObject.getString("name"));
+        aboutEntity.setShopAdress(jsonObject.getString("address"));
+        aboutEntity.setShopPhone(jsonObject.getString("phone"));
         return ResultUtil.success(aboutEntity);
     }
     @Override

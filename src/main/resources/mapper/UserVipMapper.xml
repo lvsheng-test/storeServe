@@ -85,4 +85,57 @@
     <update id="updateAcountIntegral" parameterType="com.alibaba.fastjson.JSONObject">
         update t_account set integral=integral-#{amount} where user_id=#{userId} and integral-#{amount} >= 0
     </update>
+
+    <select id="queryHorsemanInfo" resultType="com.alibaba.fastjson.JSONObject">
+        select user_id as userId,avatar_url as avatarUrl,mobile,nick_name as nickName from t_user where user_type=4
+    </select>
+
+    <select id="queryUserAccountInfo" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select id AS accountId,user_id AS userId,balance,integral from t_account where user_id=(SELECT user_id FROM t_user u WHERE open_id=#{openId})
+    </select>
+
+    <update id="updateIntegral" parameterType="com.alibaba.fastjson.JSONObject">
+        update t_account set integral=#{integral} where user_id =#{userId} and id=#{accountId};
+    </update>
+
+    <insert id="insertIntegralDetail" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into t_integral_detail(id,user_id,money,integral,create_time) values (#{id},#{userId},#{money},#{integral},now())
+    </insert>
+
+    <select id="queryIsSuperior" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        SELECT id,superior_code as superiorCode,invitation_code as invitationCode,state
+        FROM t_invite_courtesy WHERE invitation_code =(SELECT invitation_code FROM t_user WHERE user_id=#{userId})
+    </select>
+
+    <select id="queryProportion" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select name,proportion from t_config_proportion where type=#{type}
+    </select>
+
+    <update id="updateAccountBanlance" parameterType="com.alibaba.fastjson.JSONObject">
+        update t_account set balance=balance+#{money} where user_id=(SELECT user_id FROM t_user WHERE invitation_code=#{superiorCode})
+    </update>
+
+    <select id="queryUserInfoByInvitationCode" parameterType="java.lang.Integer" resultType="com.alibaba.fastjson.JSONObject">
+        select user_id as userId from t_user where invitation_code=#{invitationCode}
+    </select>
+
+    <select id="queryUserInfoByMoblie" parameterType="java.lang.Integer" resultType="java.lang.String">
+        select mobile from t_user where invitation_code=#{invitationCode}
+    </select>
+
+    <insert id="insertCommissiondetails" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into t_commissiondetails(id,user_id,mobile,consumption,rebate_amount,create_time) values (#{id},#{userId},#{mobile},#{consumption},#{rebateAmount},now())
+    </insert>
+
+    <update id="updateInviteCourtesy" parameterType="com.alibaba.fastjson.JSONObject">
+        update t_invite_courtesy set state=1 where id=#{id}
+    </update>
+
+    <select id="queryStoresInfo" resultType="com.alibaba.fastjson.JSONObject">
+        select id,name,address,images,phone from t_stores
+    </select>
+
+    <select id="getMoblie" parameterType="java.lang.String" resultType="java.lang.String">
+        select mobile from t_user where user_id=#{userId}
+    </select>
 </mapper>

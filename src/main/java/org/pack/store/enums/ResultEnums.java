@@ -38,6 +38,8 @@ public enum ResultEnums {
 
     USER_REGIST_YES(217,"该用户已注册过了"),
 
+    HORSEMAN_NULL(218,"没有匹配到骑手"),
+
     NOT_FOUND_DATA(10001,"数据不存在"),
 
     CUSTOM_STORE_NULL_PARAM(10001,""),

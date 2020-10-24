@@ -10,21 +10,37 @@
       remark from t_order where order_id =#{orderId} and open_id = #{openId} and dr=0
     </select>
 
-    <insert id="placeOrder" parameterType="com.alibaba.fastjson.JSONObject" >
+    <insert id="placeOrder" parameterType="com.alibaba.fastjson.JSONObject">
     insert into t_order (order_id, order_serial, store_id,
-      store_name, store_phone, open_id,
+      store_name,store_address,store_phone, open_id,
       receive_name, receive_phone, receive_address,
       receive_lat, receive_lng,total_price, preferences_price,
       integral_price, delivery_fee, es_arrive_time,
       remark, create_time)
     values (#{orderId,jdbcType=VARCHAR}, #{orderSerial,jdbcType=INTEGER}, #{storeId,jdbcType=VARCHAR},
-      #{storeName,jdbcType=VARCHAR}, #{storePhone,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR},
+      #{storeName,jdbcType=VARCHAR},#{storeAddress,jdbcType=VARCHAR},#{storePhone,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR},
       #{receiveName,jdbcType=VARCHAR}, #{receivePhone,jdbcType=VARCHAR}, #{receiveAddress,jdbcType=VARCHAR},
       #{receiveLat,jdbcType=DECIMAL}, #{receiveLng,jdbcType=DECIMAL},
       #{totalPrice,jdbcType=DECIMAL}, #{preferencesPrice,jdbcType=DECIMAL},
       #{integralPrice,jdbcType=DECIMAL}, #{deliveryFee,jdbcType=DECIMAL}, #{esArriveTime,jdbcType=VARCHAR},
       #{remark,jdbcType=VARCHAR}, now())
-  </insert>
+    </insert>
+    <insert id="insertSelfOrder" parameterType="com.alibaba.fastjson.JSONObject">
+        insert into t_order (order_id, order_serial, store_id,
+          store_name,store_address,store_phone, open_id,
+          self_time,reservation_tel,delivery_mode,
+          receive_lat, receive_lng,total_price, preferences_price,
+          integral_price, delivery_fee,
+          remark, create_time)
+        values (#{orderId,jdbcType=VARCHAR}, #{orderSerial,jdbcType=INTEGER}, #{storeId,jdbcType=VARCHAR},
+          #{storeName,jdbcType=VARCHAR},#{storeAddress,jdbcType=VARCHAR},#{storePhone,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR},
+          #{selfTime,jdbcType=VARCHAR},#{reservationTel,jdbcType=VARCHAR},#{deliveryMode,jdbcType=TINYINT},
+          #{receiveLat,jdbcType=DECIMAL}, #{receiveLng,jdbcType=DECIMAL},
+          #{totalPrice,jdbcType=DECIMAL}, #{preferencesPrice,jdbcType=DECIMAL},
+          #{integralPrice,jdbcType=DECIMAL}, #{deliveryFee,jdbcType=DECIMAL},
+          #{remark,jdbcType=VARCHAR}, now())
+    </insert>
+
     <insert id="insertDetail" parameterType="java.util.List">
         insert into t_order_detail(id,order_id,gooods_id,goods_name,goods_number,goods_price,goods_img,create_time)
         values
@@ -118,9 +134,10 @@
     </select>
 
     <select id="queryOrderInfo" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
-        select order_id orderId, order_serial orderSerial,
+        select order_id orderId, order_serial orderSerial,store_name storeName,store_address storeAddress,
       receive_name receiveName, receive_phone receivePhone, receive_address receiveAddress,
-      receive_lat receiveLat, receive_lng receiveLng, pay_mode payMode, total_price totalPrice, preferences_price preferencesPrice,
+      receive_lat receiveLat, receive_lng receiveLng, pay_mode payMode,self_time selfTime,reservation_tel reservationTel,
+      delivery_mode deliveryMode,total_price totalPrice, preferences_price preferencesPrice,
       integral_price integralPrice, delivery_fee deliveryFee, es_arrive_time esArriveTime,order_status status,
       (CASE order_status WHEN 0 THEN '待支付'
         WHEN 1 THEN '分拣中'
@@ -173,4 +190,30 @@
         </if>
         order by create_time desc
     </select>
+
+    <insert id="insertOrderDelivery" parameterType="com.alibaba.fastjson.JSONObject">
+        INSERT INTO t_order_delivery (
+        order_id,
+        rider_name,
+        rider_phone,
+        rider_img,
+        grab_time,
+        delivery_time)
+    VALUES
+        (
+            #{orderId},#{riderName},#{riderPhone},#{riderImg},now(),now())
+    </insert>
+
+    <update id="updateOrderStatus" parameterType="java.lang.String">
+        update t_order set order_status = 2 where order_id = #{orderId}
+    </update>
+
+    <update id="updateOrderStatusByEnd" parameterType="java.lang.String">
+        update t_order set order_status = 3 where order_id = #{orderId}
+    </update>
+
+    <select id="queryOrderByOrderId" parameterType="java.lang.String" resultType="com.alibaba.fastjson.JSONObject">
+        select order_id AS orderId,open_id AS openId,total_price AS totalPrice from t_order where order_id = #{orderId} and dr=0
+    </select>
+
 </mapper>

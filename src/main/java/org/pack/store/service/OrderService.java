@@ -54,10 +54,37 @@ public interface OrderService {
      */
     AppletResult cancelOrder(String orderId,String openId);
 
-    /**
+    /****************************************后台订单接口**************************************
      * 订单列表查询
      * @param orderListReq
      * @return
      */
     AppletResult queryOrderList(OrderListReq orderListReq);
+
+    /**
+     * 分配骑手派送订单
+     * @param orderReq
+     * @return
+     */
+    AppletResult doAllocationHorseman(OrderReq orderReq);
+
+    /**
+     * 后台订单确认收货操作
+     * @param orderReq
+     * @return
+     */
+    AppletResult doConfirmationCompletion(OrderReq orderReq);
+
+    /**
+     * 到店自取接口
+     * @param goStoreReq
+     * @return
+     */
+    AppletResult goToStore(GoStoreReq goStoreReq);
+
+    /**
+     * 查询自取时间
+     * @return
+     */
+    AppletResult querySelfTime();
 }
