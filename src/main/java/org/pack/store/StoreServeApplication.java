@@ -1,5 +1,7 @@
 package org.pack.store;
 
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.web.filter.CorsFilter;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -12,9 +14,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @MapperScan(basePackages = { "org.pack.store.mapper" })
 //@EnableSchedulinguling
 //@EnableTransactionManagement
-public class StoreServeApplication {
+public class StoreServeApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication.run(StoreServeApplication.class, args);
+	}
+
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+		return builder.sources(StoreServeApplication.class);
 	}
 
 

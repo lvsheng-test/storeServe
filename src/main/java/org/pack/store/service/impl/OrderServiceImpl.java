@@ -380,19 +380,23 @@ public class OrderServiceImpl implements OrderService {
                     if (inviteSuper.getInteger("state")==0){//邀请状态变更为有效
                         userVipMapper.updateInviteCourtesy(inviteSuper);
                     }
-                    JSONObject proportion = userVipMapper.queryProportion(ConfigEnums.COMMISSION_MEMBER.getCode());
-                    BigDecimal totalPrice =orderInfo.getBigDecimal("totalPrice");//订单消费金额
-                    proportion.put("money",totalPrice.multiply(proportion.getBigDecimal("proportion")));//返现佣金
-                    proportion.put("superiorCode",inviteSuper.getString("superiorCode"));//上级邀请码
-                    if (userVipMapper.updateAccountBanlance(proportion)>0){//给上级账户返现成功，添加一个佣金明细
-                        JSONObject commissiondetails = userVipMapper.queryUserInfoByInvitationCode(Integer.parseInt(inviteSuper.getString("superiorCode")));
-                        if (commissiondetails !=null){
-                            commissiondetails.put("id",UuidUtil.getUuid());
-                            String mobile = userVipMapper.queryUserInfoByMoblie(Integer.parseInt(inviteSuper.getString("invitationCode")));
-                            commissiondetails.put("mobile",mobile);
-                            commissiondetails.put("consumption",totalPrice);
-                            commissiondetails.put("rebateAmount",totalPrice.multiply(proportion.getBigDecimal("proportion")));
-                            userVipMapper.insertCommissiondetails(commissiondetails);
+                    //判断一下上级是否是会员，会员账户则返佣金，否则不返佣金
+                    JSONObject commissiondetails = userVipMapper.queryUserInfoByInvitationCode(Integer.parseInt(inviteSuper.getString("superiorCode")));
+                    List<JSONObject> list = this.userVipMapper.queryMyMembership(commissiondetails.getString("userId"));
+                    if (list.size()>0){
+                        JSONObject proportion = userVipMapper.queryProportion(ConfigEnums.COMMISSION_MEMBER.getCode());
+                        BigDecimal totalPrice =orderInfo.getBigDecimal("totalPrice");//订单消费金额
+                        proportion.put("money",totalPrice.multiply(proportion.getBigDecimal("proportion")));//返现佣金
+                        proportion.put("superiorCode",inviteSuper.getString("superiorCode"));//上级邀请码
+                        if (userVipMapper.updateAccountBanlance(proportion)>0){//给上级账户返现成功，添加一个佣金明细
+                            if (commissiondetails !=null){
+                                commissiondetails.put("id",UuidUtil.getUuid());
+                                String mobile = userVipMapper.queryUserInfoByMoblie(Integer.parseInt(inviteSuper.getString("invitationCode")));
+                                commissiondetails.put("mobile",mobile);
+                                commissiondetails.put("consumption",totalPrice);
+                                commissiondetails.put("rebateAmount",totalPrice.multiply(proportion.getBigDecimal("proportion")));
+                                userVipMapper.insertCommissiondetails(commissiondetails);
+                            }
                         }
                     }
                 }

@@ -170,6 +170,7 @@
     <!-- 后台管理系统订单模块接口-->
     <select id="queryOrderList" parameterType="org.pack.store.requestVo.OrderListReq" resultType="com.alibaba.fastjson.JSONObject">
         select order_id as orderNo,receive_name as receiveName,receive_phone as receivePhone,order_status as orderStatus,
+        delivery_mode deliveryMode,reservation_tel reservationTel,self_time selfTime,
         pay_mode as payMode,total_price as totalPrice,preferences_price as preferencesPrice,integral_price as integralPrice,
         delivery_fee as deliveryFee,create_time as createTime,es_arrive_time as esArriveTime from t_order where dr=0
         <if test="beginTime !=null and beginTime !=''">
